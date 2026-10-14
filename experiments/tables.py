@@ -92,6 +92,8 @@ def static() -> None:
         m("TwIvfRecall", f3(one(tp, method="folded-ivf", param=16)))
         m("TwIvfMs", f2(one(tp, "ms", method="folded-ivf", param=16)))
         m("TwOldAnchor", f3(sel(tp, method="folded-oldanchor").recall.max()))
+        m("TwLtwoDeep", f3(one(tp, method="folded-l2", param=512)))
+        m("TwIpDeep", f3(one(tp, method="folded-ip", param=512)))
     m("GlOursExactNorm", f3(one(g, method="folded-ip-exactnorm", param=64)))
     m("GlOursRecallDeep", f3(one(g, method="folded-ip", param=256)))
     m("GlCodeRecall", f3(one(sel(d, profile="code", n=nmax), method="folded-ip", param=64)))
