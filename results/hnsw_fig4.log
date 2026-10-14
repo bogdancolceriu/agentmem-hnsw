@@ -1,0 +1,10 @@
+== fig4
+  fig4_d1024 simple    mL=0.000 levels= 0 build= 177.9s cost@0.9= 21540.0
+  fig4_d1024 simple    mL=0.334 levels= 4 build= 173.1s cost@0.9= 22905.2
+  fig4_d1024 simple    mL=0.600 levels= 7 build= 186.8s cost@0.9= 23833.7
+  fig4_d1024 simple    mL=1.000 levels=12 build= 214.3s cost@0.9= 21803.0
+  fig4_d1024 heuristic mL=0.000 levels= 0 build= 508.7s cost@0.9= 20764.1
+  fig4_d1024 heuristic mL=0.334 levels= 4 build= 544.8s cost@0.9= 21715.1
+  fig4_d1024 heuristic mL=0.600 levels= 7 build= 565.3s cost@0.9= 21408.8
+  fig4_d1024 heuristic mL=1.000 levels=12 build= 701.0s cost@0.9= 22371.2
+  -> results/hnsw_fig4_d1024.csv (188 rows)

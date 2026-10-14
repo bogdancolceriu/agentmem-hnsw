@@ -1,0 +1,15 @@
+== validate
+  build: ours 669.1s, hnswlib 234.6s (1 thread)
+  ef=  10 recall ours=0.4948 hnswlib=0.4789 qps ours=   6155 hnswlib=  22672
+  ef=  16 recall ours=0.5817 hnswlib=0.5703 qps ours=   5190 hnswlib=  17688
+  ef=  24 recall ours=0.6467 hnswlib=0.6404 qps ours=   4394 hnswlib=  13059
+  ef=  32 recall ours=0.6891 hnswlib=0.6869 qps ours=   3268 hnswlib=  10493
+  ef=  48 recall ours=0.7422 hnswlib=0.7440 qps ours=   2472 hnswlib=   8126
+  ef=  64 recall ours=0.7780 hnswlib=0.7773 qps ours=   2103 hnswlib=   6517
+  ef=  96 recall ours=0.8188 hnswlib=0.8220 qps ours=   1428 hnswlib=   4203
+  ef= 128 recall ours=0.8436 hnswlib=0.8456 qps ours=   1046 hnswlib=   3737
+  ef= 192 recall ours=0.8730 hnswlib=0.8755 qps ours=    789 hnswlib=   2162
+  ef= 256 recall ours=0.8958 hnswlib=0.8968 qps ours=    572 hnswlib=   1366
+  ef= 384 recall ours=0.9219 hnswlib=0.9250 qps ours=    397 hnswlib=   1356
+  ef= 512 recall ours=0.9403 hnswlib=0.9420 qps ours=    316 hnswlib=    906
+  -> results/hnsw_validate.csv (12 rows)

@@ -1,0 +1,54 @@
+{
+ "days": 30,
+ "k": 10,
+ "decay_rate": 0.005,
+ "recall_langchain": 0.518,
+ "recall_ours": 1.0,
+ "agents": [
+  {
+   "agent": "Maria Lopez",
+   "memories": 1658,
+   "queries": 20,
+   "recall_langchain": 0.41500000000000004,
+   "recall_ours": 1.0,
+   "ms_langchain": 9.824420300037673,
+   "ms_ours": 0.787146250013393
+  },
+  {
+   "agent": "John Carter",
+   "memories": 1351,
+   "queries": 20,
+   "recall_langchain": 0.61,
+   "recall_ours": 1.0,
+   "ms_langchain": 8.195229500006462,
+   "ms_ours": 0.558430549995137
+  },
+  {
+   "agent": "Emma Wilson",
+   "memories": 1308,
+   "queries": 20,
+   "recall_langchain": 0.5399999999999999,
+   "recall_ours": 1.0,
+   "ms_langchain": 7.522396949934773,
+   "ms_ours": 0.7779157999493691
+  },
+  {
+   "agent": "Oliver Brown",
+   "memories": 1416,
+   "queries": 20,
+   "recall_langchain": 0.7050000000000001,
+   "recall_ours": 1.0,
+   "ms_langchain": 9.590546500021446,
+   "ms_ours": 0.4127254999957586
+  },
+  {
+   "agent": "Sophia Martin",
+   "memories": 1920,
+   "queries": 20,
+   "recall_langchain": 0.31999999999999995,
+   "recall_ours": 1.0,
+   "ms_langchain": 11.452311849916441,
+   "ms_ours": 0.9047111000882069
+  }
+ ]
+}

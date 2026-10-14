@@ -1,0 +1,13 @@
+\begin{tabular}{l rr rr}
+\toprule
+ & \multicolumn{2}{c}{GloVe, 1\,000\,000} & \multicolumn{2}{c}{Willowbrook, 126\,454}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+range search & recall@10 & ms & recall@10 & ms\\
+\midrule
+beam 32 (default) & 0.971 & 0.47 & 0.967 & 0.16\\
+beam 64 & 0.982 & 0.57 & 0.970 & 0.17\\
+beam 128 & 0.988 & 1.16 & 0.982 & 0.40\\
+beam 256 & 0.991 & 1.70 & 0.984 & 0.38\\
+exact ranges ($O(n)$ scan) & 0.997 & -- & 0.990 & --\\
+\bottomrule
+\end{tabular}

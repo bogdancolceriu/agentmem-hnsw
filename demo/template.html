@@ -1,0 +1,278 @@
+<title>Willowbrook Replay</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a control strip over three identical town maps (one per memory method), then the tally. */
+:root {
+  --bg: #f3f5f6; --panel: #ffffff; --line: #d9dfe2; --fg: #172026; --muted: #56636c;
+  --place: #e6ebed; --place-ink: #3d4a52; --home: #dde3e6;
+  --know: #d9531e; --know-soft: #f6c9b4; --idle: #8a969d; --focus: #2a78d6;
+  --sans: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101518; --panel: #171e22; --line: #2b353b; --fg: #e6ecef; --muted: #9aa8b0;
+    --place: #222b30; --place-ink: #c3cdd2; --home: #1d2529;
+    --know: #f0763f; --know-soft: #6b3420; --idle: #6f7d85; --focus: #5598e7; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101518; --panel: #171e22; --line: #2b353b; --fg: #e6ecef; --muted: #9aa8b0;
+  --place: #222b30; --place-ink: #c3cdd2; --home: #1d2529;
+  --know: #f0763f; --know-soft: #6b3420; --idle: #6f7d85; --focus: #5598e7; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-block: 28px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 20px; }
+header { display: flex; flex-direction: column; gap: 6px; max-width: 72ch; }
+h1 { font-size: 30px; font-weight: 600; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+button { font: inherit; font-weight: 500; color: var(--bg); background: var(--fg); border: 0; border-radius: 8px;
+  padding: 8px 16px; cursor: pointer; min-width: 104px; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.clock { font-family: var(--mono); font-size: 17px; font-variant-numeric: tabular-nums; min-width: 15ch; }
+.scrub { flex: 1 1 260px; display: flex; align-items: center; gap: 10px; min-width: 0; }
+.scrub input { flex: 1; min-width: 0; accent-color: var(--know); }
+label.small { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+select { font: inherit; font-size: 13px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.event { font-size: 13px; color: var(--muted); }
+.event b { color: var(--know); font-weight: 600; }
+.panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1060px) { .panels { grid-template-columns: 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 14px 10px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.panel h2 { font-size: 17px; font-weight: 600; margin: 0; }
+.panel .how { font-size: 13px; color: var(--muted); margin: 0; min-height: 3em; }
+.tally { display: flex; gap: 18px; font-size: 13px; color: var(--muted); }
+.tally span b { font-family: var(--mono); font-size: 20px; color: var(--fg); font-weight: 500; margin-right: 4px; font-variant-numeric: tabular-nums; }
+.tally .k b { color: var(--know); }
+svg.map { width: 100%; height: auto; display: block; }
+.map .place rect { fill: var(--place); }
+.map .place.venue rect { fill: var(--know-soft); }
+.map .place text { fill: var(--place-ink); font-family: var(--sans); font-size: 17px; font-weight: 500; }
+.map .homes rect { fill: var(--home); }
+.map .homes text { fill: var(--muted); font-family: var(--sans); font-size: 15px; }
+.agent { transition: transform 420ms ease-in-out; cursor: pointer; }
+.agent circle.dot { fill: var(--idle); stroke: var(--panel); stroke-width: 1.5; }
+.agent.knows circle.dot { fill: var(--know); }
+.agent circle.ring { fill: none; stroke: var(--know); stroke-width: 2; opacity: 0; }
+.agent.attending circle.ring { opacity: 1; }
+.agent.sel circle.dot { stroke: var(--focus); stroke-width: 2.5; }
+@media (prefers-reduced-motion: reduce) { .agent { transition: none; } }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: var(--muted); align-items: center; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; vertical-align: -1px; margin-right: 6px; background: var(--idle); }
+.legend i.k { background: var(--know); }
+.legend i.a { background: var(--know); box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--know); }
+.who { font-size: 13px; color: var(--muted); min-height: 1.5em; }
+.who b { color: var(--fg); }
+.summary { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 460px; font-size: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 500; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+th.n { text-align: right; }
+tr:last-child td { border-bottom: 0; }
+.foot { font-size: 13px; color: var(--muted); max-width: 90ch; margin: 0; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Willowbrook</h1>
+    <p class="lede" id="lede"></p>
+  </header>
+
+  <div class="controls" role="group" aria-label="Redare">
+    <button id="play" type="button">Pornește</button>
+    <span class="clock" id="clock" aria-live="off"></span>
+    <div class="scrub"><input id="scrub" type="range" min="0" max="0" value="0" aria-label="Momentul din simulare"></div>
+    <label class="small" for="speed">Viteză
+      <select id="speed"><option value="250">lent</option><option value="120" selected>normal</option><option value="50">rapid</option></select>
+    </label>
+    <span class="event" id="event"></span>
+  </div>
+
+  <div class="legend">
+    <span><i></i>nu știe de petrecere</span>
+    <span><i class="k"></i>știe de petrecere</span>
+    <span><i class="a"></i>e la petrecere</span>
+    <span class="who" id="who">Atinge un punct ca să vezi cine e și ce face.</span>
+  </div>
+
+  <div class="panels" id="panels"></div>
+
+  <div class="summary">
+    <table>
+      <thead><tr><th>Cum își caută agenții amintirile</th><th class="n">știau înainte de 17:00</th><th class="n">și-au amintit la planificare</th><th class="n">au venit</th></tr></thead>
+      <tbody id="sumrows"></tbody>
+    </table>
+  </div>
+  <p class="foot" id="foot"></p>
+</div>
+
+<script type="application/json" id="trace">__TRACE__</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("trace").textContent);
+  const DAYS = ["luni", "marți", "miercuri", "joi", "vineri", "sâmbătă", "duminică"];
+  const HOW = {
+    exact: ["Scorul din articol", "recență + importanță + relevanță, peste toate amintirile; indexul nostru întoarce aceleași amintiri"],
+    rerank100: ["Overfetch + re-rank", "primele 100 de amintiri după relevanță plus cele mai noi, reordonate cu scorul (ca în LangChain)"],
+    relonly: ["Doar relevanță", "căutare vectorială simplă, fără recență și importanță"]
+  };
+  const LAYOUT = [
+    ["Oak Hill College", 0, 0], ["Willow Library", 1, 0], ["Town Hall", 2, 0], ["Cedar Clinic", 3, 0],
+    ["Riverside Park", 0, 1], ["Maple Cafe", 1, 1], ["Rose Pub", 2, 1], ["Lakeside Gym", 3, 1],
+    ["Sunrise Bakery", 0, 2], ["Harbor Grocery", 1, 2], ["Pine Pharmacy", 2, 2], ["Elm Art Studio", 3, 2]
+  ];
+  const W = 640, PW = 146, PH = 104, GX = 10, GY = 10, X0 = 14, Y0 = 14;
+  const SHORT = { "Oak Hill College": "College", "Willow Library": "Library", "Town Hall": "Town Hall",
+    "Cedar Clinic": "Clinic", "Riverside Park": "Park", "Maple Cafe": "Maple Cafe", "Rose Pub": "Pub",
+    "Lakeside Gym": "Gym", "Sunrise Bakery": "Bakery", "Harbor Grocery": "Grocery", "Pine Pharmacy": "Pharmacy",
+    "Elm Art Studio": "Art Studio" };
+  const nPlaces = D.places.length, homes = D.homes;
+  const HOME_Y = Y0 + 3 * (PH + GY) + 14, HOME_H = 64;
+  const H = HOME_Y + HOME_H + 26;
+  const homeW = (W - 2 * X0) / homes.length;
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  // anchor of every location: public places from the layout, homes along the bottom band
+  const anchor = [];
+  D.places.forEach(function (p) {
+    const L = LAYOUT.find(function (l) { return l[0] === p; });
+    anchor.push({ x: X0 + L[1] * (PW + GX) + 12, y: Y0 + L[2] * (PH + GY) + 34, w: PW - 24, cols: 6 });
+  });
+  homes.forEach(function (h, i) { anchor.push({ x: X0 + i * homeW + homeW / 2, y: HOME_Y + 12, w: homeW, cols: 1 }); });
+
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(svgNS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function zile(n) { return n + (n % 100 >= 20 || n % 100 === 0 ? " de zile" : (n === 1 ? " zi" : " zile")); }
+  function fmtClock(f) {
+    const h = D.start_hour + f * D.step_hours, day = Math.floor(h / 24), m = Math.round((h - day * 24) * 60);
+    const hh = Math.floor(m / 60), mm = m % 60;
+    return DAYS[day % 7] + ", " + String(hh).padStart(2, "0") + ":" + String(mm).padStart(2, "0");
+  }
+
+  const methods = Object.keys(D.runs);
+  const panels = document.getElementById("panels");
+  const views = {};
+  let selected = -1;
+  methods.forEach(function (key) {
+    const run = D.runs[key];
+    const p = document.createElement("section");
+    p.className = "panel";
+    p.innerHTML = '<h2></h2><p class="how"></p><div class="tally"><span class="k"><b>0</b>știu</span><span><b>0</b>la petrecere</span></div>';
+    p.querySelector("h2").textContent = HOW[key][0];
+    p.querySelector(".how").textContent = HOW[key][1];
+    const svg = el("svg", { viewBox: "0 0 " + W + " " + H, class: "map", role: "img",
+      "aria-label": "Harta orașului pentru metoda " + HOW[key][0] });
+    LAYOUT.forEach(function (L) {
+      const g = el("g", { class: "place" + (L[0] === "Maple Cafe" ? " venue" : "") }, svg);
+      el("rect", { x: X0 + L[1] * (PW + GX), y: Y0 + L[2] * (PH + GY), width: PW, height: PH, rx: 8 }, g);
+      const t = el("text", { x: X0 + L[1] * (PW + GX) + 12, y: Y0 + L[2] * (PH + GY) + 23 }, g);
+      t.textContent = SHORT[L[0]];
+    });
+    const hg = el("g", { class: "homes" }, svg);
+    el("rect", { x: X0, y: HOME_Y, width: W - 2 * X0, height: HOME_H, rx: 8 }, hg);
+    const ht = el("text", { x: X0 + 4, y: HOME_Y + HOME_H + 19 }, hg);
+    ht.textContent = "acasă (fiecare coloană e o casă)";
+    const dots = D.agents.map(function (a, i) {
+      const g = el("g", { class: "agent", tabindex: "0", "data-i": i }, svg);
+      el("circle", { class: "ring", r: 10.5 }, g);
+      el("circle", { class: "dot", r: 7 }, g);
+      const title = el("title", {}, g);
+      title.textContent = a.name;
+      g.addEventListener("click", function () { select(i); });
+      g.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); select(i); } });
+      return g;
+    });
+    p.appendChild(svg);
+    panels.appendChild(p);
+    views[key] = { run: run, dots: dots, nums: p.querySelectorAll(".tally b") };
+  });
+
+  function draw(f) {
+    methods.forEach(function (key) {
+      const v = views[key], fr = v.run.frames[f];
+      const slot = {};
+      let know = 0, att = 0;
+      fr.forEach(function (st, i) {
+        const loc = st[0], a = anchor[loc];
+        const r = slot[loc] = (slot[loc] || 0) + 1;
+        let x, y;
+        if (a.cols === 1) { x = a.x; y = a.y + (r - 1) * 16; }
+        else { x = a.x + 9 + ((r - 1) % a.cols) * 21; y = a.y + 9 + Math.floor((r - 1) / a.cols) * 22; }
+        const g = v.dots[i];
+        g.style.transform = "translate(" + x + "px," + y + "px)";
+        g.classList.toggle("knows", st[1] === 1);
+        g.classList.toggle("attending", st[2] === 1);
+        g.classList.toggle("sel", i === selected);
+        know += st[1]; att += st[2];
+      });
+      v.nums[0].textContent = know;
+      v.nums[1].textContent = att;
+    });
+    document.getElementById("clock").textContent = fmtClock(f);
+    scrub.value = f;
+    describe(f);
+  }
+
+  function describe(f) {
+    if (selected < 0) return;
+    const a = D.agents[selected];
+    const parts = methods.map(function (key) {
+      const st = D.runs[key].frames[f][selected];
+      return HOW[key][0] + ": " + D.runs[key].activities[f][selected] + (st[1] ? " (știe)" : "");
+    });
+    document.getElementById("who").innerHTML = "<b></b> · ";
+    document.querySelector("#who b").textContent = a.name + ", " + a.role;
+    document.getElementById("who").appendChild(document.createTextNode(parts.join(" · ")));
+  }
+  function select(i) { selected = (selected === i) ? -1 : i; if (selected < 0) document.getElementById("who").textContent = "Atinge un punct ca să vezi cine e și ce face."; draw(frame); }
+
+  const scrub = document.getElementById("scrub");
+  const nFrames = D.runs[methods[0]].frames.length;
+  scrub.max = String(nFrames - 1);
+  let frame = 0, timer = null;
+  const playBtn = document.getElementById("play");
+  function stop() { clearInterval(timer); timer = null; playBtn.textContent = "Pornește"; }
+  let fresh = true;
+  function start() {
+    if (frame >= nFrames - 1 || fresh) frame = 0;
+    fresh = false;
+    playBtn.textContent = "Pauză";
+    timer = setInterval(function () { frame += 1; draw(frame); if (frame >= nFrames - 1) stop(); }, Number(document.getElementById("speed").value));
+  }
+  playBtn.addEventListener("click", function () { timer ? stop() : start(); });
+  document.getElementById("speed").addEventListener("change", function () { if (timer) { stop(); start(); } });
+  scrub.addEventListener("input", function () { fresh = false; frame = Number(scrub.value); draw(frame); });
+
+  const partyStart = D.party_frame;
+  document.getElementById("event").innerHTML = "Petrecerea: <b>" + fmtClock(partyStart) + "</b>, la Maple Cafe (portocaliu pe hartă)";
+  document.getElementById("lede").textContent = "Același oraș, aceiași 25 de oameni, aceleași zile. Singura diferență este cum își caută fiecare agent amintirile. "
+    + "Orașul trăiește deja de " + zile(D.burn + 1) + ", deci fiecare agent are în jur de "
+    + String(Math.round(D.runs.exact.summary.mean_memories / 100) * 100).replace(/\B(?=(\d{3})+(?!\d))/g, "\u202f")
+    + " de amintiri când Maria Lopez află, cu 35 de ore înainte, că dă o petrecere.";
+  const tb = document.getElementById("sumrows");
+  methods.forEach(function (key) {
+    const s = D.runs[key].summary, tr = document.createElement("tr");
+    [HOW[key][0], s.aware_at_party, s.recalled_at_plan, s.attended].forEach(function (v, j) {
+      const td = document.createElement("td"); td.textContent = v; if (j) td.className = "n"; tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+  document.getElementById("foot").textContent = "Simulare cu agenți pe reguli (seed " + D.seed + ", ales ca exemplu tipic din 30). "
+    + "Fiecare apel de LLM din Generative Agents e înlocuit cu o regulă; conversațiile și planificarea folosesc aceleași puncte focale ca în codul articolului. "
+    + "Rezultatele medii pe toate seed-urile sunt în raport.";
+  frame = Math.max(0, Math.min(nFrames - 1, partyStart + 4));
+  draw(frame);
+})();
+</script>

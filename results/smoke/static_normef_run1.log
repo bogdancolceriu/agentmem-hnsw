@@ -1,0 +1,41 @@
+  glove ef=64 paper norm_ef=32   recall=0.9730 0.403 ms
+  glove ef=64 paper norm_ef=64   recall=0.9843 0.509 ms
+  glove ef=64 paper norm_ef=128  recall=0.9886 0.774 ms
+  glove ef=64 paper norm_ef=256  recall=0.9913 2.092 ms
+  glove ef=64 paper exact ranges   recall=0.9971
+  glove ef=64 code  norm_ef=32   recall=0.8714 0.758 ms
+  glove ef=64 code  norm_ef=64   recall=0.8793 0.601 ms
+  glove ef=64 code  norm_ef=128  recall=0.8815 0.973 ms
+  glove ef=64 code  norm_ef=256  recall=0.8835 1.829 ms
+  glove ef=64 code  exact ranges   recall=0.8864
+  glove ef=128 paper norm_ef=32   recall=0.9744 0.478 ms
+  glove ef=128 paper norm_ef=64   recall=0.9861 0.714 ms
+  glove ef=128 paper norm_ef=128  recall=0.9906 0.991 ms
+  glove ef=128 paper norm_ef=256  recall=0.9935 1.486 ms
+  glove ef=128 paper exact ranges   recall=0.9995
+  glove ef=128 code  norm_ef=32   recall=0.9344 0.651 ms
+  glove ef=128 code  norm_ef=64   recall=0.9462 0.730 ms
+  glove ef=128 code  norm_ef=128  recall=0.9497 1.049 ms
+  glove ef=128 code  norm_ef=256  recall=0.9534 1.566 ms
+  glove ef=128 code  exact ranges   recall=0.9577
+  town ef=64 paper norm_ef=32   recall=0.9695 0.162 ms
+  town ef=64 paper norm_ef=64   recall=0.9697 0.165 ms
+  town ef=64 paper norm_ef=128  recall=0.9775 0.374 ms
+  town ef=64 paper norm_ef=256  recall=0.9830 0.502 ms
+  town ef=64 paper exact ranges   recall=0.9899
+  town ef=64 code  norm_ef=32   recall=0.9589 0.249 ms
+  town ef=64 code  norm_ef=64   recall=0.9592 0.205 ms
+  town ef=64 code  norm_ef=128  recall=0.9766 0.305 ms
+  town ef=64 code  norm_ef=256  recall=0.9792 0.513 ms
+  town ef=64 code  exact ranges   recall=0.9836
+  town ef=128 paper norm_ef=32   recall=0.9768 0.201 ms
+  town ef=128 paper norm_ef=64   recall=0.9770 0.223 ms
+  town ef=128 paper norm_ef=128  recall=0.9848 0.319 ms
+  town ef=128 paper norm_ef=256  recall=0.9903 0.400 ms
+  town ef=128 paper exact ranges   recall=0.9973
+  town ef=128 code  norm_ef=32   recall=0.9846 0.358 ms
+  town ef=128 code  norm_ef=64   recall=0.9850 0.261 ms
+  town ef=128 code  norm_ef=128  recall=0.9903 0.325 ms
+  town ef=128 code  norm_ef=256  recall=0.9943 0.473 ms
+  town ef=128 code  exact ranges   recall=0.9987
+wrote /home/claude/agentmem-hnsw/results/static_normef.csv

@@ -1,0 +1,14 @@
+\begin{tabular}{l ccc r ccc}
+\toprule
+ & \multicolumn{4}{c}{GloVe, 1\,000\,000 memories} & \multicolumn{3}{c}{Willowbrook, 126\,454 memories}\\
+\cmidrule(lr){2-5}\cmidrule(lr){6-8}
+Method & paper & code & raw & ms & paper & code & raw\\
+\midrule
+Exact scan & 1.000 & 1.000 & 1.000 & 64.5 & 1.000 & 1.000 & 1.000\\
+Relevance only & 0.001 & 0.016 & 0.002 & 0.20 & 0.042 & 0.045 & 0.043\\
+Overfetch + re-rank, $K=100$ & 0.006 & 0.083 & 0.010 & 0.56 & 0.277 & 0.325 & 0.290\\
+Overfetch + re-rank, $K=1000$ & 0.040 & 0.298 & 0.059 & 3.18 & 0.661 & 0.769 & 0.729\\
+Folded HNSW, $ef=64$ & 0.975 & 0.875 & 0.996 & 0.53 & 0.959 & 0.978 & 0.994\\
+Folded HNSW, $ef=256$ & 0.976 & 0.959 & 1.000 & 0.69 & 0.962 & 0.981 & 0.999\\
+\bottomrule
+\end{tabular}

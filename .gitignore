@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+data/raw
+data/cache/
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.log
+report/*.out
+report/*.toc
+.pytest_cache/
+results/smoke/llm_mock_log.jsonl
+results/smoke/demo_trace_dev.json

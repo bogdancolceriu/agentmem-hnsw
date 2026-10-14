@@ -1,0 +1,5 @@
+  exact      seed 3: knew 12, attended 8, 169 frames
+  rerank100  seed 3: knew 15, attended 7, 169 frames
+  relonly    seed 3: knew 7, attended 5, 169 frames
+wrote /home/claude/agentmem-hnsw/results/demo_trace.json (384 kB)
+wrote /home/claude/agentmem-hnsw/demo/willowbrook.html (400 kB)

@@ -1,0 +1,16 @@
+\begin{tabular}{r cc r rr}
+\toprule
+ & \multicolumn{2}{c}{recall@10} & dist.\ eval. & \multicolumn{2}{c}{queries / s}\\
+\cmidrule(lr){2-3}\cmidrule(lr){5-6}
+$ef$ & ours & hnswlib & ours & ours & hnswlib\\
+\midrule
+16 & 0.5817 & 0.5703 & 618 & 5\,189 & 17\,688\\
+32 & 0.6891 & 0.6869 & 961 & 3\,268 & 10\,493\\
+64 & 0.7780 & 0.7773 & 1572 & 2\,102 & 6\,516\\
+128 & 0.8436 & 0.8456 & 2705 & 1\,046 & 3\,736\\
+256 & 0.8958 & 0.8968 & 4824 & 571 & 1\,365\\
+512 & 0.9403 & 0.9420 & 8756 & 315 & 906\\
+\midrule
+build time & \multicolumn{2}{c}{} & & 669 s & 235 s\\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,32 @@
+== fig7
+  fig7 uniform      simple    build= 181.9s best recall=1.0000 cost@0.9=   368.0
+  fig7 uniform      heuristic build= 175.7s best recall=0.9999 cost@0.9=   335.0
+  fig7 100 clusters simple    build= 169.7s best recall=0.7646 cost@0.9=     nan
+  fig7 100 clusters heuristic build= 141.8s best recall=0.9960 cost@0.9=   286.4
+  -> results/hnsw_fig7_d10.csv (41 rows)
+== glove
+  glove simple    mL=0.000 levels= 0 build= 549.4s cost@0.9=  6789.4
+  glove simple    mL=0.361 levels= 4 build= 546.0s cost@0.9=  6489.0
+  glove heuristic mL=0.000 levels= 0 build= 687.7s cost@0.9=  5065.8
+  glove heuristic mL=0.361 levels= 4 build= 670.3s cost@0.9=  5101.3
+  -> results/hnsw_glove.csv (56 rows)
+== fig3
+  fig3_d4 simple    mL=0.000 levels= 0 build= 106.2s cost@0.9=   238.9
+  fig3_d4 simple    mL=0.100 levels= 1 build=  87.4s cost@0.9=   143.8
+  fig3_d4 simple    mL=0.200 levels= 3 build=  78.5s cost@0.9=    98.4
+  fig3_d4 simple    mL=0.300 levels= 4 build=  74.9s cost@0.9=    89.1
+  fig3_d4 simple    mL=0.400 levels= 6 build=  84.3s cost@0.9=    89.5
+  fig3_d4 simple    mL=0.558 levels= 8 build=  95.2s cost@0.9=   100.8
+  fig3_d4 simple    mL=0.800 levels=12 build= 117.3s cost@0.9=   118.5
+  fig3_d4 simple    mL=1.200 levels=19 build= 144.0s cost@0.9=   153.3
+  fig3_d4 heuristic mL=0.000 levels= 0 build=  96.8s cost@0.9=   210.8
+  fig3_d4 heuristic mL=0.100 levels= 1 build=  81.1s cost@0.9=   116.5
+  fig3_d4 heuristic mL=0.200 levels= 3 build=  72.8s cost@0.9=    79.7
+  fig3_d4 heuristic mL=0.300 levels= 4 build=  74.0s cost@0.9=    79.4
+  fig3_d4 heuristic mL=0.400 levels= 6 build=  77.8s cost@0.9=    83.7
+  fig3_d4 heuristic mL=0.558 levels= 8 build=  94.7s cost@0.9=    95.5
+  fig3_d4 heuristic mL=0.800 levels=12 build= 112.0s cost@0.9=   110.9
+  fig3_d4 heuristic mL=1.200 levels=19 build= 142.8s cost@0.9=   142.9
+  -> results/hnsw_fig3_d4.csv (126 rows)
+== fig4
+  fig4_d1024 simple    mL=0.000 levels= 0 build= 167.8s cost@0.9=     nan

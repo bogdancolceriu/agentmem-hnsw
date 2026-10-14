@@ -1,0 +1,7 @@
+model,policy,seed,burn,aware_at_party,recalled_at_plan,planned,attended,llm_calls,llm_seconds,mean_memories
+mock,exact,0,10,15,12,12,12,220,0.0,644
+mock,rerank_exact,0,10,14,11,11,11,213,0.0,641
+mock,relonly_exact,0,10,8,7,7,7,155,0.0,637
+mock,exact,1,10,17,13,13,13,242,0.0,632
+mock,rerank_exact,1,10,14,10,10,10,219,0.0,631
+mock,relonly_exact,1,10,8,6,6,6,180,0.0,626
