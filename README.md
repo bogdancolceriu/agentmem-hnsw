@@ -23,7 +23,8 @@ Author: Colceriu Mihai Bogdan
    The store handles the parts that make this practical: time anchors and segments with
    compaction (bounded coordinates), refresh-on-access through a write buffer and the paper's
    min-max normalization (a per-query rescaling of the weights).
-3. **A drop-in LangChain retriever** (`agentmem/langchain_retriever.py`).
+3. **A LangChain retriever** (`agentmem/langchain_retriever.py`) with the scoring rule and the main fields
+   of LangChain's `TimeWeightedVectorStoreRetriever`, backed by the folded index.
 4. **Willowbrook** (`town/`): a closed-loop simulation of 25 rule-based generative agents
    (perception, conversations, planning through memory retrieval), calibrated so that exact
    retrieval reproduces the information diffusion reported in the paper (13 of 25 agents knew
@@ -38,7 +39,7 @@ Author: Colceriu Mihai Bogdan
 
 ```bash
 pip install numpy scipy pandas matplotlib hnswlib faiss-cpu numba pytest langchain-core langchain-classic
-python -m pytest -q tests/                                     # 25 tests, ~30 s
+python -m pytest -q tests/                                     # 26 tests, ~30 s
 
 python -m experiments.exp_hnsw_ablation validate fig3 fig4 fig7 glove   # HNSW study (~2 h)
 python -m experiments.exp_static --dataset glove --sizes 10000 100000 1000000

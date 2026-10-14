@@ -1,4 +1,4 @@
-"""Drop-in replacement for LangChain's TimeWeightedVectorStoreRetriever.
+"""A replacement for LangChain's TimeWeightedVectorStoreRetriever that scores every memory.
 
 LangChain's retriever (langchain_classic.retrievers) scores a memory as
 
@@ -10,8 +10,8 @@ similarity search, plus the k most recently created documents (which get no
 relevance term). Anything else is never considered, however recent or
 important it is.
 
-ExactTimeWeightedRetriever keeps the same fields and behaviour (it returns the
-k best documents and stamps them with last_accessed_at) but scores every
+ExactTimeWeightedRetriever keeps the main fields and the scoring behaviour (it returns
+the k best documents and stamps them with last_accessed_at) but scores every
 memory: the score is folded into an inner-product HNSW index (agentmem.FoldedHNSW),
 so the top-k is exact up to the recall of the index. Relevance is the cosine
 similarity of unit-normalized embeddings.

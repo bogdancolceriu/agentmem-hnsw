@@ -174,3 +174,17 @@ def test_relevance_only_is_exact_for_pure_relevance():
 
 def test_recency_is_hours_based():
     assert np.isclose(recency(np.array([0.0]), 100.0, 0.995)[0], 0.995 ** 100)
+
+
+def test_backdated_insert_keeps_coordinates_bounded():
+    """A batch with old timestamps must not flush recently refreshed memories into an old segment."""
+    d = 16
+    E, imp, t = random_memories(8, d=d, seed=3, horizon=10.0)
+    st = FoldedHNSW(d, seg_hours=48.0, buffer_size=4, ef=64, M=16)
+    st.add(E[:4], imp[:4], t[:4])                                   # flushed into a segment near t = 10
+    st.retrieve(E[0], 500.0, 2, PROFILES["paper"])                  # two memories refreshed at t = 500
+    st.add(E[4:6], imp[4:6], np.array([1.0, 2.0]))                  # backdated batch fills the buffer
+    for i in range(st.n):
+        sid = st.loc[i]
+        if sid >= 0:
+            assert st.t_last[i] - st.seg_of[sid]["anchor"] <= st.seg_hours + 1e-9

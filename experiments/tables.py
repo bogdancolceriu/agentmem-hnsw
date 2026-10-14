@@ -73,6 +73,12 @@ def static() -> None:
     m("GlRerankKRecallOneM", f3(one(g, method="rerank", param=1000)))
     m("GlRelonlyRecallOneM", f3(one(g, method="relonly", param=64)))
     m("GlRerankRecallTenK", f3(one(sel(d, profile="paper", n=int(d.n.min())), method="rerank", param=100)))
+    m("GlRerankRecallHundredK", f3(one(sel(d, profile="paper", n=100000), method="rerank", param=100)))
+    kt = RES / "exact_knn_timing.json"
+    if kt.exists():
+        mv = json.loads(kt.read_text())[str(nmax)]["median_ms"]
+        m("GlExactMvMsOneM", f"{mv:.0f}")
+        m("GlSpeedupMv", f"{mv / ours_ms:.0f}")
     ab = sel(d, profile="paper", n=100000)
     if not ab.empty:
         m("AbOldAnchor", f3(sel(ab, method="folded-oldanchor").recall.max()))
@@ -93,6 +99,9 @@ def static() -> None:
         m("TwIvfMs", f2(one(tp, "ms", method="folded-ivf", param=16)))
         m("TwOldAnchor", f3(sel(tp, method="folded-oldanchor").recall.max()))
         m("TwLtwoDeep", f3(one(tp, method="folded-l2", param=512)))
+        tc = sel(t, profile="code")
+        m("TwIvfCodeRecall", f3(one(tc, method="folded-ivf", param=16)))
+        m("TwOursCodeRecall", f3(one(tc, method="folded-ip", param=64)))
         m("TwIpDeep", f3(one(tp, method="folded-ip", param=512)))
     m("GlOursExactNorm", f3(one(g, method="folded-ip-exactnorm", param=64)))
     m("GlOursRecallDeep", f3(one(g, method="folded-ip", param=256)))
@@ -283,6 +292,7 @@ def langchain_and_reference() -> None:
     if p.exists():
         j = json.loads(p.read_text())
         m("LcRecall", f3(j["recall_langchain"]))
+        m("LcDecay", f"{j['decay_rate']:g}")
         m("LcOursRecall", f3(j["recall_ours"]))
         m("LcMinN", thin(min(a["memories"] for a in j["agents"])))
         m("LcMaxN", thin(max(a["memories"] for a in j["agents"])))
@@ -292,9 +302,34 @@ def langchain_and_reference() -> None:
         m("GaOverlap", pct(j["overlap_reference_paper"]))
         m("GaAgeRef", f"{j['age_reference']:.1f}")
         m("GaAgePaper", f"{j['age_paper']:.1f}")
+        m("GaAgeCodeW", f"{j['age_code_weights']:.1f}")
+        m("GaOverlapCodeW", pct(j["overlap_reference_codeweights"]))
 
 
 # ------------------------------------------------------------------ town
+
+def town_holm(d: pd.DataFrame) -> dict:
+    """Paired Wilcoxon tests of every method against the exact scan (same seeds), Holm-corrected
+    over all the comparisons in the town table. Returns {(burn, method, outcome): adjusted p}."""
+    tests = []
+    for b in sorted(d.burn.unique()):
+        db = d[d.burn == b]
+        for key in ("folded", "rerank100", "relonly"):
+            for col in ("aware_at_party", "recalled_at_plan", "attended"):
+                piv = db.pivot_table(index="seed", columns="backend_key", values=col)
+                if key not in piv or "exact" not in piv:
+                    continue
+                pv = piv[[key, "exact"]].dropna()
+                diff = pv[key] - pv["exact"]
+                p = stats.wilcoxon(pv[key], pv["exact"]).pvalue if (diff != 0).any() else 1.0
+                tests.append(((b, key, col), p))
+    m_ = len(tests)
+    adj, running = {}, 0.0
+    for rank, (key, p) in enumerate(sorted(tests, key=lambda x: x[1])):
+        running = max(running, min(1.0, (m_ - rank) * p))
+        adj[key] = running
+    return adj
+
 
 def town() -> None:
     c = RES / "calibration.csv"
@@ -312,24 +347,20 @@ def town() -> None:
              ("rerank100", "Overfetch + re-rank, $K{=}100$"), ("relonly", "Relevance only")]
     burns = sorted(d.burn.unique())
     lines = [r"\begin{tabular}{l l r r r r r}", r"\toprule",
-             r"Age & Retrieval & memories & recall & knew & recalled & attended\\", r"\midrule"]
+             r"Run & Retrieval & memories & recall & knew & recalled & attended\\", r"\midrule"]
+    holm = town_holm(d)
     for b in burns:
         db = d[d.burn == b]
-        ex = db[db.backend_key == "exact"].set_index("seed")
         for i, (key, lab) in enumerate(order):
             dk = db[db.backend_key == key].set_index("seed")
             if dk.empty:
                 continue
             cells = []
             for col in ("aware_at_party", "recalled_at_plan", "attended"):
-                mean, ci = dk[col].mean(), 1.96 * dk[col].std(ddof=1) / np.sqrt(len(dk))
-                mark = ""
-                if key != "exact":
-                    common = ex.index.intersection(dk.index)
-                    diff = (dk.loc[common, col] - ex.loc[common, col]).values
-                    if len(common) > 5 and np.any(diff != 0):
-                        pv = stats.wilcoxon(dk.loc[common, col], ex.loc[common, col]).pvalue
-                        mark = "$^{**}$" if pv < 0.01 else ("$^{*}$" if pv < 0.05 else "")
+                n = len(dk)
+                mean, ci = dk[col].mean(), stats.t.ppf(0.975, n - 1) * dk[col].std(ddof=1) / np.sqrt(n)
+                pv = holm.get((b, key, col), 1.0)
+                mark = "$^{**}$" if pv < 0.01 else ("$^{*}$" if pv < 0.05 else "")
                 cells.append(f"{mean:.1f} $\\pm$ {ci:.1f}{mark}")
             age = f"{b + 2} days" if i == 0 else ""
             lines.append(f"{age} & {lab} & {dk.mean_memories.mean():.0f} & {dk.recall.mean():.3f} & "
@@ -367,6 +398,26 @@ def town() -> None:
             m(f"T{tag}FoSame", f"{int(same.sum())}")
             m(f"T{tag}FoMaxDiff", f"{maxdiff:.0f}")
             m(f"T{tag}Seeds", f"{int(len(same))}")
+    holm = town_holm(d)
+    for b_, tag in ((7, "Seven"), (30, "Thirty"), (90, "Ninety")):
+        for col, cs in (("aware_at_party", "Aware"), ("recalled_at_plan", "Recalled"), ("attended", "Att")):
+            m(f"T{tag}Re{cs}Holm", f"{holm.get((b_, 'rerank100', col), 1.0):.2g}")
+    rj = RES / "town_recall.jsonl"
+    if rj.exists():
+        recs = [json.loads(line) for line in rj.read_text().splitlines() if line.strip()]
+        for key, short in (("rerank100", "Re"), ("relonly", "Rel"), ("folded", "Fo")):
+            rows_ = [r["recall_per_day"] for r in recs
+                     if r["burn"] == 90 and r["profile"] == "paper" and r["backend_key"] == key]
+            if rows_:
+                a_ = np.array([[np.nan if v is None else v for v in x] for x in rows_], dtype=float)
+                m(f"TNinety{short}RecallEnd", f"{np.nanmean(a_[:, -3:]):.2f}")
+    d90 = d[d.burn == 90].groupby("backend_key").search_ms.mean()
+    m("TwSimExactMs", f2(d90["exact"]))
+    m("TwSimFoldedMs", f2(d90["folded"]))
+    m("TwSimMemories", thin(round(d[(d.burn == 90) & (d.backend_key == "exact")].mean_memories.mean())))
+    all_runs = pd.read_csv(p)
+    n_cal = int(pd.read_csv(c).seeds.sum()) if c.exists() else 0
+    m("TownRuns", thin(len(all_runs) + n_cal))
     # relevance-only memory against the exact scan, in towns older than the paper's two days
     drops = {"aware_at_party": [], "attended": []}
     for b in burns:

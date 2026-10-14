@@ -1,25 +1,25 @@
 \begin{tabular}{l l r r r r r}
 \toprule
-Age & Retrieval & memories & recall & knew & recalled & attended\\
+Run & Retrieval & memories & recall & knew & recalled & attended\\
 \midrule
-2 days & Exact scan (paper) & 103 & 1.000 & 12.6 $\pm$ 1.5 & 10.7 $\pm$ 1.3 & 5.5 $\pm$ 0.7\\
- & Folded HNSW (ours) & 103 & 1.000 & 12.6 $\pm$ 1.5 & 10.7 $\pm$ 1.3 & 5.5 $\pm$ 0.7\\
- & Overfetch + re-rank, $K{=}100$ & 103 & 0.995 & 12.6 $\pm$ 1.5 & 10.7 $\pm$ 1.3 & 5.5 $\pm$ 0.7\\
- & Relevance only & 103 & 0.872 & 11.9 $\pm$ 1.4$^{**}$ & 10.2 $\pm$ 1.3$^{**}$ & 5.4 $\pm$ 0.7\\
+2 days & Exact scan (paper) & 103 & 1.000 & 12.6 $\pm$ 1.6 & 10.7 $\pm$ 1.4 & 5.5 $\pm$ 0.8\\
+ & Folded HNSW (ours) & 103 & 1.000 & 12.6 $\pm$ 1.6 & 10.7 $\pm$ 1.4 & 5.5 $\pm$ 0.8\\
+ & Overfetch + re-rank, $K{=}100$ & 103 & 0.995 & 12.6 $\pm$ 1.6 & 10.7 $\pm$ 1.4 & 5.5 $\pm$ 0.8\\
+ & Relevance only & 103 & 0.872 & 11.9 $\pm$ 1.5$^{**}$ & 10.2 $\pm$ 1.4$^{*}$ & 5.4 $\pm$ 0.8\\
 \addlinespace
-9 days & Exact scan (paper) & 488 & 1.000 & 11.7 $\pm$ 1.5 & 10.1 $\pm$ 1.5 & 5.0 $\pm$ 1.0\\
- & Folded HNSW (ours) & 488 & 1.000 & 11.7 $\pm$ 1.5 & 10.1 $\pm$ 1.5 & 5.0 $\pm$ 1.0\\
- & Overfetch + re-rank, $K{=}100$ & 487 & 0.876 & 11.2 $\pm$ 1.3$^{**}$ & 9.7 $\pm$ 1.4$^{*}$ & 4.9 $\pm$ 0.9\\
- & Relevance only & 484 & 0.637 & 7.3 $\pm$ 0.8$^{**}$ & 6.3 $\pm$ 0.8$^{**}$ & 3.4 $\pm$ 0.5$^{**}$\\
+9 days & Exact scan (paper) & 488 & 1.000 & 11.7 $\pm$ 1.5 & 10.1 $\pm$ 1.6 & 5.0 $\pm$ 1.0\\
+ & Folded HNSW (ours) & 488 & 1.000 & 11.7 $\pm$ 1.5 & 10.1 $\pm$ 1.6 & 5.0 $\pm$ 1.0\\
+ & Overfetch + re-rank, $K{=}100$ & 487 & 0.876 & 11.2 $\pm$ 1.4$^{*}$ & 9.7 $\pm$ 1.5 & 4.9 $\pm$ 1.0\\
+ & Relevance only & 484 & 0.637 & 7.3 $\pm$ 0.8$^{**}$ & 6.3 $\pm$ 0.9$^{**}$ & 3.4 $\pm$ 0.5$^{**}$\\
 \addlinespace
-32 days & Exact scan (paper) & 1736 & 1.000 & 11.7 $\pm$ 1.0 & 9.5 $\pm$ 1.0 & 5.0 $\pm$ 0.6\\
- & Folded HNSW (ours) & 1736 & 1.000 & 11.7 $\pm$ 1.0 & 9.5 $\pm$ 1.0 & 5.0 $\pm$ 0.6\\
- & Overfetch + re-rank, $K{=}100$ & 1734 & 0.681 & 10.9 $\pm$ 1.0$^{*}$ & 9.1 $\pm$ 1.0$^{*}$ & 4.9 $\pm$ 0.6\\
+32 days & Exact scan (paper) & 1736 & 1.000 & 11.7 $\pm$ 1.0 & 9.5 $\pm$ 1.1 & 5.0 $\pm$ 0.6\\
+ & Folded HNSW (ours) & 1736 & 1.000 & 11.7 $\pm$ 1.0 & 9.5 $\pm$ 1.1 & 5.0 $\pm$ 0.6\\
+ & Overfetch + re-rank, $K{=}100$ & 1734 & 0.681 & 10.9 $\pm$ 1.0 & 9.1 $\pm$ 1.1 & 4.9 $\pm$ 0.6\\
  & Relevance only & 1725 & 0.488 & 6.7 $\pm$ 0.6$^{**}$ & 4.9 $\pm$ 0.5$^{**}$ & 2.7 $\pm$ 0.4$^{**}$\\
 \addlinespace
-92 days & Exact scan (paper) & 5041 & 1.000 & 13.1 $\pm$ 1.3 & 10.8 $\pm$ 1.5 & 5.8 $\pm$ 0.9\\
- & Folded HNSW (ours) & 5041 & 0.999 & 13.2 $\pm$ 1.3 & 10.9 $\pm$ 1.5 & 5.9 $\pm$ 0.9\\
- & Overfetch + re-rank, $K{=}100$ & 5034 & 0.487 & 15.2 $\pm$ 1.3$^{**}$ & 13.3 $\pm$ 1.3$^{**}$ & 6.8 $\pm$ 0.9$^{*}$\\
+92 days & Exact scan (paper) & 5041 & 1.000 & 13.1 $\pm$ 1.4 & 10.8 $\pm$ 1.6 & 5.8 $\pm$ 1.0\\
+ & Folded HNSW (ours) & 5041 & 0.999 & 13.2 $\pm$ 1.4 & 10.9 $\pm$ 1.5 & 5.9 $\pm$ 0.9\\
+ & Overfetch + re-rank, $K{=}100$ & 5034 & 0.487 & 15.2 $\pm$ 1.3$^{*}$ & 13.3 $\pm$ 1.3$^{**}$ & 6.8 $\pm$ 0.9\\
  & Relevance only & 5007 & 0.366 & 8.2 $\pm$ 0.6$^{**}$ & 5.4 $\pm$ 0.6$^{**}$ & 3.3 $\pm$ 0.5$^{**}$\\
 \bottomrule
 \end{tabular}

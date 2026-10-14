@@ -87,7 +87,9 @@ class MemoryStore:
         self.t_hi = max(self.t_hi, float(t.max()))
         self._push_times(ids, t)
         t0 = time.perf_counter()
-        self._on_add(ids, float(t.max()))
+        # flush at the latest time the store has seen, not at the batch's own times: a backdated
+        # batch must not send memories refreshed later into an old segment (bounded coordinates)
+        self._on_add(ids, self.t_hi)
         self.stats["insert_s"] += time.perf_counter() - t0
         self.stats["inserted"] += m
         return ids

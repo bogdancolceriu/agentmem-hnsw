@@ -96,8 +96,10 @@ def overfetch() -> None:
     town.run()
     a = town.by_name["Max Phillips"]
     n = a.store.n
-    T = 31 * 24 + 6.0
-    q = town.enc.encode([f"{a.name}'s plan for {date_str(31)}."])[0]
+    # the next morning, after the last step of the run, so that no memory lies in the future
+    T = town.cfg.days * 24 + 6.0
+    q = town.enc.encode([f"{a.name}'s plan for {date_str(town.cfg.days)}."])[0]
+    assert float(a.store.t_last[: a.store.n].max()) <= T
     E, imp, t = a.store.E[:n], a.store.imp[:n], a.store.t_last[:n]
     rel = E @ q
     score = exact_scores(E, imp, t, q, T, PROFILES["paper"])

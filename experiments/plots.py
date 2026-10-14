@@ -66,8 +66,10 @@ def save(fig, name: str) -> None:
 
 
 def ci95(x) -> float:
+    """Half-width of the 95% confidence interval of the mean (t distribution)."""
+    from scipy import stats
     x = np.asarray(x, dtype=float)
-    return 1.96 * x.std(ddof=1) / np.sqrt(len(x)) if len(x) > 1 else 0.0
+    return stats.t.ppf(0.975, len(x) - 1) * x.std(ddof=1) / np.sqrt(len(x)) if len(x) > 1 else 0.0
 
 
 # ------------------------------------------------------------------ static benchmark
@@ -216,7 +218,7 @@ def fig_town(csv: Path, profile: str = "paper") -> None:
         ax.set_title(title)
         ax.grid(axis="x", visible=False)
     axes[0].set_ylabel("agents (of 25), mean ± 95% CI")
-    fig.supxlabel("age of the town at the party in days (memories per agent)", fontsize=8, y=-0.07)
+    fig.supxlabel("length of the run in days, the party on its last day (memories per agent)", fontsize=8, y=-0.11)
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", ncol=4, fontsize=6.8, bbox_to_anchor=(0.5, 1.07))
     save(fig, "town_outcomes")
