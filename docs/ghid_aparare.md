@@ -4,6 +4,71 @@ Ghidul ăsta te pregătește pentru prezentarea din 17.12 și pentru întrebări
 
 ---
 
+## 0. De la zero: noțiunile pe care se sprijină tot proiectul
+
+Restul ghidului presupune noțiunile de aici. Dacă le știi pe acestea, secțiunile 2–5 se citesc ușor.
+
+### Ce e obligatoriu și ce e extensie
+
+- **Prezentarea articolului 11 (obligatorie):** problema căutării de vecini, NSW, HNSW cu nivelurile lui, căutarea, inserarea, euristica de vecini, parametrii, rezultatele din articol, impactul și limitele. Slide-urile 1–7 și secțiunea 2 din ghid. Atât ar fi prezentat oricine.
+- **Verificarea articolului (în plus, dar încă despre articolul 11):** HNSW rescris de tine după pseudocod, comparat cu hnswlib, plus studiul parametrilor refăcut. Slide-urile 8–11 și secțiunea 3.
+- **Extensia propriu-zisă:** legătura cu articolul 12 (Generative Agents), scorul ca produs scalar, memoria cu segmente, experimentele pe un milion de amintiri, orașul simulat, bug-ul din codul public și retriever-ul pentru LangChain. Slide-urile 12–21 și secțiunile 4–5.
+- Slide-urile 22–23 sunt limitele și concluziile întregului proiect.
+
+### Partea 1: căutarea de vecini (lumea articolului 11)
+
+- **Vector, embedding.** Un text (sau o imagine) transformat într-o listă de numere, de exemplu 100 sau 384, astfel încât texte cu sens apropiat să dea vectori apropiați. Programul care face transformarea se numește encoder sau model de embedding. **GloVe** (Stanford, 2014) dă câte un vector de 100 de numere pentru fiecare cuvânt. Vectorul unei propoziții îl obții ca medie ponderată a cuvintelor (metoda SIF). Numărul de numere e **dimensiunea** `d`.
+- **Cât de apropiați sunt doi vectori.** Trei măsuri:
+  - **distanța euclidiană (L2):** lungimea segmentului dintre ei;
+  - **similaritatea cosinus:** cât de mic e unghiul dintre ei, între −1 și 1;
+  - **produsul scalar (inner product):** `x·y = x₁y₁ + x₂y₂ + …`. Dacă vectorii au lungimea 1, produsul scalar e chiar cosinusul, iar ordinea după cosinus e aceeași cu ordinea după L2.
+- **k-NN (k nearest neighbours).** Dintr-o mulțime de `n` vectori, îi vrei pe cei `k` mai apropiați de o interogare `q`. Varianta exactă (**brute force**, scanare liniară) calculează distanța până la toți, deci costul crește cu `n·d`.
+- **Blestemul dimensionalității.** Structurile clasice (arbori kd) taie spațiul în bucăți și funcționează bine în 2–3 dimensiuni. Peste câteva zeci de dimensiuni ajung să verifice aproape tot, deci nu mai câștigi nimic față de scanare.
+- **ANN (approximate nearest neighbours).** Accepți să ratezi uneori un vecin în schimbul unei viteze de sute de ori mai mari. Calitatea se măsoară prin **recall@k**: dacă adevărații 10 vecini sunt A…J și tu ai găsit 9 dintre ei, recall@10 = 0,9.
+- **Familii de indexuri ANN:** hashing (LSH), cuantizare și clustere (**IVF**: împarți vectorii în clustere și cauți doar în cele mai apropiate câteva) și **grafuri** (NSW, HNSW). HNSW face parte din a treia familie.
+- **Graf de proximitate și căutare lacomă.** Fiecare vector e un nod legat de câțiva vecini apropiați. Ca să cauți, pleci dintr-un nod și te muți mereu la vecinul cel mai apropiat de `q`, până nu mai ai unde să te apropii.
+- **Small world, navigabil.** Ca la „șase grade de separare”: dacă pe lângă legăturile scurte există și câteva lungi, orice nod e la puțini pași de oricare altul. Graful e **navigabil** dacă și căutarea lacomă, care vede doar vecinii nodului curent, găsește drumul scurt.
+- **Skip list.** O listă ordonată cu mai multe niveluri: sus puține elemente, cu salturi mari, jos toate, cu pași mici. Cauți sus, cobori când ai trecut de țintă. HNSW e exact ideea asta mutată pe grafuri: nivelurile de sus au puține noduri și legături lungi.
+- **Fascicul (beam), `ef`.** În loc să ții un singur „cel mai bun nod curent”, ții o listă cu cei mai buni `ef` candidați. Un `ef` mai mare înseamnă recall mai mare și căutare mai lentă. E butonul cu care alegi compromisul.
+- **Hub.** Un nod cu foarte multe legături. În dimensiuni mari apar singure și fac o parte din treaba nivelurilor de sus (vezi „Down with the Hierarchy”, secțiunea 3).
+- **Evaluări de distanță.** Câte distanțe calculează o căutare. E costul pe care îl compară articolul, pentru că nu depinde de calculator.
+- **Bază de date vectorială.** Un sistem care stochează vectori și răspunde la căutări de vecini (pgvector, Qdrant, Milvus, Weaviate). Aproape toate folosesc HNSW. Folosirea tipică e **RAG**: cauți textele relevante și i le dai unui LLM ca context.
+- **MIPS (maximum inner product search).** Căutarea vectorilor cu cel mai mare produs scalar cu `q`, nu a celor mai apropiați. Diferența contează când vectorii nu au toți lungimea 1: produsul scalar nu e o distanță adevărată, deci garanțiile teoretice ale HNSW nu se aplică direct. În practică HNSW merge bine și așa (Morozov și Babenko, 2018), iar hnswlib are metrica `ip` pentru asta. Extensia ta se bazează pe MIPS.
+
+### Partea 2: agenții generativi (lumea articolului 12)
+
+- **Agent cu LLM.** Un program care folosește un model de limbaj ca să decidă ce face: percepe ce se întâmplă, își amintește, planifică și acționează, în buclă.
+- **Generative Agents** (Park et al., 2023). 25 de personaje într-un orășel ca în The Sims, fiecare condus de ChatGPT. Comportamentul interesant apare singur: un agent decide să dea o petrecere de Valentine's Day, vestea circulă prin conversații, iar o parte din cei invitați chiar vin. Articolul a numărat câți au aflat (13 din 25) și câți invitați au venit (5 din 12).
+- **Memory stream.** Memoria unui agent: lista tuturor observațiilor lui, scrise ca text („Maria discută cu Tom la cafenea”). Fiecare amintire are momentul creării, momentul ultimului acces, importanța și embedding-ul ei.
+- **Regăsirea (retrieval).** Când agentul trebuie să decidă ceva (ce vorbește, ce face azi), formulează o întrebare către memorie (în cod se numește **focal point**) și primește top-k amintiri după scorul `recență + importanță + relevanță`. Detaliile scorului sunt în secțiunea 4.
+- **Recența exponențială.** `0,995` la puterea orelor de la ultimul acces: după o zi rămâne 0,89, după o săptămână 0,43, după o lună 0,03. Fiecare oră înmulțește cu același factor. Pe asta se sprijină toată extensia.
+- **Refresh la acces.** O amintire regăsită primește ca „ultim acces” momentul de acum, deci redevine recentă. Amintirile folosite des rămân „vii”.
+- **Normalizarea min-max.** Fiecare dintre cei trei termeni e rescalat la [0, 1] peste toate amintirile: cel mai mic devine 0, cel mai mare 1. Așa niciun termen nu domină doar pentru că are altă unitate de măsură.
+- **Reflecție și planificare.** Agentul scrie periodic concluzii despre propriile amintiri (care intră tot în memorie) și își face planul zilei pe baza a ce regăsește. Și ele trec prin aceeași regăsire.
+- **LangChain și overfetch.** LangChain e cea mai folosită bibliotecă pentru aplicații cu LLM. Clasa ei `TimeWeightedVectorStoreRetriever` implementează memoria în stilul Generative Agents așa: cere bazei vectoriale cele mai asemănătoare 100 de amintiri (**overfetch**), adaugă ultimele create și le ordonează după scorul complet (**re-rank**). Ce nu intră printre cei 100 nu e evaluat niciodată.
+
+### Partea 3: noțiunile extensiei
+
+- **Ideea, într-o frază.** Scorul agentului poate fi scris exact ca produs scalar între vectorul amintirii și vectorul întrebării, fiecare cu două coordonate în plus. Atunci top-k după scor e o căutare MIPS, pe care un singur index HNSW o face direct, fără overfetch.
+- **De ce merge.** Exponențiala se desparte: `0,995^(acum − t) = 0,995^(acum − τ) · 0,995^(τ − t)`. Primul factor depinde doar de momentul întrebării, al doilea doar de amintire. Fiecare intră în vectorul lui. Importanța e o constantă a amintirii, deci intră la fel. τ e un moment de referință fix, numit **ancoră**. Trucul e cunoscut din baze de date ca **forward decay** (Cormode et al., 2009).
+- **„Indexul pliat” (folded).** Numele din raport pentru indexul care conține vectorii cu cele două coordonate în plus, adică scorul „pliat” în produsul scalar.
+- **Ancoră și segment.** Dacă ancora e departe în trecut, coordonata de recență a amintirilor noi devine uriașă, iar graful se strică. De aceea memoria e împărțită în **segmente**, fiecare cu ancora lui, așa încât coordonatele rămân mici. Segmentul în care intră amintirile noi e cel **cald**. Se închide după o săptămână.
+- **Compactare.** Când se strâng prea multe segmente închise, le unești într-unul și recalculezi coordonatele față de o ancoră nouă. Așa fac și bazele de date de tip LSM (RocksDB, Cassandra).
+- **Buffer și marcaj de ștergere (tombstone).** Când o amintire e regăsită, recența ei se schimbă, deci vectorul ei nu mai e bun. O marchezi ca ștearsă acolo unde era și o pui într-o listă mică (256 de amintiri) pe care o scanezi exact la fiecare întrebare. Când lista se umple, amintirile intră în segmentul cald.
+- **Factorul `s`.** Cât de mult contează cele două coordonate noi când se construiește graful. Rezultatul produsului scalar nu depinde de `s`, doar forma grafului.
+- **Rescorare.** La final, candidații găsiți de index sunt recalculați cu formula completă și ordonați.
+- **Recall-ul din proiect.** Ce fracțiune din top-k ales de scorul exact din articol întoarce fiecare metodă. 1 înseamnă că agentul își amintește exact ce și-ar fi amintit cu scanarea completă.
+- **Cele patru metode comparate:** scanarea exactă (referința), indexul tău, overfetch cu re-rank (LangChain, K=100) și doar relevanța (căutare vectorială simplă, fără recență și importanță).
+- **Willowbrook.** Orașul tău simulat cu 25 de agenți, cu reguli în loc de LLM, ca să poți rula sute de simulări identice și gratuite.
+- **Seed.** Numărul de pornire al generatorului aleator. Același seed dă aceeași lume, deci poți rula aceeași simulare cu toate cele patru metode și compara diferențele.
+- **Statistica.** **Testul Wilcoxon pe perechi** compară două metode pe aceleași seed-uri, fără să presupună că datele sunt normale. **Corecția Holm** ajustează pragul pentru că ai făcut 36 de comparații (altfel unele ar ieși „semnificative” din întâmplare). **Intervalul de încredere de 95%** e zona în care e probabil să fie media adevărată.
+
+### Ce rezolvă proiectul, pe scurt
+
+Problema: agenții cu memorie mare își aleg amintirile după un scor pe care bazele vectoriale nu îl pot căuta, deci în practică se folosește o aproximare (overfetch) care pierde aproape tot top-ul real când memoria crește. Soluția: scrii scorul ca produs scalar și îl cauți direct cu HNSW, cu inginerie pentru timp (segmente), refresh (buffer) și normalizare. Dovada: recall aproape 1 la un milion de amintiri, de aproximativ o sută de ori mai rapid decât scanarea, iar în oraș comportamentul agenților rămâne cel al regăsirii exacte, pe când metodele aproximative îl schimbă.
+
+---
+
 ## 1. Povestea în 60 de secunde
 
 Dacă te întreabă cineva „despre ce e proiectul tău?”, răspunsul e ăsta:
