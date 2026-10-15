@@ -19,8 +19,8 @@ Restul ghidului presupune noțiunile de aici. Dacă le știi pe acestea, secțiu
 
 - **Vector, embedding.** Un text (sau o imagine) transformat într-o listă de numere, de exemplu 100 sau 384, astfel încât texte cu sens apropiat să dea vectori apropiați. Programul care face transformarea se numește encoder sau model de embedding. **GloVe** (Stanford, 2014) dă câte un vector de 100 de numere pentru fiecare cuvânt. Vectorul unei propoziții îl obții ca medie ponderată a cuvintelor (metoda SIF). Numărul de numere e **dimensiunea** `d`.
 - **Cât de apropiați sunt doi vectori.** Trei măsuri:
-  - **distanța euclidiană (L2):** lungimea segmentului dintre ei;
-  - **similaritatea cosinus:** cât de mic e unghiul dintre ei, între −1 și 1;
+  - **distanța euclidiană (L2):** lungimea segmentului dintre ei.
+  - **similaritatea cosinus:** cât de mic e unghiul dintre ei, între −1 și 1.
   - **produsul scalar (inner product):** `x·y = x₁y₁ + x₂y₂ + …`. Dacă vectorii au lungimea 1, produsul scalar e chiar cosinusul, iar ordinea după cosinus e aceeași cu ordinea după L2.
 - **k-NN (k nearest neighbours).** Dintr-o mulțime de `n` vectori, îi vrei pe cei `k` mai apropiați de o interogare `q`. Varianta exactă (**brute force**, scanare liniară) calculează distanța până la toți, deci costul crește cu `n·d`.
 - **Blestemul dimensionalității.** Structurile clasice (arbori kd) taie spațiul în bucăți și funcționează bine în 2–3 dimensiuni. Peste câteva zeci de dimensiuni ajung să verifice aproape tot, deci nu mai câștigi nimic față de scanare.
