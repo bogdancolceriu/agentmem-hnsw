@@ -11,3 +11,5 @@ report/*.toc
 .pytest_cache/
 results/smoke/llm_mock_log.jsonl
 results/smoke/demo_trace_dev.json
+report/*.fdb_latexmk
+report/*.fls

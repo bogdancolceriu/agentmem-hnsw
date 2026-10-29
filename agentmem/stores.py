@@ -460,6 +460,9 @@ class ExactOverfetchRerank(MemoryStore):
 
 
 def make_store(kind: str, dim: int, **kw) -> MemoryStore:
+    if kind.startswith("curve_"):   # general forgetting curves (curves.py, curve_stores.py)
+        from .curve_stores import CURVE_KINDS
+        return CURVE_KINDS[kind](dim, **kw)
     kinds = {
         "exact": ExactStore,
         "relonly": RelevanceOnlyHNSW,

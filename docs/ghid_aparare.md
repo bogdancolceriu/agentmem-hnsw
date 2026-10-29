@@ -12,8 +12,8 @@ Restul ghidului presupune noțiunile de aici. Dacă le știi pe acestea, secțiu
 
 - **Prezentarea articolului 11 (obligatorie):** problema căutării de vecini, NSW, HNSW cu nivelurile lui, căutarea, inserarea, euristica de vecini, parametrii, rezultatele din articol, impactul și limitele. Slide-urile 1–7 și secțiunea 2 din ghid. Atât ar fi prezentat oricine.
 - **Verificarea articolului (în plus, dar încă despre articolul 11):** HNSW rescris de tine după pseudocod, comparat cu hnswlib, plus studiul parametrilor refăcut. Slide-urile 8–11 și secțiunea 3.
-- **Extensia propriu-zisă:** legătura cu articolul 12 (Generative Agents), scorul ca produs scalar, memoria cu segmente, experimentele pe un milion de amintiri, orașul simulat, bug-ul din codul public și retriever-ul pentru LangChain. Slide-urile 12–21 și secțiunile 4–5.
-- Slide-urile 22–23 sunt limitele și concluziile întregului proiect.
+- **Extensia propriu-zisă:** legătura cu articolul 12 (Generative Agents), scorul ca produs scalar, memoria cu segmente, experimentele pe un milion de amintiri, orașul simulat, a doua extensie (curbele de uitare din psihologie), bug-ul din codul public și retriever-ul pentru LangChain. Slide-urile 12–23 și secțiunile 4–6. Curbele de uitare sunt slide-urile 20–21 și secțiunea 6.
+- Slide-urile 24–25 sunt limitele și concluziile întregului proiect.
 
 ### Partea 1: căutarea de vecini (lumea articolului 11)
 
@@ -57,6 +57,9 @@ Restul ghidului presupune noțiunile de aici. Dacă le știi pe acestea, secțiu
 - **Buffer și marcaj de ștergere (tombstone).** Când o amintire e regăsită, recența ei se schimbă, deci vectorul ei nu mai e bun. O marchezi ca ștearsă acolo unde era și o pui într-o listă mică (256 de amintiri) pe care o scanezi exact la fiecare întrebare. Când lista se umple, amintirile intră în segmentul cald.
 - **Factorul `s`.** Cât de mult contează cele două coordonate noi când se construiește graful. Rezultatul produsului scalar nu depinde de `s`, doar forma grafului.
 - **Rescorare.** La final, candidații găsiți de index sunt recalculați cu formula completă și ordonați.
+- **Curbă de uitare.** Cât de mult mai contează o amintire după un anumit timp. În articol e o exponențială (0,995 pe oră). În psihologie, uitarea urmează mai degrabă o putere a timpului: scade repede la început, apoi foarte încet.
+- **Funcție complet monotonă, teorema lui Bernstein.** O curbă care scade, cu o pantă care se îndulcește, și așa mai departe la toate derivatele. Bernstein a arătat că orice astfel de curbă e un amestec de exponențiale. De aici vine a doua extensie: puterea din ACT-R se poate scrie aproape exact cu 8 exponențiale.
+- **Front Pareto.** Dintr-o mulțime de vectori, cei pe care nu îi întrece niciun alt vector la toate coordonatele deodată. Maximul unui produs scalar cu un vector cu toate componentele pozitive e mereu pe frontul Pareto, deci ajunge să te uiți la el.
 - **Recall-ul din proiect.** Ce fracțiune din top-k ales de scorul exact din articol întoarce fiecare metodă. 1 înseamnă că agentul își amintește exact ce și-ar fi amintit cu scanarea completă.
 - **Cele patru metode comparate:** scanarea exactă (referința), indexul tău, overfetch cu re-rank (LangChain, K=100) și doar relevanța (căutare vectorială simplă, fără recență și importanță).
 - **Willowbrook.** Orașul tău simulat cu 25 de agenți, cu reguli în loc de LLM, ca să poți rula sute de simulări identice și gratuite.
@@ -65,7 +68,7 @@ Restul ghidului presupune noțiunile de aici. Dacă le știi pe acestea, secțiu
 
 ### Ce rezolvă proiectul, pe scurt
 
-Problema: agenții cu memorie mare își aleg amintirile după un scor pe care bazele vectoriale nu îl pot căuta, deci în practică se folosește o aproximare (overfetch) care pierde aproape tot top-ul real când memoria crește. Soluția: scrii scorul ca produs scalar și îl cauți direct cu HNSW, cu inginerie pentru timp (segmente), refresh (buffer) și normalizare. Dovada: recall aproape 1 la un milion de amintiri, de aproximativ o sută de ori mai rapid decât scanarea, iar în oraș comportamentul agenților rămâne cel al regăsirii exacte, pe când metodele aproximative îl schimbă.
+Problema: agenții cu memorie mare își aleg amintirile după un scor pe care bazele vectoriale nu îl pot căuta, deci în practică se folosește o aproximare (overfetch) care pierde aproape tot top-ul real când memoria crește. Soluția: scrii scorul ca produs scalar și îl cauți direct cu HNSW, cu inginerie pentru timp (segmente), refresh (buffer) și normalizare. Dovada: recall aproape 1 la un milion de amintiri, de aproximativ o sută de ori mai rapid decât scanarea, iar în oraș comportamentul agenților rămâne cel al regăsirii exacte, pe când metodele aproximative îl schimbă. A doua extensie duce ideea mai departe: și curbele de uitare din psihologie, de exemplu puterea din ACT-R în care contează fiecare folosire a unei amintiri, se aproximează cu 8 exponențiale, deci se caută la fel, cu un singur index.
 
 ---
 
@@ -73,7 +76,7 @@ Problema: agenții cu memorie mare își aleg amintirile după un scor pe care b
 
 Dacă te întreabă cineva „despre ce e proiectul tău?”, răspunsul e ăsta:
 
-> HNSW e indexul pe care îl folosesc aproape toate bazele de date vectoriale ca să găsească rapid cei mai asemănători vectori. Agenții generativi din articolul lui Park (Generative Agents) își aleg însă amintirile după un scor care combină recența, importanța și relevanța, nu doar asemănarea. De aceea framework-urile precum LangChain iau primele 100 de amintiri după asemănare și le reordonează, iar orice amintire din afara celor 100 nu e evaluată deloc, oricât de recentă sau importantă ar fi. Eu am arătat că, pentru că recența scade exponențial, scorul agentului se poate scrie exact ca un produs scalar între doi vectori cu două coordonate în plus. Deci un singur index HNSW cu produs scalar întoarce direct amintirile cu cel mai mare scor real. Am testat pe până la un milion de amintiri și într-o simulare cu 25 de agenți, iar pe lângă asta am reimplementat HNSW după pseudocodul din articol și am găsit o inversare a recenței în codul public al Generative Agents.
+> HNSW e indexul pe care îl folosesc aproape toate bazele de date vectoriale ca să găsească rapid cei mai asemănători vectori. Agenții generativi din articolul lui Park (Generative Agents) își aleg însă amintirile după un scor care combină recența, importanța și relevanța, nu doar asemănarea. De aceea framework-urile precum LangChain iau primele 100 de amintiri după asemănare și le reordonează, iar orice amintire din afara celor 100 nu e evaluată deloc, oricât de recentă sau importantă ar fi. Pentru că recența scade exponențial, scorul agentului se poate scrie exact ca un produs scalar între doi vectori cu două coordonate în plus. Deci un singur index HNSW cu produs scalar întoarce direct amintirile cu cel mai mare scor real. Aceeași identitate, pentru un scor mai simplu, a publicat-o independent în septembrie 2026 și un grup de cercetători (TANGO). Eu am construit în jurul ei o memorie completă pentru agenți și am extins-o la curbele de uitare din psihologie: și scorul din ACT-R, unde contează fiecare folosire a unei amintiri, devine un singur produs scalar, cu 8 coordonate în plus. Am testat pe până la un milion de amintiri și într-o simulare cu 25 de agenți, iar pe lângă asta am reimplementat HNSW după pseudocodul din articol și am găsit o inversare a recenței în codul public al Generative Agents.
 
 ---
 
@@ -145,8 +148,10 @@ Indexul vectorial știe doar relevanța. LangChain (`TimeWeightedVectorStoreRetr
 - **Factorul de construcție `s`.** Produsul scalar e exact pentru orice `s`, dar graful e construit pe vectori, deci `s` decide cât contează metadatele în vecinătăți. Prea mic: graful nu „vede” timpul. Prea mare: graful grupează după vârstă, nu după sens. Dintre valorile încercate, `s = 1` e cel mai bun pentru ponderile din articol. Când relevanța domină, `s = 0,5` e mai sigur.
 - **Rescorare exactă** a candidaților la final, cu formula completă. Fără normalizare (ca la LangChain), aproximarea poate doar să piardă amintiri. Cu min-max, candidații sunt ordonați cu ponderile obținute din amplitudinile estimate, deci ordinea poate ieși puțin diferită de cea exactă. De aici vine cea mai mare parte din ce lipsește până la recall 1.
 
-### Cât de originală e ideea (răspunde cinstit)
-Bucățile sunt cunoscute: forward decay e din 2009, căutarea după produs scalar cu grafuri e din 2018 (Morozov și Babenko). Contribuția mea e combinația aplicată la memoria agenților, partea de inginerie pentru amintiri al căror scor se schimbă la fiecare regăsire și dovada experimentală că alegerea metodei schimbă comportamentul agenților. Nu am găsit lucrarea asta făcută înainte, dar spune „din câte am găsit”, nu „sigur nimeni”.
+### Cât de originală e ideea
+Bucățile sunt cunoscute: forward decay e din 2009, căutarea după produs scalar cu grafuri e din 2018 (Morozov și Babenko). Mai mult, identitatea însăși a fost publicată pe 1 septembrie 2026, cu șase săptămâni înaintea raportului, de Wei și colegii lor (OceanBase, Ant Group și Université Paris Cité), sub numele STR, într-un articol numit TANGO. Ei au doar similaritate plus o exponențială a momentului creării, fără importanță, fără normalizare și fără amintiri al căror timp se schimbă. Spune deschis: „am ajuns la ea independent, dar ei au publicat primii, așa că îi citez”.
+
+Ce rămâne al tău: scorul complet al agenților (importanță, normalizare min-max), memoria vie (reîmprospătare, segmente, ancore), măsurarea efectivă a cât pierde re-ranking-ul (TANGO doar afirmă că pierde), efectul asupra comportamentului agenților, bug-ul din cod și a doua extensie, cu curbele de uitare (secțiunea 6). Pentru aceasta din urmă n-am găsit nimic publicat, dar spune „din câte am găsit”, nu „sigur nimeni”.
 
 ---
 
@@ -181,11 +186,78 @@ Am comparat cu clasa reală din LangChain pe memoriile a 5 agenți după 30 de z
 - În plus, recența depinde de poziție, nu de ore, iar ponderile sunt 0,5 / 3 / 2, nu 1 / 1 / 1.
 - **Cum am verificat:** am rulat funcția lor `new_retrieve` nemodificată pe personaje simulate, doar apelul la OpenAI pentru embedding l-am înlocuit.
 - **Cât contează:** ca să izolezi inversarea, compari cu aceleași ponderi din cod, dar cu recența corectă. Top-30 coincide în proporție de 95%, dar amintirile alese au fost accesate în medie acum 17,6 ore în loc de 10,0 ore, adică de aproape două ori mai demult. (Față de formula completă din articol: 89% și 8,6 ore, dar acolo intră și diferența de ponderi.)
-- **Atenție la formulare:** nu spune că rezultatele din articol sunt greșite. Spune că oricine refolosește codul public primește altă recență decât cea descrisă în articol. Înainte de prezentare, caută pe GitHub, la issues, dacă a mai raportat cineva asta (eu n-am avut acces la pagina de issues).
+- **Atenție la formulare:** nu spune că rezultatele din articol sunt greșite. Spune că oricine refolosește codul public primește altă recență decât cea descrisă în articol. Nu am găsit pe nimeni care să fi raportat asta public, dar pagina de issues n-am putut-o căuta direct, deci uită-te tu acolo înainte de prezentare.
+- **Codul mai nou al autorilor** (genagents, 2024, cel pentru simularea cu 1 000 de oameni) calculează recența corect, din pașii de timp, și îi dă implicit ponderea 0. Dacă te întreabă, spune asta: bug-ul e doar în repository-ul original, care e însă cel pe care îl refolosește toată lumea.
 
 ---
 
-## 6. Întrebări probabile și răspunsuri scurte
+## 6. A doua extensie: curbele de uitare
+
+### Problema
+
+Până aici recența a fost cea din articol: o exponențială a ultimului acces, care se înjumătățește la 138 de ore și după o lună e practic zero. Psihologia memoriei descrie altfel uitarea.
+
+- **Anderson și Schooler (1991)** au măsurat cât de des revine o informație în viața reală (titluri din New York Times, ce le spun părinții copiilor mici, e-mailurile primite de unul dintre autori). Au găsit că probabilitatea să ai iar nevoie de ea scade ca o **putere** a timpului trecut de la fiecare apariție și crește cu **numărul** de apariții. Uitarea la oameni urmează tot o putere (Wixted și Ebbesen, 1991).
+- **ACT-R** (arhitectura cognitivă a lui John Anderson, de la Carnegie Mellon) transformă asta în activarea de bază a unei amintiri: `B = ln Σ (T − t_j)^(−0,5)`, o sumă peste **toate** folosirile ei.
+- Memoriile pentru agenți au început să împrumute astfel de curbe. MemoryBank întărește o amintire de fiecare dată când e reamintită, iar FadeMem o face să se estompeze după o exponențială „întinsă”. Niciunul nu spune cum cauți repede într-o memorie mare cu un astfel de scor. TANGO acceptă doar o exponențială a momentului creării.
+- **De ce nu merge direct trucul din secțiunea 4:** exponențiala se desparte în jurul unei ancore (`δ^(T−t) = δ^(T−τ) · δ^(τ−t)`), puterea nu. `(T − t)^(−0,5)` nu se poate scrie ca produs între ceva ce depinde doar de `T` și ceva ce depinde doar de `t`.
+
+### Scorul folosit
+
+`scor = D + importanță + relevanță`, fiecare termen scalat min-max la [0, 1] și cu ponderi 1, ca în articol. Noul termen e
+
+`D = Σ (1 + Δ / 1 h)^(−0,5)`, suma peste toate momentele în care amintirea a fost creată sau regăsită (`Δ` e vârsta fiecărei folosiri).
+
+- `0,5` e valoarea obișnuită din ACT-R. `1 + Δ / 1 h` e acolo doar ca să nu fie infinit la vârsta 0.
+- Fără logaritmul din ACT-R, pentru că logaritmul unui produs scalar nu mai e un produs scalar.
+- A doua variantă păstrează doar ultima folosire, `D = (1 + Δ / 1 h)^(−0,5)`, ca singura diferență față de articol să fie curba.
+
+### Ideea (3 rânduri, învață-le)
+
+1. Puterea, curba hiperbolică și exponențiala întinsă sunt **complet monotone**, deci, după teorema lui Bernstein (1928), sunt amestecuri de exponențiale. Ajung câteva exponențiale bine alese: **8** urmează puterea din ACT-R pe un an întreg cu o eroare de cel mult **0,30% din amplitudine**. Ponderile le găsesc cu cele mai mici pătrate, cu condiția să fie pozitive (NNLS).
+2. Fiecare exponențială se pliază exact ca înainte. Amintirea primește **8 coordonate de timp** în loc de una, iar întrebarea 8 factori `e^(−λ_r·(T − τ))`. Scorul e tot un singur produs scalar, acum cu `d + 8 + 1` coordonate.
+3. **Frecvența e gratuită.** Amintirea ține 8 numere `y_r` și momentul ultimei folosiri. La o folosire nouă: `y_r ← y_r · e^(−λ_r·(t − t_ultim)) + 1`. Nu trebuie păstrată toată istoria. Scorul din articol e cazul cu o singură exponențială și `y = 1`.
+
+**Ce garanție ai:** dacă scorul aproximat al fiecărei amintiri e la cel mult `η` de cel adevărat, orice amintire din top-k aproximat are un scor adevărat la cel mult `2η` de al k-lea cel mai bun. În benchmark, scanarea exactă cu curba aproximată întoarce **0,996** din adevăratul top-10, deci aproximarea curbei aproape nu costă.
+
+### Ce a trebuit schimbat la memorie
+
+- **Ratele sunt foarte diferite.** Cea mai rapidă dintre cele 8 exponențiale are 1,7 pe oră, deci coordonata unei amintiri folosite după ancoră crește de 5,5 ori pe oră. Segmentul cald din secțiunea 4 (ancorat când se deschide, umplut o săptămână) ar ajunge la coordonate de ordinul 10^17 după o singură zi.
+- **Soluția: partea recentă.** O amintire stă într-o listă scanată exact cât timp ultima ei folosire e mai nouă de **W = 24 de ore**. Abia apoi intră în segmentul cald. Segmentul cald e deschis `L ≤ W` ore și are ancora `τ = deschidere + L − W`, adică puțin în trecut. Așa, orice amintire dintr-un segment a fost folosită ultima oară înainte de ancora lui. Toate coordonatele stau între 0 și `w_r·y_r`, iar factorii întrebării între 0 și 1, oricât de rapidă ar fi rata.
+- **Refresh-ul** e mai simplu: o amintire regăsită are ultima folosire „acum”, deci se întoarce în partea recentă. Partea recentă ține locul bufferului de 256 de dinainte.
+- **Amplitudinea lui D pentru min-max, fără nicio căutare.** Factorii întrebării sunt toți pozitivi, deci maximul lui `D` e atins pe **frontul Pareto** al vectorilor de timp (amintirile pe care nu le întrece alta la toate cele 8 coordonate deodată), iar minimul pe frontul invers. Fronturile sunt mici: din 94 037 de amintiri din cel mai mare segment, 26 sunt pe frontul de maxim și una pe cel de minim. Deci amplitudinea lui `D` e exactă. Pe cea a relevanței o estimez tot cu căutările după `q` și `−q`.
+
+### Rezultate pe un milion de amintiri
+
+- **Date:** aceiași vectori GloVe, fiecare amintire cu o istorie de folosire sintetică: creată la un moment uniform pe 90 de zile, apoi folosită din nou de un număr geometric de ori (1,2 în medie).
+- **Indexul pliat:** 0,982 din adevăratul top-10 la 100 000 de amintiri (0,70 ms) și **0,969 la un milion (2,40 ms)**. Cu o căutare mai adâncă, 0,975 în 2,87 ms.
+- **Overfetch cu K = 100: 0,030** la un milion (cu K = 1000: 0,101), deși primește amplitudinile exacte. **Doar relevanța: 0,008.**
+- **Timpul:** scanarea exactă din codul meu durează 268 ms la un milion, pentru că evaluează 8 exponențiale pentru fiecare amintire. Comparația corectă e cu cea mai ieftină scanare posibilă, un produs matrice-vector de vreo 46 ms, deci indexul e de vreo 20 de ori mai rapid. Spune „de vreo 20 de ori”, nu „de 112 ori”.
+- **Unde se duce timpul:** în scanarea părții recente, care aici are 60 824 de amintiri (cele folosite în ultimele 24 de ore). Cu W = 6 ore rămân 19 059, iar interogarea scade la 1,55 ms, cu recall 0,954. E un buton, ca `ef`.
+- **Câte exponențiale:** la 100 000 de amintiri recall-ul e 0,958, 0,977, 0,988 și 0,991 pentru 4, 6, 8 și 10 exponențiale. Peste 8 aproape că nu mai câștigi nimic.
+- **Curba chiar schimbă ce își amintește agentul:** la un milion de amintiri, doar 17% din top-10 cu scorul ACT-R e și în top-10 cu scorul din articol (34% la 100 000). Care curbă e mai potrivită pentru agenți e altă întrebare, la care proiectul nu răspunde. Ideea e că indexul nu mai decide în locul tău.
+
+### În oraș
+
+Rulările din oraș cu curba ACT-R sunt încă în desfășurare. Rezultatele vin aici când se termină.
+
+### Întrebări probabile despre curbe
+
+**„E nou?”** Din ce am găsit, da. TANGO are doar exponențiala momentului creării, iar MemoryBank și FadeMem nu discută căutarea. Nu am găsit pe nimeni care să aproximeze curba din ACT-R cu exponențiale ca s-o caute cu un index vectorial. Matematica e veche (Bernstein, 1928, apoi sumele de exponențiale ale lui Beylkin și Monzón, 2005). Nou e felul în care le-am pus împreună și memoria care face asta să meargă. Spune „din câte am găsit”, nu „sigur nimeni”.
+
+**„De ce suma și nu logaritmul, ca în ACT-R?”** Logaritmul nu schimbă ordinea amintirilor după `D`, dar schimbă cât cântărește `D` față de importanță și relevanță. Iar logaritmul unui produs scalar nu e un produs scalar, deci nu se mai poate căuta direct. Suma favorizează ceva mai mult amintirile folosite des. Am scris asta la limite.
+
+**„De ce 8 exponențiale?”** Eroarea scade repede: cu 8 e 0,30% din amplitudine pe un an întreg. Recall-ul crește până la 8 și aproape deloc după (0,988 la 8, 0,991 la 10).
+
+**„Merge pentru orice curbă?”** Pentru orice curbă complet monotonă: puterea, hiperbola, exponențiala întinsă cu exponent cel mult 1. Nu pentru o curbă care urcă din nou sau are praguri. Nici pentru rate de uitare diferite de la o amintire la alta (cum au MemoryBank și FadeMem), decât dacă iau puține valori, cu câte un bloc de coordonate pentru fiecare. Asta n-am implementat.
+
+**„De ce ai nevoie de partea recentă?”** Pentru că cea mai rapidă exponențială crește de 5,5 ori pe oră după ancoră. Fără ea, după o zi coordonatele ajung la 10^17 și graful nu mai găsește nimic. Cu ea, toate coordonatele rămân mici, pentru orice rată.
+
+**„Cât costă în plus?”** 8 coordonate de timp în loc de una per amintire, 8 numere de actualizat la fiecare folosire și scanarea părții recente la fiecare întrebare.
+
+---
+
+## 7. Întrebări probabile și răspunsuri scurte
 
 **„De ce n-ai folosit un LLM real pentru agenți?”**
 Ca să pot rula sute de simulări identice (720 în total), gratis și reproductibil. Comparația are nevoie doar ca agenții să acționeze pe baza a ce își amintesc. Am pregătit și o validare cu un LLM local (Ollama) care rulează pe placa mea video. (Dacă ai rulat-o, spune rezultatul.)
@@ -212,10 +284,10 @@ Formula e exactă, căutarea nu: HNSW e un index aproximativ, ca orice index rap
 Două coordonate per vector și, pentru normalizarea min-max, încă două căutări mici per interogare. La un milion de amintiri, interogarea rămâne sub o milisecundă și ceva.
 
 **„Ce ai face mai departe?”**
-Validare cu un LLM real pe mai multe scenarii, embedding-uri neurale, integrare într-o bază de date vectorială reală și un studiu despre cum se propagă erorile de regăsire în reflecțiile agenților.
+Validare cu un LLM real pe mai multe scenarii, embedding-uri neurale, integrare într-o bază de date vectorială reală, parametrii curbei de uitare potriviți pe agenți reali și un studiu despre cum se propagă erorile de regăsire în reflecțiile agenților.
 
 ---
 
-## 7. Critica prezentării următoare
+## 8. Critica prezentării următoare
 
 Regulamentul spune că după prezentarea ta critici prezentarea următoarei echipe din listă. Întreabă-l pe profesor care e echipa. Dacă e articolul 12 (Generative Agents, Bota Andrei Raul, 19.11), ai deja tot ce-ți trebuie: întreabă cum se calculează concret recența și dacă au văzut diferența dintre articol și cod, și cum ar scala regăsirea la o memorie de luni de zile.

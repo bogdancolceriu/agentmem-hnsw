@@ -417,7 +417,9 @@ def town() -> None:
     m("TwSimMemories", thin(round(d[(d.burn == 90) & (d.backend_key == "exact")].mean_memories.mean())))
     all_runs = pd.read_csv(p)
     n_cal = int(pd.read_csv(c).seeds.sum()) if c.exists() else 0
-    m("TownRuns", thin(len(all_runs) + n_cal))
+    p_curve = RES / "town_curve.csv"
+    n_curve = len(pd.read_csv(p_curve)) if p_curve.exists() else 0
+    m("TownRuns", thin(len(all_runs) + n_cal + n_curve))
     # relevance-only memory against the exact scan, in towns older than the paper's two days
     drops = {"aware_at_party": [], "attended": []}
     for b in burns:
@@ -434,6 +436,234 @@ def town() -> None:
             m(f"TRelDrop{cs}Hi", pct(max(drops[col])))
 
 
+# ------------------------------------------------------------------ forgetting curves
+
+def pc2(x) -> str:
+    return f"{100 * x:.2f}\\%"
+
+
+def curves() -> None:
+    p = RES / "curve_fit.csv"
+    if p.exists():
+        d = pd.read_csv(p)
+        names = (("actr", "ACT-R"), ("hyperbolic", "hyperbolic"), ("fademem", "FadeMem"))
+        lines = [r"\begin{tabular}{r rr rr rr}", r"\toprule",
+                 " & " + " & ".join(rf"\multicolumn{{2}}{{c}}{{{lab}}}" for _, lab in names) + r"\\",
+                 r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}",
+                 r"$R$ & of range & relative & of range & relative & of range & relative\\", r"\midrule"]
+        for R in (4, 6, 8, 10, 12):
+            cells = []
+            for key, _ in names:
+                r = d[(d.curve == key) & (d.R == R)].iloc[0]
+                cells += [pc2(r.max_range_err), pc2(r.max_rel_err)]
+            lines.append(f"{R} & " + " & ".join(cells) + r"\\")
+        lines += [r"\bottomrule", r"\end{tabular}"]
+        (OUT / "tab_curvefit.tex").write_text("\n".join(lines) + "\n")
+        a8 = d[(d.curve == "actr") & (d.R == 8)].iloc[0]
+        m("CfActrRngEight", pc2(a8.max_range_err))
+        m("CfActrRelEight", pc2(a8.max_rel_err))
+        m("CfFastRate", f"{a8.fastest_rate:.1f}")
+        for key, tag in (("hyperbolic", "Hyp"), ("fademem", "Fade")):
+            m(f"Cf{tag}RngEight", pc2(d[(d.curve == key) & (d.R == 8)].iloc[0].max_range_err))
+    p = RES / "curve_fronts.json"
+    if p.exists():
+        j = json.loads(p.read_text())
+        f = j.get("100000")
+        if f:
+            m("CuSegN", thin(f["segment"]))
+            m("CuFrontMax", str(f["front_max"]))
+            m("CuFrontMin", str(f["front_min"]))
+        f = j.get("1000000")
+        if f:
+            m("CuSegNOneM", thin(f["segment"]))
+            m("CuFrontMaxOneM", str(f["front_max"]))
+            m("CuFrontMinOneM", str(f["front_min"]))
+    p = RES / "curve_ranges.json"
+    if p.exists():
+        j = json.loads(p.read_text())
+        m("CuRangeEst", f3(j["estimated"]))
+        m("CuRangeExact", f3(j["exact_ranges"]))
+    p = RES / "static_curves.csv"
+    if not p.exists():
+        return
+    d = pd.read_csv(p)
+    d["param"] = d["param"].fillna("")
+
+    def get(n, method, param="", col="recall"):
+        r = d[(d.n == n) & (d.method == method) & (d.param == param)]
+        return float(r[col].iloc[0]) if len(r) else float("nan")
+
+    sizes = sorted(d.n.unique())
+    big, small = sizes[-1], sizes[0]
+    ours = lambda ef, W=24: f"R=8,ef={ef},W={W}h"   # noqa: E731
+    rows = [("Exact scan, fitted curve ($R{=}8$)", "exact scan, fitted curve", "R=8"),
+            ("Folded HNSW, $ef{=}64$ (ours)", "folded (ours)", ours(64)),
+            ("Folded HNSW, $ef{=}256$ (ours)", "folded (ours)", ours(256)),
+            ("Folded HNSW, $ef{=}64$, $W{=}6$\\,h (ours)", "folded (ours)", ours(64, 6)),
+            ("Overfetch + re-rank, $K{=}100$", "overfetch + re-rank", "K=100"),
+            ("Overfetch + re-rank, $K{=}1000$", "overfetch + re-rank", "K=1000"),
+            ("Relevance only", "relevance only", "")]
+    lines = [r"\begin{tabular}{l rr rr}", r"\toprule",
+             rf" & \multicolumn{{2}}{{c}}{{{thin(small)} memories}} & \multicolumn{{2}}{{c}}{{{thin(big)} memories}}\\",
+             r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}",
+             r"Method & recall@10 & ms & recall@10 & ms\\", r"\midrule"]
+    for lab, meth, par in rows:
+        cells = []
+        for n in (small, big):
+            rc, ms = get(n, meth, par), get(n, meth, par, "ms")
+            cells += ["--" if math.isnan(rc) else f3(rc),
+                      "--" if math.isnan(ms) else (f"{ms:.0f}" if ms >= 10 else f2(ms))]
+        lines.append(f"{lab} & " + " & ".join(cells) + r"\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    (OUT / "tab_curves_static.tex").write_text("\n".join(lines) + "\n")
+    for n, tag in ((small, "HundredK"), (big, "OneM")):
+        m(f"CuFitRecall{tag}", f3(get(n, "exact scan, fitted curve", "R=8")))
+        m(f"CuFitMs{tag}", f"{get(n, 'exact scan, fitted curve', 'R=8', 'ms'):.0f}")
+        m(f"CuOursRecall{tag}", f3(get(n, "folded (ours)", ours(64))))
+        m(f"CuOursMs{tag}", f2(get(n, "folded (ours)", ours(64), "ms")))
+        m(f"CuOursDeep{tag}", f3(get(n, "folded (ours)", ours(256))))
+        m(f"CuOursDeepMs{tag}", f2(get(n, "folded (ours)", ours(256), "ms")))
+        m(f"CuRerank{tag}", f3(get(n, "overfetch + re-rank", "K=100")))
+        m(f"CuRerankK{tag}", f3(get(n, "overfetch + re-rank", "K=1000")))
+        m(f"CuRerankKMs{tag}", f2(get(n, "overfetch + re-rank", "K=1000", "ms")))
+        m(f"CuRel{tag}", f3(get(n, "relevance only")))
+        r = d[(d.n == n) & (d.method == "paper score vs ACT-R score")]
+        if len(r):
+            m(f"CuOverlap{tag}", pct(float(r.recall.iloc[0])))
+            nums = [float(x) for x in __import__("re").findall(r"([0-9.]+) h", r.extra.iloc[0])]
+            if len(nums) == 2:
+                m(f"CuAgeActr{tag}", f"{nums[0]:.1f}")
+                m(f"CuAgePaper{tag}", f"{nums[1]:.1f}")
+        r = d[(d.n == n) & (d.method == "folded (ours)") & (d.param == ours(64))]
+        if len(r):
+            m(f"CuRecent{tag}", thin(int(r.extra.iloc[0].split()[2].replace(",", ""))))
+    m("CuOursSixRecallOneM", f3(get(big, "folded (ours)", ours(64, 6))))
+    m("CuOursSixMsOneM", f2(get(big, "folded (ours)", ours(64, 6), "ms")))
+    r = d[(d.n == big) & (d.method == "folded (ours)") & (d.param == ours(64, 6))]
+    if len(r):
+        m("CuRecentSixOneM", thin(int(r.extra.iloc[0].split()[2].replace(",", ""))))
+    for R, tag in ((4, "Four"), (6, "Six"), (8, "Eight"), (10, "Ten")):
+        m(f"CuR{tag}", f3(get(small, "folded (ours)", f"R={R},ef=128,W=24h")))
+    m("CuSpeedupOneM", f"{get(big, 'exact scan, fitted curve', 'R=8', 'ms') / get(big, 'folded (ours)', ours(64), 'ms'):.0f}")
+
+
+def curves_town() -> None:
+    p = RES / "town_curve.csv"
+    if not p.exists():
+        return
+    d = pd.read_csv(p)
+    outcomes = ("aware_at_party", "recalled_at_plan", "attended")
+    # paired Wilcoxon against the exact scan of the same score, Holm-corrected over this table
+    tests = []
+    for (b, sc), db in d.groupby(["burn", "score"]):
+        for key in ("folded", "rerank100"):
+            for col in outcomes:
+                piv = db.pivot_table(index="seed", columns="backend_key", values=col)
+                if key not in piv or "exact" not in piv:
+                    continue
+                pv = piv[[key, "exact"]].dropna()
+                diff = pv[key] - pv["exact"]
+                pval = stats.wilcoxon(pv[key], pv["exact"]).pvalue if (diff != 0).any() else 1.0
+                tests.append(((b, sc, key, col), pval))
+    holm, running = {}, 0.0
+    for rank, (key, pval) in enumerate(sorted(tests, key=lambda x: x[1])):
+        running = max(running, min(1.0, (len(tests) - rank) * pval))
+        holm[key] = running
+    order = [("exact", "Exact scan, true curve"), ("folded", "Folded HNSW, $R{=}8$ (ours)"),
+             ("rerank100", "Overfetch + re-rank, $K{=}100$")]
+    scores = [("last", "last use"), ("uses", "every use")]
+    burns = sorted(d.burn.unique())
+    lines = [r"\begin{tabular}{l l l r r r r r}", r"\toprule",
+             r"Run & Curve & Retrieval & memories & recall & knew & recalled & attended\\", r"\midrule"]
+    for b in burns:
+        for si, (sc, slab) in enumerate(scores):
+            for i, (key, lab) in enumerate(order):
+                dk = d[(d.burn == b) & (d.score == sc) & (d.backend_key == key)]
+                if dk.empty:
+                    continue
+                cells = []
+                for col in outcomes:
+                    n = len(dk)
+                    mean = dk[col].mean()
+                    ci = stats.t.ppf(0.975, n - 1) * dk[col].std(ddof=1) / np.sqrt(n) if n > 1 else float("nan")
+                    pv = holm.get((b, sc, key, col), 1.0)
+                    mark = "$^{**}$" if pv < 0.01 else ("$^{*}$" if pv < 0.05 else "")
+                    cells.append(f"{mean:.1f} $\\pm$ {ci:.1f}{mark}")
+                run = f"{b + 2} days" if (si == 0 and i == 0) else ""
+                curve = slab if i == 0 else ""
+                lines.append(f"{run} & {curve} & {lab} & {dk.mean_memories.mean():.0f} & {dk.recall.mean():.3f} & "
+                             + " & ".join(cells) + r"\\")
+            if si == 0:
+                lines.append(r"\addlinespace[2pt]")
+        if b != burns[-1]:
+            lines.append(r"\addlinespace")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    (OUT / "tab_curves_town.tex").write_text("\n".join(lines) + "\n")
+    # numbers for the text
+    for b in burns:
+        btag = {30: "Thirty", 90: "Ninety"}.get(int(b))
+        if btag is None:
+            continue
+        for sc, stag in (("last", "Last"), ("uses", "Uses")):
+            db = d[(d.burn == b) & (d.score == sc)]
+            if db.empty:
+                continue
+            piv = {c: db.pivot_table(index="seed", columns="backend_key", values=c) for c in outcomes + ("recall",)}
+            for key, ktag in (("exact", "Ex"), ("folded", "Fo"), ("rerank100", "Re")):
+                if key not in piv["attended"]:
+                    continue
+                for col, ctag in zip(outcomes, ("Aware", "Recalled", "Att")):
+                    m(f"Tc{btag}{stag}{ktag}{ctag}", f"{piv[col][key].mean():.1f}")
+                m(f"Tc{btag}{stag}{ktag}Recall", f3(piv["recall"][key].mean()))
+            if "folded" in piv["attended"] and "exact" in piv["attended"]:
+                both = pd.concat([piv[c][["folded", "exact"]] for c in outcomes], axis=1).dropna()
+                same = np.logical_and.reduce([(piv[c]["folded"] == piv[c]["exact"]).reindex(both.index) for c in outcomes])
+                maxdiff = max(float((piv[c]["folded"] - piv[c]["exact"]).abs().max()) for c in outcomes)
+                m(f"Tc{btag}{stag}FoSame", str(int(np.sum(same))))
+                m(f"Tc{btag}{stag}Seeds", str(len(both)))
+                m(f"Tc{btag}{stag}FoMaxDiff", f"{maxdiff:.0f}")
+            for col, ctag in zip(outcomes, ("Aware", "Recalled", "Att")):
+                m(f"Tc{btag}{stag}Re{ctag}Holm", f"{holm.get((b, sc, 'rerank100', col), 1.0):.2g}")
+                m(f"Tc{btag}{stag}Fo{ctag}Holm", f"{holm.get((b, sc, 'folded', col), 1.0):.2g}")
+        db = d[(d.burn == b) & (d.backend_key == "folded")]
+        if len(db) and btag:
+            m(f"Tc{btag}FoMs", f2(db.search_ms.mean()))
+        de = d[(d.burn == b) & (d.backend_key == "exact")]
+        if len(de) and btag:
+            m(f"Tc{btag}ExMs", f2(de.search_ms.mean()))
+    m("TcRuns", thin(len(d)))
+    # the curve itself: exact retrieval with ACT-R's curve against the paper's exponential on the same
+    # seeds (same world), paired Wilcoxon, Holm-corrected over these comparisons
+    pt = RES / "town.csv"
+    if not pt.exists():
+        return
+    base = pd.read_csv(pt)
+    base = base[(base.profile == "paper") & (base.backend_key == "exact")]
+    vs, cells = [], {}
+    for b in burns:
+        btag = {30: "Thirty", 90: "Ninety"}.get(int(b))
+        pb = base[base.burn == b].set_index("seed")
+        if btag is None or pb.empty:
+            continue
+        for sc, stag in (("last", "Last"), ("uses", "Uses")):
+            dc = d[(d.burn == b) & (d.score == sc) & (d.backend_key == "exact")].set_index("seed")
+            common = dc.index.intersection(pb.index)
+            if len(common) < 2:
+                continue
+            for col, ctag in zip(outcomes, ("Aware", "Recalled", "Att")):
+                x, y = dc.loc[common, col], pb.loc[common, col]
+                pval = stats.wilcoxon(x, y).pvalue if (x != y).any() else 1.0
+                vs.append(((btag, stag, ctag), pval))
+                cells[(btag, ctag)] = f"{y.mean():.1f}"
+                m(f"Tc{btag}{stag}VsExpSeeds", str(len(common)))
+    running = 0.0
+    for rank, (key, pval) in enumerate(sorted(vs, key=lambda x: x[1])):
+        running = max(running, min(1.0, (len(vs) - rank) * pval))
+        m(f"Tc{key[0]}{key[1]}VsExp{key[2]}Holm", f"{running:.2g}")
+    for (btag, ctag), v in cells.items():
+        m(f"Tc{btag}Exp{ctag}", v)
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     static()
@@ -442,6 +672,8 @@ def main() -> None:
     hnsw()
     langchain_and_reference()
     town()
+    curves()
+    curves_town()
     lines = [f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in sorted(macros.items())]
     (OUT / "numbers.tex").write_text("% generated by experiments/tables.py\n" + "\n".join(lines) + "\n")
     print(f"{len(macros)} macros -> {OUT / 'numbers.tex'}")

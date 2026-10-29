@@ -1,0 +1,10 @@
+\begin{tabular}{l l l r r r r r}
+\toprule
+Run & Curve & Retrieval & memories & recall & knew & recalled & attended\\
+\midrule
+92 days & last use & Exact scan, true curve & 5043 & 1.000 & 15.8 $\pm$ 2.4 & 13.6 $\pm$ 2.8 & 6.9 $\pm$ 2.0\\
+ &  & Folded HNSW, $R{=}8$ (ours) & 5042 & 1.000 & 16.0 $\pm$ 2.8 & 13.9 $\pm$ 3.3 & 7.0 $\pm$ 2.6\\
+ &  & Overfetch + re-rank, $K{=}100$ & 5034 & 0.537 & 16.0 $\pm$ 2.0 & 14.4 $\pm$ 2.3 & 7.0 $\pm$ 2.3\\
+\addlinespace[2pt]
+\bottomrule
+\end{tabular}

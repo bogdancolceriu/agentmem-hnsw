@@ -1,0 +1,27 @@
+n = 100,000: 223,234 uses
+  n=100000  method=paper score vs ACT-R score  param=overlap of top-10  recall=0.335  ms=nan  build_s=0  extra=median age of last use 80.3 h vs 8.9 h
+  n=100000  method=exact scan, fitted curve  param=R=8  recall=0.9985  ms=17.28  build_s=0  extra=
+  n=100000  method=folded (ours)  param=R=4,ef=128,W=24h  recall=0.958  ms=1.137  build_s=16.29  extra=recent part 5,963 memories
+  n=100000  method=folded (ours)  param=R=6,ef=128,W=24h  recall=0.9765  ms=0.7997  build_s=18.37  extra=recent part 5,963 memories
+  n=100000  method=folded (ours)  param=R=8,ef=32,W=24h  recall=0.96  ms=0.6208  build_s=17.49  extra=recent part 5,963 memories
+  n=100000  method=folded (ours)  param=R=8,ef=64,W=24h  recall=0.9815  ms=0.6986  build_s=17.49  extra=recent part 5,963 memories
+  n=100000  method=folded (ours)  param=R=8,ef=128,W=24h  recall=0.988  ms=0.8245  build_s=17.49  extra=recent part 5,963 memories
+  n=100000  method=folded (ours)  param=R=8,ef=256,W=24h  recall=0.989  ms=1.048  build_s=17.49  extra=recent part 5,963 memories
+  n=100000  method=folded (ours)  param=R=10,ef=128,W=24h  recall=0.9905  ms=0.9006  build_s=20.42  extra=recent part 5,963 memories
+  n=100000  method=overfetch + re-rank  param=K=100  recall=0.085  ms=0.5741  build_s=16.16  extra=exact normalisation ranges given
+  n=100000  method=overfetch + re-rank  param=K=1000  recall=0.4375  ms=2.046  build_s=16.16  extra=exact normalisation ranges given
+  n=100000  method=relevance only  param=  recall=0.014  ms=nan  build_s=16.16  extra=
+n = 1,000,000: 2,221,347 uses
+  n=1000000  method=paper score vs ACT-R score  param=overlap of top-10  recall=0.171  ms=nan  build_s=0  extra=median age of last use 0.8 h vs 5.9 h
+  n=1000000  method=exact scan, fitted curve  param=R=8  recall=0.996  ms=267.9  build_s=0  extra=
+  n=1000000  method=folded (ours)  param=R=8,ef=32,W=24h  recall=0.9645  ms=2.562  build_s=321.7  extra=recent part 60,824 memories
+  n=1000000  method=folded (ours)  param=R=8,ef=64,W=24h  recall=0.9685  ms=2.395  build_s=321.7  extra=recent part 60,824 memories
+  n=1000000  method=folded (ours)  param=R=8,ef=128,W=24h  recall=0.9735  ms=2.659  build_s=321.7  extra=recent part 60,824 memories
+  n=1000000  method=folded (ours)  param=R=8,ef=256,W=24h  recall=0.975  ms=2.866  build_s=321.7  extra=recent part 60,824 memories
+  n=1000000  method=folded (ours)  param=R=8,ef=32,W=6h  recall=0.937  ms=1.679  build_s=346.2  extra=recent part 19,059 memories
+  n=1000000  method=folded (ours)  param=R=8,ef=64,W=6h  recall=0.9535  ms=1.553  build_s=346.2  extra=recent part 19,059 memories
+  n=1000000  method=folded (ours)  param=R=8,ef=128,W=6h  recall=0.9615  ms=1.483  build_s=346.2  extra=recent part 19,059 memories
+  n=1000000  method=folded (ours)  param=R=8,ef=256,W=6h  recall=0.9645  ms=1.757  build_s=346.2  extra=recent part 19,059 memories
+  n=1000000  method=overfetch + re-rank  param=K=100  recall=0.03  ms=0.4803  build_s=280  extra=exact normalisation ranges given
+  n=1000000  method=overfetch + re-rank  param=K=1000  recall=0.1005  ms=2.774  build_s=280  extra=exact normalisation ranges given
+  n=1000000  method=relevance only  param=  recall=0.008  ms=nan  build_s=280  extra=

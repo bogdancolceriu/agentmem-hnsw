@@ -332,6 +332,117 @@ def fig_ga_recency(js: Path) -> None:
     save(fig, "ga_recency")
 
 
+def fig_curves(csv: Path) -> None:
+    """Left: forgetting curves and the 8-exponential fit. Right: recall against time at the largest size."""
+    from agentmem import ACT_R, exponential, fit_expsum
+
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(6.6, 2.45), gridspec_kw=dict(width_ratios=[1.0, 1.15]))
+    ages = np.geomspace(1 / 60, 365 * 24.0, 600)
+    f = fit_expsum(ACT_R, 8)
+    for r in range(f.R):
+        a1.plot(ages, f.w[r] * np.exp(-f.lam[r] * ages), color=BLUE_RAMP[0], lw=0.7, zorder=1)
+    a1.plot(ages, exponential(0.995)(ages), color=INK2, label="paper: 0.995 per hour")
+    a1.plot(ages, ACT_R(ages), color=C["ours"], lw=2.2, label="ACT-R power law, d = 0.5")
+    a1.plot(ages, f(ages), "--", color=BLUE_RAMP[4], lw=1.1, label="sum of 8 exponentials")
+    a1.set_xscale("log")
+    a1.set_yscale("log")
+    a1.set_ylim(1e-3, 1.5)
+    a1.set_xticks([1 / 60, 1, 24, 24 * 30, 24 * 365])
+    a1.set_xticklabels(["1 min", "1 h", "1 day", "1 month", "1 year"])
+    a1.xaxis.set_minor_formatter(NullFormatter())
+    a1.set_xlabel("time since a use")
+    a1.set_ylabel("weight of the use")
+    a1.legend(loc="lower left", handlelength=1.6)
+    d = pd.read_csv(csv)
+    d["param"] = d["param"].fillna("")
+    n = int(d.n.max())
+    dn = d[d.n == n]
+    for W, style, lab in ((24, "-o", "folded (ours), recent part 24 h"), (6, "--o", "folded (ours), recent part 6 h")):
+        dm = dn[(dn.method == "folded (ours)") & dn.param.str.endswith(f"W={W}h") & dn.param.str.startswith("R=8,")]
+        if dm.empty:
+            continue
+        dm = dm.assign(ef=dm.param.str.extract(r"ef=(\d+)")[0].astype(int)).sort_values("ef")
+        a2.plot(dm.ms, dm.recall, style, color=C["ours"] if W == 24 else BLUE_RAMP[1], label=lab)
+        if W == 24:
+            a2.annotate("ef 32 to 256", (dm.ms.max(), dm.recall.max()), xytext=(5, -9), textcoords="offset points",
+                        ha="left", va="top", fontsize=6.5, color=INK2)
+    dm = dn[dn.method == "overfetch + re-rank"].copy()
+    if not dm.empty:
+        dm["K"] = dm.param.str.extract(r"K=(\d+)")[0].astype(int)
+        dm = dm.sort_values("K")
+        a2.plot(dm.ms, dm.recall, "-o", color=C["rerank"], label=LABEL["rerank"])
+        for _, r in dm.iterrows():
+            a2.annotate(f"K={r.K}", (r.ms, r.recall), xytext=(4, 2), textcoords="offset points",
+                        ha="left", va="bottom", fontsize=6.5, color=INK2)
+    dm = dn[dn.method == "exact scan, fitted curve"]
+    if not dm.empty:
+        a2.plot(dm.ms, dm.recall, "s", color=C["exact"], label="exact scan", markersize=5)
+    logaxis(a2, "x")
+    a2.set_ylim(-0.02, 1.03)
+    a2.set_xlabel("ms per query")
+    a2.set_ylabel("recall@10, ACT-R score")
+    a2.set_title(f"{n:,}".replace(",", "\u2009") + " memories")
+    a2.legend(loc="center right", handlelength=1.6)
+    fig.tight_layout(w_pad=1.5)
+    save(fig, "curves")
+
+
+def fig_curves_slides(csv: Path) -> None:
+    """The two panels of fig_curves as separate, larger figures for the slides (labels in Romanian)."""
+    from agentmem import ACT_R, exponential, fit_expsum
+
+    big = {"font.size": 13, "axes.labelsize": 13, "legend.fontsize": 11.5, "xtick.labelsize": 11.5,
+           "ytick.labelsize": 11.5, "axes.titlesize": 13}
+    with plt.rc_context(big):
+        fig, a1 = plt.subplots(figsize=(6.4, 4.6))
+        ages = np.geomspace(1 / 60, 365 * 24.0, 600)
+        f = fit_expsum(ACT_R, 8)
+        for r in range(f.R):
+            a1.plot(ages, f.w[r] * np.exp(-f.lam[r] * ages), color=BLUE_RAMP[0], lw=0.9, zorder=1)
+        a1.plot(ages, exponential(0.995)(ages), color=INK2, lw=2.0, label="articolul: 0,995 pe oră")
+        a1.plot(ages, ACT_R(ages), color=C["ours"], lw=3.0, label="ACT-R: putere, d = 0,5")
+        a1.plot(ages, f(ages), "--", color=BLUE_RAMP[4], lw=1.6, label="suma celor 8 exponențiale")
+        a1.set_xscale("log")
+        a1.set_yscale("log")
+        a1.set_ylim(1e-3, 1.5)
+        a1.set_xticks([1 / 60, 1, 24, 24 * 30, 24 * 365])
+        a1.set_xticklabels(["1 min", "1 oră", "1 zi", "1 lună", "1 an"])
+        a1.xaxis.set_minor_formatter(NullFormatter())
+        a1.set_xlabel("timp de la o folosire")
+        a1.set_ylabel("ponderea folosirii")
+        a1.legend(loc="lower left", handlelength=1.8)
+        save(fig, "curves_fit_slide")
+        d = pd.read_csv(csv)
+        d["param"] = d["param"].fillna("")
+        n = int(d.n.max())
+        dn = d[d.n == n]
+        fig, a2 = plt.subplots(figsize=(6.4, 4.6))
+        for W, style, lab in ((24, "-o", "indexul nostru, partea recentă 24 h"),
+                              (6, "--o", "indexul nostru, partea recentă 6 h")):
+            dm = dn[(dn.method == "folded (ours)") & dn.param.str.endswith(f"W={W}h") & dn.param.str.startswith("R=8,")]
+            if dm.empty:
+                continue
+            dm = dm.assign(ef=dm.param.str.extract(r"ef=(\d+)")[0].astype(int)).sort_values("ef")
+            a2.plot(dm.ms, dm.recall, style, color=C["ours"] if W == 24 else BLUE_RAMP[1], label=lab, markersize=6)
+        dm = dn[dn.method == "overfetch + re-rank"].copy()
+        if not dm.empty:
+            dm["K"] = dm.param.str.extract(r"K=(\d+)")[0].astype(int)
+            dm = dm.sort_values("K")
+            a2.plot(dm.ms, dm.recall, "-o", color=C["rerank"], label="overfetch (LangChain)", markersize=6)
+            for _, r in dm.iterrows():
+                a2.annotate(f"K={r.K}", (r.ms, r.recall), xytext=(5, 3), textcoords="offset points",
+                            ha="left", va="bottom", fontsize=11, color=INK2)
+        dm = dn[dn.method == "exact scan, fitted curve"]
+        if not dm.empty:
+            a2.plot(dm.ms, dm.recall, "s", color=C["exact"], label="scanare exactă", markersize=7)
+        logaxis(a2, "x")
+        a2.set_ylim(-0.02, 1.05)
+        a2.set_xlabel("ms pe interogare")
+        a2.set_ylabel("recall@10, scorul ACT-R")
+        a2.legend(loc="center right", handlelength=1.8)
+        save(fig, "curves_recall_slide")
+
+
 def main() -> None:
     jobs = [
         (RES / "static_glove_k10.csv", lambda p: (fig_static_tradeoff(p), fig_static_scaling(p), fig_static_ablation(p))),
@@ -342,6 +453,7 @@ def main() -> None:
         (RES / "hnsw_fig7_d10.csv", fig_hnsw_fig7),
         (RES / "hnsw_glove.csv", fig_hnsw_glove),
         (RES / "ga_reference_check.json", fig_ga_recency),
+        (RES / "static_curves.csv", lambda p: (fig_curves(p), fig_curves_slides(p))),
     ]
     for path, fn in jobs:
         if path.exists():

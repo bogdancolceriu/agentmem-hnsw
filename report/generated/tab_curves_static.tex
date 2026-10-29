@@ -1,0 +1,15 @@
+\begin{tabular}{l rr rr}
+\toprule
+ & \multicolumn{2}{c}{100\,000 memories} & \multicolumn{2}{c}{1\,000\,000 memories}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Method & recall@10 & ms & recall@10 & ms\\
+\midrule
+Exact scan, fitted curve ($R{=}8$) & 0.999 & 17 & 0.996 & 268\\
+Folded HNSW, $ef{=}64$ (ours) & 0.982 & 0.70 & 0.969 & 2.40\\
+Folded HNSW, $ef{=}256$ (ours) & 0.989 & 1.05 & 0.975 & 2.87\\
+Folded HNSW, $ef{=}64$, $W{=}6$\,h (ours) & -- & -- & 0.954 & 1.55\\
+Overfetch + re-rank, $K{=}100$ & 0.085 & 0.57 & 0.030 & 0.48\\
+Overfetch + re-rank, $K{=}1000$ & 0.438 & 2.05 & 0.101 & 2.77\\
+Relevance only & 0.014 & -- & 0.008 & --\\
+\bottomrule
+\end{tabular}
