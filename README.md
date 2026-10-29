@@ -33,7 +33,8 @@ Author: Colceriu Mihai Bogdan
    every rate, and the range of the recency-frequency term comes exactly from Pareto fronts.
    In the town the folded store behaves like the exact scan under these curves too. The town also
    shows that counting every retrieval as a use lets the most retrieved memories crowd out new
-   ones, with or without ACT-R's logarithm.
+   ones, with or without ACT-R's logarithm. Letting a retrieval count as a small fraction of a use
+   (0.03), which still folds, removes most of the effect.
 4. **A LangChain retriever** (`agentmem/langchain_retriever.py`) with the scoring rule and the main fields
    of LangChain's `TimeWeightedVectorStoreRetriever`, backed by the folded index.
 5. **Willowbrook** (`town/`): a closed-loop simulation of 25 rule-based generative agents
@@ -50,7 +51,7 @@ Author: Colceriu Mihai Bogdan
 
 ```bash
 pip install -r requirements.txt
-python -m pytest -q tests/                                     # 43 tests, ~40 s
+python -m pytest -q tests/                                     # 45 tests, ~40 s
 python demo/tour.py                                            # guided tour on small data, in Romanian (~2 min)
 python demo/tour.py --oras                                     # ... plus two short town runs
 
@@ -69,6 +70,8 @@ python -m experiments.exp_curves --part ranges --sizes 100000           # estima
 python -m experiments.exp_town_curve --burns 90 30 --seeds 30  # town with forgetting curves (~3 h)
 python -m experiments.exp_town_curve --burns 90 30 --scores uses_log --backends exact --seeds 30
 python -m experiments.town_curve_diag --seeds 5                # why counting every use locks memory in
+python -m experiments.exp_town_curve --burns 90 30 --scores uses_w003 uses_w01 uses_w03 --backends exact --seeds 30
+python -m experiments.exp_town_curve --burns 30 --scores uses_w003 --backends folded --seeds 30
 python -m experiments.exp_langchain
 python -m experiments.ga_reference_check --repo /path/to/generative_agents
 python -m experiments.plots                                    # figures/ from results/
