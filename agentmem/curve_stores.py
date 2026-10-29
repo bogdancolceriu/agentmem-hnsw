@@ -11,6 +11,11 @@ with each component min-max normalised over all memories when w.minmax (as in Pa
 log=True ranks by ln D_i(T) instead, ACT-R's base-level activation. The logarithm of an
 inner product is not an inner product, so only the exact scan (CurveExact) supports it.
 
+retrieval_weight=w (frequency=True) lets a retrieval count as w of a use while the creation
+of a memory counts 1: D_i(T) = phi(T - t_i1) + w * sum_{j>1} phi(T - t_ij). This is still a
+sum of exponentials with per-memory weights, so every store supports it. The default w = 1
+is ACT-R's rule, under which every retrieved memory gains a full use.
+
     CurveExact       scan with the true curve (ground truth)
     CurveExactFit    scan with the fitted sum of exponentials (isolates the approximation)
     CurveRelevance   plain similarity search with HNSW
@@ -45,13 +50,17 @@ class CurveMemory:
     supports_log = False
 
     def __init__(self, dim: int, curve: Curve = ACT_R, R: int = 8, frequency: bool = True,
-                 age_max: float = YEAR_H, capacity: int = 1024, log: bool = False, **_ignored):
+                 age_max: float = YEAR_H, capacity: int = 1024, log: bool = False,
+                 retrieval_weight: float = 1.0, **_ignored):
         if log and not self.supports_log:
             raise ValueError("the logarithm of D is not an inner product: use CurveExact for log=True")
+        if retrieval_weight < 0:
+            raise ValueError("retrieval_weight must be non-negative")
         self.dim = dim
         self.curve = curve
         self.frequency = frequency
         self.log = log
+        self.w_ret = float(retrieval_weight)
         self.fit = fit_expsum(curve, R, age_max)
         self.lam, self.wr, self.R = self.fit.lam, self.fit.w, self.fit.R
         self.E = np.zeros((capacity, dim), dtype=np.float32)
@@ -62,8 +71,9 @@ class CurveMemory:
         self.n = 0
         self.imp_lo, self.imp_hi = np.inf, -np.inf
         self.t_hi = -np.inf
-        self.acc_mem = np.zeros(4096, dtype=np.int64)   # every use: (memory, time), for the true curve
+        self.acc_mem = np.zeros(4096, dtype=np.int64)   # every use: (memory, time, weight), for the true curve
         self.acc_t = np.zeros(4096)
+        self.acc_w = np.ones(4096)
         self.n_acc = 0
         self.stats: dict[str, float] = defaultdict(float)
         self._cache: tuple | None = None
@@ -84,17 +94,18 @@ class CurveMemory:
     def _on_grow(self, new_capacity: int) -> None:
         pass
 
-    def _log(self, ids: np.ndarray, t: np.ndarray) -> None:
+    def _log(self, ids: np.ndarray, t: np.ndarray, w=1.0) -> None:
         m = len(ids)
         if self.n_acc + m > len(self.acc_t):
             new = max(self.n_acc + m, 2 * len(self.acc_t))
-            for attr in ("acc_mem", "acc_t"):
+            for attr in ("acc_mem", "acc_t", "acc_w"):
                 old = getattr(self, attr)
                 arr = np.zeros(new, dtype=old.dtype)
                 arr[: self.n_acc] = old[: self.n_acc]
                 setattr(self, attr, arr)
         self.acc_mem[self.n_acc:self.n_acc + m] = ids
         self.acc_t[self.n_acc:self.n_acc + m] = t
+        self.acc_w[self.n_acc:self.n_acc + m] = w
         self.n_acc += m
         self._cache = None
 
@@ -126,17 +137,23 @@ class CurveMemory:
         ids = np.arange(self.n, self.n + m)
         mem = np.concatenate([np.full(len(h), i) for i, h in zip(ids, histories)])
         t = np.concatenate([np.asarray(h, dtype=np.float64) for h in histories])
+        # creation counts 1, every later use counts w_ret (1 by default, then the weights are all 1)
+        wts = (np.concatenate([np.r_[1.0, np.full(len(h) - 1, self.w_ret)] for h in histories])
+               if self.w_ret != 1.0 else 1.0)
         self.E[ids], self.imp[ids] = E, np.asarray(imp, dtype=np.float64)
         self.t_created[ids] = [float(np.min(h)) for h in histories]
         self.t_last[ids] = [float(np.max(h)) for h in histories]
         if self.frequency:
             age = self.t_last[mem] - t
             for r in range(self.R):
-                self.y[ids, r] = np.bincount(mem - self.n, weights=np.exp(-self.lam[r] * age), minlength=m)
+                wr = np.exp(-self.lam[r] * age)
+                if self.w_ret != 1.0:
+                    wr = wr * wts
+                self.y[ids, r] = np.bincount(mem - self.n, weights=wr, minlength=m)
         else:
             self.y[ids] = 1.0
         self.n += m
-        self._log(mem, t)
+        self._log(mem, t, wts)
         self.imp_lo = min(self.imp_lo, float(np.min(imp)))
         self.imp_hi = max(self.imp_hi, float(np.max(imp)))
         self.t_hi = max(self.t_hi, float(self.t_last[ids].max()))
@@ -152,12 +169,12 @@ class CurveMemory:
     def touch(self, ids: np.ndarray, T: float) -> None:
         """Record a use of `ids` at time T (refresh on retrieval)."""
         if self.frequency:
-            self.y[ids] = self.y[ids] * np.exp(-np.outer(T - self.t_last[ids], self.lam)) + 1.0
+            self.y[ids] = self.y[ids] * np.exp(-np.outer(T - self.t_last[ids], self.lam)) + self.w_ret
         else:
             self.y[ids] = 1.0
         self.t_last[ids] = T
         self.t_hi = max(self.t_hi, float(T))
-        self._log(ids, np.full(len(ids), float(T)))
+        self._log(ids, np.full(len(ids), float(T)), self.w_ret)
 
     # ------------------------------------------------------------ scoring
     def D_true(self, T: float) -> np.ndarray:
@@ -166,7 +183,10 @@ class CurveMemory:
             D = self.curve(T - self.t_last[: self.n])
         else:
             k = self.n_acc
-            D = np.bincount(self.acc_mem[:k], weights=self.curve(T - self.acc_t[:k]), minlength=self.n)
+            w = self.curve(T - self.acc_t[:k])
+            if self.w_ret != 1.0:
+                w = w * self.acc_w[:k]
+            D = np.bincount(self.acc_mem[:k], weights=w, minlength=self.n)
         return np.log(D) if self.log else D
 
     def D_fit(self, T: float, ids: np.ndarray | None = None) -> np.ndarray:

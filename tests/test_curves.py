@@ -150,6 +150,53 @@ def test_overfetch_with_everything_is_exact():
                     == set(ofr.retrieve(q, 600.0, 10, w, refresh=False)))
 
 
+def test_retrieval_weight_bookkeeping_and_bulk_load():
+    """A retrieval counts w of a use: incremental bookkeeping, bulk load and direct sums agree."""
+    rng = np.random.default_rng(16)
+    E, imp, t = random_memories(150, seed=16, horizon=60.0)
+    w = 0.1
+    st = CurveExactFit(E.shape[1], retrieval_weight=w)
+    st.add(E, imp, t)
+    hist = [[ti] for ti in t]
+    for step in range(40):
+        T = 60.0 + step * 2.3
+        ids = rng.choice(st.n, size=8, replace=False)
+        st.touch(ids, T)
+        for i in ids:
+            hist[i].append(T)
+    T = 200.0
+    direct_fit = np.array([st.fit(T - h[0]) + w * st.fit(T - np.asarray(h[1:])).sum() for h in hist])
+    direct_true = np.array([ACT_R(T - h[0]) + w * ACT_R(T - np.asarray(h[1:])).sum() for h in hist])
+    np.testing.assert_allclose(st.D_fit(T), direct_fit, rtol=1e-10)
+    np.testing.assert_allclose(st.D_true(T), direct_true, rtol=1e-10)
+    bulk = CurveExactFit(E.shape[1], retrieval_weight=w)
+    bulk.load(E, imp, [np.asarray(h) for h in hist], T_now=T)
+    np.testing.assert_allclose(bulk.y[:150], st.y[:150], rtol=1e-10)
+    np.testing.assert_allclose(bulk.D_true(T), st.D_true(T), rtol=1e-12)
+
+
+def test_folded_matches_exact_fit_with_retrieval_weight():
+    E, imp, t = random_memories(2500, horizon=1000.0, seed=17)
+    d = E.shape[1]
+    exact = CurveExactFit(d, retrieval_weight=0.1)
+    folded = CurveFolded(d, retrieval_weight=0.1, recent_hours=24.0, seg_hours=12.0, max_closed=3, ef=400,
+                         M=32, norm_ef=200)
+    rng = np.random.default_rng(18)
+    agree = []
+    for i in range(0, 2500, 100):
+        T = float(t[i + 99])
+        exact.add(E[i:i + 100], imp[i:i + 100], t[i:i + 100])
+        folded.add(E[i:i + 100], imp[i:i + 100], t[i:i + 100])
+        for j in range(4):
+            q = unit(rng, d)
+            a = exact.retrieve(q, T + j, 10, PROFILES["paper"])
+            b = folded.retrieve(q, T + j, 10, PROFILES["paper"])
+            agree.append(len(set(a) & set(b)) / 10)
+        assert folded.coordinates_bounded()
+    assert np.mean(agree) > 0.99, np.mean(agree)
+    np.testing.assert_allclose(exact.y[: exact.n], folded.y[: folded.n], rtol=1e-9)
+
+
 def test_log_of_the_sum_only_with_the_exact_scan():
     """ACT-R's logarithm: the exact scan ranks by ln D, a folded store refuses it."""
     E, imp, t = random_memories(500, seed=14)

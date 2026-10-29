@@ -31,7 +31,11 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 
 SCORES = {"last": dict(frequency=False), "uses": dict(frequency=True),
-          "uses_log": dict(frequency=True, log=True)}   # ACT-R's logarithm: exact scan only
+          "uses_log": dict(frequency=True, log=True),   # ACT-R's logarithm: exact scan only
+          # a retrieval counts w of a use (creation counts 1): a remedy for the lock-in that still folds
+          "uses_w03": dict(frequency=True, retrieval_weight=0.3),
+          "uses_w01": dict(frequency=True, retrieval_weight=0.1),
+          "uses_w003": dict(frequency=True, retrieval_weight=0.03)}
 BACKENDS = {
     "exact": ("curve_exact", {}),
     "folded": ("curve_folded", {}),
