@@ -1,6 +1,6 @@
 # Ghid de pregătire: prezentare și întrebări
 
-Ghidul ăsta te pregătește pentru prezentarea din 17.12 și pentru întrebările de după. Citește-l o dată de la cap la coadă, apoi revino la secțiunile unde nu ai putea răspunde fără să te uiți. Cifrele exacte sunt în raport (`report/main.pdf`), aici sunt doar cele de care chiar ai nevoie.
+Ghidul ăsta te pregătește pentru prezentarea din 17.12 și pentru întrebările de după. Citește-l o dată de la cap la coadă, apoi revino la secțiunile unde nu ai putea răspunde fără să te uiți. Cifrele exacte sunt în raport (`report/main.pdf`), aici sunt doar cele de care chiar ai nevoie. Secțiunea 9 spune cum s-a lucrat și cum rulezi tu proiectul, inclusiv un tur ghidat de două minute (`demo/tour.py`).
 
 ---
 
@@ -291,3 +291,73 @@ Validare cu un LLM real pe mai multe scenarii, embedding-uri neurale, integrare 
 ## 8. Critica prezentării următoare
 
 Regulamentul spune că după prezentarea ta critici prezentarea următoarei echipe din listă. Întreabă-l pe profesor care e echipa. Dacă e articolul 12 (Generative Agents, Bota Andrei Raul, 19.11), ai deja tot ce-ți trebuie: întreabă cum se calculează concret recența și dacă au văzut diferența dintre articol și cod, și cum ar scala regăsirea la o memorie de luni de zile.
+
+---
+
+## 9. Cum s-a lucrat și cum rulezi tu proiectul
+
+### Ce s-a folosit
+
+- **Totul e Python**, rulat din linia de comandă pe o mașină Linux din cloud, cu 2 nuclee și fără placă video. Nu s-a antrenat nicio rețea neurală. Singurul lucru „învățat” din date sunt vectorii GloVe, pe care cei de la Stanford i-au antrenat demult și pe care codul îi descarcă o singură dată.
+- **Bibliotecile**, toate în `requirements.txt`:
+  - `numpy` pentru calcule și `numba`, care compilează HNSW-ul scris după articol ca să meargă repede
+  - `hnswlib`, HNSW-ul autorilor (C++ cu interfață Python), folosit ca referință și în memoria pliată
+  - `faiss-cpu`, doar pentru comparația cu IVF
+  - `scipy` și `pandas` pentru statistică și tabele, `matplotlib` pentru figuri
+  - `pytest` pentru teste, `langchain-core` și `langchain-classic` pentru comparația cu LangChain
+- **Raportul** e scris în LaTeX și compilat cu `latexmk`. Slide-urile sunt făcute în Claude, iar ghidul e un fișier Markdown.
+
+### Cum ajunge un rezultat în raport
+
+1. Fiecare experiment e un script din `experiments/`. Comanda exactă e în README, la „Reproduce”, iar la începutul fiecărui script scrie ce face.
+2. Scriptul scrie rezultatele brute în `results/`, de obicei câte un rând de CSV pe rulare.
+3. `python -m experiments.plots` desenează figurile din `results/` în `figures/`. `python -m experiments.tables` calculează tabelele și toate cifrele din text, în `report/generated/`. Niciun număr din raport nu e scris de mână.
+4. `latexmk` compilează raportul cu ele.
+
+De exemplu, rulările de azi sunt `python -m experiments.exp_town_curve --burns 90 30 --seeds 30`: 360 de simulări ale orașului (2 durate × 2 variante de scor × 3 metode de regăsire × 30 de seed-uri). În fiecare simulare, 25 de agenți trăiesc 32 sau 92 de zile în pași de 15 minute, iar la final scriptul adaugă un rând în `results/town_curve.csv`.
+
+**Nu trebuie să refaci experimentele mari.** Studiul HNSW durează vreo 2 ore, benchmark-ul la un milion de amintiri cam 40 de minute, iar fiecare set de simulări ale orașului cam 3 ore pe 2 nuclee. Rezultatele lor sunt deja în `results/`, iar figurile și cifrele se refac din ele în câteva secunde.
+
+### Cum îl rulezi pe calculatorul tău (Windows)
+
+1. Instalează **Python 3.12** de pe python.org (bifează „Add python.exe to PATH”). Ia 3.12, nu 3.13, pentru că pe Windows unele pachete au variante gata compilate doar pentru 3.12. Instalează și **Git**.
+2. Într-un Command Prompt:
+   ```
+   git clone https://github.com/bogdancolceriu/agentmem-hnsw
+   cd agentmem-hnsw
+   py -3.12 -m venv .venv
+   .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+3. Dacă `hnswlib` dă o eroare de felul „Microsoft Visual C++ 14.0 or greater is required”, pip încearcă să-l compileze. Ai două variante. Fie instalezi „Build Tools for Visual Studio”, cu componenta „Desktop development with C++”, și reiei comanda. Fie instalezi varianta gata compilată, care are aceeași interfață (n-am testat-o pe Windows):
+   ```
+   pip install chroma-hnswlib numpy scipy pandas matplotlib faiss-cpu numba pytest langchain-core langchain-classic
+   ```
+4. Verifică instalarea: `python -m pytest -q tests/` trebuie să arate 42 de teste trecute, în vreo jumătate de minut.
+5. **Turul ghidat:** `python demo/tour.py` rulează în 1–2 minute pașii proiectului pe date mici: HNSW-ul din articol față de hnswlib, scorul agenților, plierea în produs scalar, cele patru metode de regăsire și curbele de uitare. La fiecare pas spune ce arată și în ce fișier e codul. `python demo/tour.py --oras` adaugă două simulări scurte ale orașului (prima dată descarcă vectorii GloVe, cam 130 MB).
+6. `python -m experiments.plots` și `python -m experiments.tables` refac în câteva secunde figurile și cifrele din raport, din rezultatele salvate.
+7. `demo/willowbrook.html`, deschis în browser, reia pas cu pas aceeași petrecere cu trei metode de regăsire.
+
+Cifrele din tur nu sunt cele din raport, pentru că datele lui sunt sintetice și mici. Diferențele dintre metode sunt însă aceleași.
+
+### Cu Claude Code pe calculatorul tău
+
+Ideea e bună. Deschizi Claude Code în folderul proiectului (din aplicația desktop sau din terminal) și îi ceri, de exemplu: „instalează dependențele, rulează testele și `demo/tour.py`, apoi explică-mi fiecare pas”. Se descurcă singur cu erorile de instalare. Apoi îl poți întreba direct despre cod: „unde se construiește vectorul pliat?”, „ce face `_age_out` din `curve_stores.py`?”, „de ce are nevoie memoria de segmente?”. Ce nu poate reface e conversația în care s-a construit proiectul. Pașii mari se văd în commit-urile de pe GitHub, iar fiecare rezultat se reproduce cu comanda lui din README.
+
+Dacă te întreabă cineva cum ai lucrat, spune direct că ai lucrat cu Claude, cu acordul profesorului. La prezentare contează să poți rula și explica fiecare parte, iar pentru asta sunt turul și harta de mai jos.
+
+### Harta codului
+
+| Ce | Unde |
+|---|---|
+| HNSW după pseudocodul din articol | `agentmem/paper_hnsw.py` (`PaperHNSW`, `search_layer`, `select_heuristic`, `insert`) |
+| Scorul agenților și plierea lui | `agentmem/score.py` (`exact_scores`, `fold_memories`, `fold_query`) |
+| Memoria pliată, cu segmente și buffer | `agentmem/stores.py` (`FoldedHNSW`) |
+| Metodele cu care compari | `agentmem/stores.py` (`ExactStore`, `OverfetchRerank`, `RelevanceOnlyHNSW`) |
+| Curbele de uitare ca sumă de exponențiale | `agentmem/curves.py` (`fit_expsum`) |
+| Memoria pentru orice curbă | `agentmem/curve_stores.py` (`CurveFolded`) |
+| Retriever-ul pentru LangChain | `agentmem/langchain_retriever.py` |
+| Embedding-urile (GloVe și SIF) | `agentmem/embed.py` |
+| Orașul | `town/world.py` (oamenii, locurile, rutinele), `town/sim.py` (bucla agenților) |
+| Experimentele, figurile și tabelele | `experiments/` (un script pe experiment, plus `plots.py` și `tables.py`) |
+| Testele | `tests/` |

@@ -46,8 +46,10 @@ Author: Colceriu Mihai Bogdan
 ## Reproduce
 
 ```bash
-pip install numpy scipy pandas matplotlib hnswlib faiss-cpu numba pytest langchain-core langchain-classic
+pip install -r requirements.txt
 python -m pytest -q tests/                                     # 42 tests, ~40 s
+python demo/tour.py                                            # guided tour on small data, in Romanian (~2 min)
+python demo/tour.py --oras                                     # ... plus two short town runs
 
 python -m experiments.exp_hnsw_ablation validate fig3 fig4 fig7 glove   # HNSW study (~2 h)
 python -m experiments.exp_static --dataset glove --sizes 10000 100000 1000000
@@ -82,6 +84,8 @@ agentmem/   score.py (score, folding), stores.py (memory stores), curves.py (for
             as sums of exponentials), curve_stores.py (stores for any curve), paper_hnsw.py
             (HNSW from the paper), embed.py (GloVe-SIF sentence embeddings), langchain_retriever.py
 town/       world.py (residents, places, routines), sim.py (closed-loop agent simulation)
+demo/       tour.py (guided tour of every idea on small data), willowbrook.html (step-by-step replay
+            of the party with three retrieval methods, open it in a browser)
 experiments/ one script per experiment, plots.py, tables.py
 tests/      correctness tests (folding is exact, stores agree with brute force)
 results/    CSV / JSON outputs        figures/  PDF + PNG        report/  LaTeX report
