@@ -571,7 +571,7 @@ def curves_town() -> None:
         holm[key] = running
     order = [("exact", "Exact scan, true curve"), ("folded", "Folded HNSW, $R{=}8$ (ours)"),
              ("rerank100", "Overfetch + re-rank, $K{=}100$")]
-    scores = [("last", "last use"), ("uses", "every use")]
+    scores = [("last", "last use"), ("uses", "every use"), ("uses_log", "every use, log")]
     burns = sorted(d.burn.unique())
     lines = [r"\begin{tabular}{l l l r r r r r}", r"\toprule",
              r"Run & Curve & Retrieval & memories & recall & knew & recalled & attended\\", r"\midrule"]
@@ -593,7 +593,7 @@ def curves_town() -> None:
                 curve = slab if i == 0 else ""
                 lines.append(f"{run} & {curve} & {lab} & {dk.mean_memories.mean():.0f} & {dk.recall.mean():.3f} & "
                              + " & ".join(cells) + r"\\")
-            if si == 0:
+            if si < len(scores) - 1 and not d[(d.burn == b) & (d.score == scores[si + 1][0])].empty:
                 lines.append(r"\addlinespace[2pt]")
         if b != burns[-1]:
             lines.append(r"\addlinespace")
@@ -604,7 +604,7 @@ def curves_town() -> None:
         btag = {30: "Thirty", 90: "Ninety"}.get(int(b))
         if btag is None:
             continue
-        for sc, stag in (("last", "Last"), ("uses", "Uses")):
+        for sc, stag in (("last", "Last"), ("uses", "Uses"), ("uses_log", "Log")):
             db = d[(d.burn == b) & (d.score == sc)]
             if db.empty:
                 continue
@@ -645,7 +645,7 @@ def curves_town() -> None:
         pb = base[base.burn == b].set_index("seed")
         if btag is None or pb.empty:
             continue
-        for sc, stag in (("last", "Last"), ("uses", "Uses")):
+        for sc, stag in (("last", "Last"), ("uses", "Uses"), ("uses_log", "Log")):
             dc = d[(d.burn == b) & (d.score == sc) & (d.backend_key == "exact")].set_index("seed")
             common = dc.index.intersection(pb.index)
             if len(common) < 2:
@@ -662,6 +662,18 @@ def curves_town() -> None:
         m(f"Tc{key[0]}{key[1]}VsExp{key[2]}Holm", f"{running:.2g}")
     for (btag, ctag), v in cells.items():
         m(f"Tc{btag}Exp{ctag}", v)
+    # why counting every use locks the memory in (experiments/town_curve_diag.py)
+    pdg = RES / "town_curve_diag.json"
+    if pdg.exists():
+        sm = json.loads(pdg.read_text())["summary"]
+        for v, tag in (("last", "Last"), ("uses", "Uses"), ("uses_log", "Log")):
+            if v not in sm:
+                continue
+            m(f"TcDiag{tag}MaxRet", thin(round(sm[v]["max_retrievals"])))
+            m(f"TcDiag{tag}TopShare", pct(sm[v]["top1_share"]))
+            m(f"TcDiag{tag}NewHour", f"{sm[v]['new_hour']:.2f}" if sm[v]["new_hour"] >= 0.01 else f"{sm[v]['new_hour']:.3f}")
+            m(f"TcDiag{tag}PerMem", f"{sm[v]['retrievals_per_memory']:.1f}")
+        m("TcDiagSeeds", str(sm["uses"]["seeds"]))
 
 
 def main() -> None:

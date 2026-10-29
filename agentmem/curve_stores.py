@@ -8,6 +8,9 @@ with each component min-max normalised over all memories when w.minmax (as in Pa
     D_i(T) = sum_j phi(T - t_ij)      frequency=True: every use of the memory counts (ACT-R), or
     D_i(T) = phi(T - t_last,i)        frequency=False: only the last use (as in the paper).
 
+log=True ranks by ln D_i(T) instead, ACT-R's base-level activation. The logarithm of an
+inner product is not an inner product, so only the exact scan (CurveExact) supports it.
+
     CurveExact       scan with the true curve (ground truth)
     CurveExactFit    scan with the fitted sum of exponentials (isolates the approximation)
     CurveRelevance   plain similarity search with HNSW
@@ -39,12 +42,16 @@ from .stores import _Hnsw
 
 class CurveMemory:
     name = "curve base"
+    supports_log = False
 
     def __init__(self, dim: int, curve: Curve = ACT_R, R: int = 8, frequency: bool = True,
-                 age_max: float = YEAR_H, capacity: int = 1024, **_ignored):
+                 age_max: float = YEAR_H, capacity: int = 1024, log: bool = False, **_ignored):
+        if log and not self.supports_log:
+            raise ValueError("the logarithm of D is not an inner product: use CurveExact for log=True")
         self.dim = dim
         self.curve = curve
         self.frequency = frequency
+        self.log = log
         self.fit = fit_expsum(curve, R, age_max)
         self.lam, self.wr, self.R = self.fit.lam, self.fit.w, self.fit.R
         self.E = np.zeros((capacity, dim), dtype=np.float32)
@@ -154,11 +161,13 @@ class CurveMemory:
 
     # ------------------------------------------------------------ scoring
     def D_true(self, T: float) -> np.ndarray:
-        """Recency-frequency term of every memory with the true curve."""
+        """Recency-frequency term of every memory with the true curve (its logarithm if self.log)."""
         if not self.frequency:
-            return self.curve(T - self.t_last[: self.n])
-        k = self.n_acc
-        return np.bincount(self.acc_mem[:k], weights=self.curve(T - self.acc_t[:k]), minlength=self.n)
+            D = self.curve(T - self.t_last[: self.n])
+        else:
+            k = self.n_acc
+            D = np.bincount(self.acc_mem[:k], weights=self.curve(T - self.acc_t[:k]), minlength=self.n)
+        return np.log(D) if self.log else D
 
     def D_fit(self, T: float, ids: np.ndarray | None = None) -> np.ndarray:
         """The same term with the fitted sum of exponentials (what an inner product can carry)."""
@@ -252,6 +261,7 @@ def pareto_max(Z: np.ndarray, chunk: int = 1024) -> np.ndarray:
 
 class CurveExact(CurveMemory):
     name = "exact scan (true curve)"
+    supports_log = True
 
     def _search(self, q, T, k, w):
         return topk(self.exact(q, T, w), k)

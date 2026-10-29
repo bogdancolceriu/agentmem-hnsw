@@ -3,6 +3,8 @@
 The same party scenario as exp_town.py, with the recency term of the paper's score replaced by
 ACT-R's power-law curve (d = 0.5, one-hour offset), either of the last use only or summed over
 every use of a memory. Retrieval keeps the paper's min-max normalisation and equal weights.
+A third score takes ACT-R's logarithm of the sum over every use; it is not an inner product,
+so it is run with the exact scan only (--scores uses_log --backends exact).
 For each score we compare an exact scan with the true curve, the folded store (eight
 exponentials, recent part of 24 h, daily segments) and LangChain-style overfetch (K = 100).
 Recall is measured at every retrieval against the exact scan with the true curve.
@@ -28,7 +30,8 @@ from experiments.exp_town import FIELDS as BASE_FIELDS
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 
-SCORES = {"last": dict(frequency=False), "uses": dict(frequency=True)}
+SCORES = {"last": dict(frequency=False), "uses": dict(frequency=True),
+          "uses_log": dict(frequency=True, log=True)}   # ACT-R's logarithm: exact scan only
 BACKENDS = {
     "exact": ("curve_exact", {}),
     "folded": ("curve_folded", {}),
@@ -85,7 +88,7 @@ def main():
     out, out_rec = RESULTS / "town_curve.csv", RESULTS / "town_curve_recall.jsonl"
     done = done_keys(out)
     todo = [(b, sc, k, s) for b in a.burns for sc in a.scores for s in range(a.seeds) for k in a.backends
-            if (b, sc, k, s) not in done]
+            if (b, sc, k, s) not in done and not (sc == "uses_log" and k != "exact")]
     print(f"{len(todo)} runs to do ({len(done)} already in {out.name})", flush=True)
     new_file = not out.exists()
     t0 = time.time()

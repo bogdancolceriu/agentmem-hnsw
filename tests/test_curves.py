@@ -150,6 +150,24 @@ def test_overfetch_with_everything_is_exact():
                     == set(ofr.retrieve(q, 600.0, 10, w, refresh=False)))
 
 
+def test_log_of_the_sum_only_with_the_exact_scan():
+    """ACT-R's logarithm: the exact scan ranks by ln D, a folded store refuses it."""
+    E, imp, t = random_memories(500, seed=14)
+    d = E.shape[1]
+    st = CurveExact(d, log=True)
+    st.add(E, imp, t)
+    st.touch(np.arange(0, 500, 7), 520.0)
+    T = 530.0
+    D = np.bincount(st.acc_mem[: st.n_acc], weights=ACT_R(T - st.acc_t[: st.n_acc]), minlength=st.n)
+    np.testing.assert_allclose(st.D_true(T), np.log(D), rtol=1e-12)
+    q = unit(np.random.default_rng(15), d)
+    ref = CurveExact.combine(np.log(D), imp, (E @ q).astype(np.float64), PROFILES["paper"])
+    np.testing.assert_allclose(st.exact(q, T, PROFILES["paper"]), ref, rtol=1e-12)
+    for cls in (CurveFolded, CurveExactFit, CurveOverfetch):
+        with pytest.raises(ValueError):
+            cls(d, log=True)
+
+
 def test_segments_need_a_long_enough_recent_window():
     with pytest.raises(ValueError):
         CurveFolded(8, recent_hours=6.0, seg_hours=12.0)
