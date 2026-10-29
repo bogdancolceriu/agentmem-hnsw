@@ -1,0 +1,4 @@
+last      most retrieved memory: 656 retrievals, top 1% of memories: 64% of retrievals, a memory one hour old gets 0.701 of the range | knew 15.0, recalled 12.8, attended 6.8
+uses      most retrieved memory: 735 retrievals, top 1% of memories: 82% of retrievals, a memory one hour old gets 0.023 of the range | knew 9.8, recalled 1.8, attended 1.8
+uses_log  most retrieved memory: 692 retrievals, top 1% of memories: 78% of retrievals, a memory one hour old gets 0.485 of the range | knew 10.2, recalled 3.4, attended 2.2
+-> /home/claude/agentmem-hnsw/results/town_curve_diag.json

@@ -69,13 +69,35 @@ The curve changes what is retrieved. On the same one million memories, only \CuO
 \label{fig:curves}
 \end{figure}
 
-%TOWN_RESULTS%
+\subsection{Agents with a forgetting curve}
+\label{sec:curvestown}
+
+The party scenario of \cref{sec:town} was run again in the 32-day and 92-day runs, on the same 30 seeds, with ACT-R's curve in place of the paper's recency term. The curve takes two forms, of the last use only and summed over every use (\cref{eq:curvescore}). Each form is retrieved by an exact scan with the true curve, by the folded store ($R=8$, $W=L=24$ hours) and by overfetch and re-rank ($K=100$, with the newest memories added as in LangChain and exact normalisation ranges). In the town every segment is small enough for the folded store to compute its ranges by a scan. A third form takes ACT-R's logarithm of the sum. It cannot be folded and was run with the exact scan only. Recall is measured at every retrieval against the exact scan of the same score. \Cref{tab:curvestown} shows the outcomes.
+
+\textbf{The folded store behaves like the exact scan with both foldable forms.} In the 92-day runs its retrievals contain \TcNinetyLastFoRecallFour{} of the true top-$k$ with the last use and \TcNinetyUsesFoRecallFour{} with every use. The three outcomes are identical on \TcNinetyLastFoSame{} and \TcNinetyUsesFoSame{} of the 30 seeds and differ by at most \TcNinetyUsesFoMaxDiff{} agents on the others. In the 32-day runs they are identical on \TcThirtyLastFoSame{} and \TcThirtyUsesFoSame{} seeds, with a largest difference of \TcThirtyUsesFoMaxDiff{} agents. At this memory size the exact scan is faster (\TcNinetyExMs{} against \TcNinetyFoMs{} ms per retrieval), as with the paper's score.
+
+\textbf{The curve itself changes what the town does.} With exact retrieval and ACT-R's curve of the last use, \TcNinetyLastExAware{} agents know about the party at 92 days and \TcNinetyLastExRecalled{} recall it when planning, against \TcNinetyExpAware{} and \TcNinetyExpRecalled{} under the paper's exponential on the same seeds (paired Wilcoxon, Holm-adjusted $p=\TcNinetyLastVsExpAwareHolm{}$ and $p=\TcNinetyLastVsExpRecalledHolm{}$). In the 32-day runs the two curves give similar outcomes. The power law falls steeply in the first hours and slowly after that. After min-max scaling over 92 days, a memory last used five hours earlier keeps \TcShapeActrFive{} of the recency range under ACT-R's curve and \TcShapeExpFive{} under the exponential, one used 35 hours earlier \TcShapeActrThirtyFive{} and \TcShapeExpThirtyFive{}. Recency then mostly separates the last few hours from everything else, and among older memories importance weighs more. This probably helps the invitation, which is more important than most of what an agent observes.
+
+\textbf{Counting every use locks the memory in.} With the sum over every use, only \TcNinetyUsesExRecalled{} agents recall the party when planning at 92 days and \TcNinetyUsesExAtt{} attend it, against \TcNinetyLastExRecalled{} and \TcNinetyLastExAtt{} with the last use (\TcThirtyUsesExRecalled{} against \TcThirtyLastExRecalled{} recalling it at 32 days). Every memory a retrieval returns counts as a use, so a memory that is retrieved gains weight and is retrieved again. Retrieval is concentrated under every form of the curve. At the end of \TcDiagSeeds{} of the 92-day runs, the 1\% most retrieved memories of an agent had received \TcDiagLastTopShare{} of its retrievals with the last use and \TcDiagUsesTopShare{} with every use. They are mostly pieces of news heard from other residents, which conversations bring up again and again. What differs is the effect on the score. With the last use a memory's recency term cannot exceed that of a fresh memory, so a memory heard an hour earlier still gets \TcDiagLastNewHour{} of the normalised range. Summed over every use, the most retrieved memories reach values of $D$ far above any single use, and the same memory gets \TcDiagUsesNewHour{}. ACT-R's logarithm compresses the range (\TcDiagLogNewHour{}) but changes the outcome little. With it the exact scan gives \TcNinetyLogExAware{} knowing agents, \TcNinetyLogExRecalled{} recalling the party and \TcNinetyLogExAtt{} guests. The lock-in therefore comes from counting retrievals as uses, not from leaving out the logarithm.
+
+\textbf{Overfetch hides the problem.} With every use counted, overfetch returns only \TcNinetyUsesReRecall{} of the true top-$k$ at 92 days, yet \TcNinetyUsesReAware{} agents know about the party. Most of the memories that lock the score in never enter its candidate set, while the newest memories always do. Its outcome resembles the score of the last use more than the score it is meant to compute.
+
+The index therefore no longer restricts the choice of curve, but the choice has to be tested in a closed loop. A score that looks reasonable on its own can lock an agent's memory in once every retrieval counts as a use.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4.5pt}
+\input{generated/tab_curves_town}
+\caption{The party scenario with ACT-R's curve in place of the paper's recency term, of the last use, summed over every use and, with the exact scan only, the logarithm of that sum. Columns as in \cref{tab:town}. Recall is against the exact scan of the same score. Stars mark a difference from that exact scan in a paired Wilcoxon test, Holm-corrected over the 24 comparisons in the table ($^{*}p<0.05$, $^{**}p<0.01$).}
+\label{tab:curvestown}
+\end{table}
 
 \subsection{Limits}
 \label{sec:curvelimits}
 
 \begin{itemize}
-\item ACT-R takes the logarithm of the sum before adding other sources of activation. The logarithm does not change which of two memories has the larger recency-frequency term, but it changes how that term trades off against importance and relevance, and the logarithm of an inner product is not an inner product. The score used here keeps the sum, which favours frequently used memories more than ACT-R does.
+\item ACT-R takes the logarithm of the sum before adding other sources of activation. The logarithm does not change which of two memories has the larger recency-frequency term, but it changes how that term trades off against importance and relevance, and the logarithm of an inner product is not an inner product. The score used here keeps the sum, which favours frequently used memories more than ACT-R does. In the town the logarithm changes little (\cref{sec:curvestown}).
+\item What locks the memory in is that every retrieved memory counts as a use. Remedies that still fold exist, for example a smaller weight for a retrieval than for the observation itself or a cap on the number of uses that count, but they are not tested here.
 \item The curve's parameters are ACT-R's usual choices, not values fitted to agents, and the use histories of the scale test are synthetic.
 \item Decay rates that differ from memory to memory, as in MemoryBank and FadeMem, fold only when they take a few values, with one block of coordinates per value. This is not implemented.
 \item The recent part is scanned, so its cost grows with the number of memories used in the last $W$ hours. Compaction rebuilds the merged segment from scratch, which is cheap for one agent's memory but would need a tiered scheme for millions of memories.

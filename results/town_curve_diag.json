@@ -1,0 +1,3208 @@
+{
+ "burn": 90,
+ "summary": {
+  "last": {
+   "seeds": 5,
+   "max_retrievals": 656.192,
+   "retrievals_per_memory": 5.334692143065006,
+   "top1_share": 0.6400514479479087,
+   "new_hour": 0.7007109461333788,
+   "aware": 15.0,
+   "recalled": 12.8,
+   "attended": 6.8,
+   "examples": [
+    "John Carter told me that Lily Adams is moving to another city next month",
+    "Ethan Lewis told me that Lily Adams is moving to another city next month",
+    "Leo Mitchell told me that Lily Adams is moving to another city next month",
+    "Adam Roberts told me that Lily Adams is moving to another city next month",
+    "Jack Baker told me that Lily Adams is moving to another city next month"
+   ]
+  },
+  "uses": {
+   "seeds": 5,
+   "max_retrievals": 734.648,
+   "retrievals_per_memory": 5.334641946176279,
+   "top1_share": 0.8220490169243664,
+   "new_hour": 0.02315868041017072,
+   "aware": 9.8,
+   "recalled": 1.8,
+   "attended": 1.8,
+   "examples": [
+    "John Carter told me that Grace Young is having a birthday dinner at the Rose Pub on Saturday at 7 pm",
+    "Lily Adams told me that Grace Young is having a birthday dinner at the Rose Pub on Saturday at 7 pm",
+    "Max Phillips told me that Maria Lopez got a promotion at work",
+    "Sophia Martin is attending a chemistry lecture at Oak Hill College",
+    "Leo Mitchell is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+   ]
+  },
+  "uses_log": {
+   "seeds": 5,
+   "max_retrievals": 691.992,
+   "retrievals_per_memory": 5.334176829193812,
+   "top1_share": 0.7808794439611498,
+   "new_hour": 0.4853038515808419,
+   "aware": 10.2,
+   "recalled": 3.4,
+   "attended": 2.2,
+   "examples": [
+    "Adam Roberts told me that Maria Lopez got a promotion at work",
+    "Max Phillips told me that Maria Lopez got a promotion at work",
+    "Leo Mitchell told me that Lily Adams is moving to another city next month",
+    "Adam Roberts told me that Lily Adams is moving to another city next month",
+    "Leo Mitchell told me that Maria Lopez got a promotion at work"
+   ]
+  }
+ },
+ "runs": [
+  {
+   "variant": "last",
+   "seed": 0,
+   "burn": 90,
+   "aware": 11,
+   "recalled": 8,
+   "attended": 3,
+   "agents": [
+    {
+     "memories": 5071,
+     "retrievals": 34812,
+     "max_retrievals": 879,
+     "top1_share": 0.6701999310582558,
+     "new_hour": 0.7006892539462366,
+     "most_retrieved": "John Carter told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4442,
+     "retrievals": 27584,
+     "max_retrievals": 698,
+     "top1_share": 0.5803726798143851,
+     "new_hour": 0.7006877459734662,
+     "most_retrieved": "Ethan Lewis told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4207,
+     "retrievals": 22693,
+     "max_retrievals": 599,
+     "top1_share": 0.6012426739523201,
+     "new_hour": 0.7007169624848844,
+     "most_retrieved": "Leo Mitchell told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4284,
+     "retrievals": 22146,
+     "max_retrievals": 567,
+     "top1_share": 0.5795629007495711,
+     "new_hour": 0.7007158460884231,
+     "most_retrieved": "Adam Roberts told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 5993,
+     "retrievals": 30105,
+     "max_retrievals": 711,
+     "top1_share": 0.6829430327188175,
+     "new_hour": 0.7007162182851285,
+     "most_retrieved": "Jack Baker told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4848,
+     "retrievals": 20098,
+     "max_retrievals": 545,
+     "top1_share": 0.6584734799482536,
+     "new_hour": 0.7007177064265572,
+     "most_retrieved": "Sophia Martin told me that Leo Mitchell is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 5329,
+     "retrievals": 26067,
+     "max_retrievals": 634,
+     "top1_share": 0.6716921778493881,
+     "new_hour": 0.7007124934098923,
+     "most_retrieved": "Ethan Lewis told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 3484,
+     "retrievals": 19264,
+     "max_retrievals": 489,
+     "top1_share": 0.5370639534883721,
+     "new_hour": 0.7007139841358747,
+     "most_retrieved": "Ethan Lewis is moving to another city next month"
+    },
+    {
+     "memories": 3885,
+     "retrievals": 22333,
+     "max_retrievals": 580,
+     "top1_share": 0.5670084628128778,
+     "new_hour": 0.7007177064265572,
+     "most_retrieved": "Ella Turner told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 5242,
+     "retrievals": 19972,
+     "max_retrievals": 518,
+     "top1_share": 0.6709393150410575,
+     "new_hour": 0.7007128661884579,
+     "most_retrieved": "Noah Hall is organizing a charity run at Riverside Park on Monday morning"
+    },
+    {
+     "memories": 4366,
+     "retrievals": 20859,
+     "max_retrievals": 528,
+     "top1_share": 0.6225130639052687,
+     "new_hour": 0.700708762060207,
+     "most_retrieved": "Mia Clark told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4122,
+     "retrievals": 25899,
+     "max_retrievals": 603,
+     "top1_share": 0.5690953318660952,
+     "new_hour": 0.7006866143010149,
+     "most_retrieved": "Ethan Lewis told me that Ethan Lewis is moving to another city next month"
+    },
+    {
+     "memories": 4280,
+     "retrievals": 28678,
+     "max_retrievals": 715,
+     "top1_share": 0.6234047004672572,
+     "new_hour": 0.7006847268589673,
+     "most_retrieved": "Ethan Lewis told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4708,
+     "retrievals": 32346,
+     "max_retrievals": 819,
+     "top1_share": 0.6173870030297409,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "Leo Mitchell told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 3689,
+     "retrievals": 21008,
+     "max_retrievals": 539,
+     "top1_share": 0.5835872048743336,
+     "new_hour": 0.7007132389022976,
+     "most_retrieved": "Samuel Green told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 8745,
+     "retrievals": 39751,
+     "max_retrievals": 967,
+     "top1_share": 0.8044325928907449,
+     "new_hour": 0.7007169624848844,
+     "most_retrieved": "John Carter told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 8449,
+     "retrievals": 30787,
+     "max_retrievals": 762,
+     "top1_share": 0.7855263585279502,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "Anna Novak told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 8748,
+     "retrievals": 32793,
+     "max_retrievals": 790,
+     "top1_share": 0.8076418747903517,
+     "new_hour": 0.7007191935362489,
+     "most_retrieved": "Oliver Brown told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4468,
+     "retrievals": 18948,
+     "max_retrievals": 429,
+     "top1_share": 0.6526282457251424,
+     "new_hour": 0.7007158460884231,
+     "most_retrieved": "Henry King told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 5254,
+     "retrievals": 36240,
+     "max_retrievals": 874,
+     "top1_share": 0.639210816777042,
+     "new_hour": 0.7007117476585093,
+     "most_retrieved": "Emma Wilson told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 6170,
+     "retrievals": 30995,
+     "max_retrievals": 811,
+     "top1_share": 0.718148088401355,
+     "new_hour": 0.7007151015012637,
+     "most_retrieved": "Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 3355,
+     "retrievals": 21371,
+     "max_retrievals": 506,
+     "top1_share": 0.5298301436526134,
+     "new_hour": 0.700685482034096,
+     "most_retrieved": "John Carter told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 3999,
+     "retrievals": 20106,
+     "max_retrievals": 528,
+     "top1_share": 0.5939023177161047,
+     "new_hour": 0.700715473827141,
+     "most_retrieved": "Adam Roberts got a promotion at work"
+    },
+    {
+     "memories": 4230,
+     "retrievals": 21543,
+     "max_retrievals": 546,
+     "top1_share": 0.62962447198626,
+     "new_hour": 0.7006835936001151,
+     "most_retrieved": "Leo Mitchell told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 5093,
+     "retrievals": 28763,
+     "max_retrievals": 711,
+     "top1_share": 0.65872822723638,
+     "new_hour": 0.7007184501102959,
+     "most_retrieved": "Maria Lopez told me that Lily Adams is moving to another city next month"
+    }
+   ]
+  },
+  {
+   "variant": "last",
+   "seed": 1,
+   "burn": 90,
+   "aware": 19,
+   "recalled": 16,
+   "attended": 12,
+   "agents": [
+    {
+     "memories": 4811,
+     "retrievals": 32974,
+     "max_retrievals": 780,
+     "top1_share": 0.6335597743676836,
+     "new_hour": 0.7007132389022976,
+     "most_retrieved": "John Carter told me that Ella Turner is moving to another city next month"
+    },
+    {
+     "memories": 4246,
+     "retrievals": 26822,
+     "max_retrievals": 706,
+     "top1_share": 0.5898143315189024,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Ethan Lewis told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4070,
+     "retrievals": 21541,
+     "max_retrievals": 536,
+     "top1_share": 0.5873450629033007,
+     "new_hour": 0.7007124934098923,
+     "most_retrieved": "Adam Roberts is moving to another city next month"
+    },
+    {
+     "memories": 4513,
+     "retrievals": 22287,
+     "max_retrievals": 549,
+     "top1_share": 0.5806523982590748,
+     "new_hour": 0.7007143566556492,
+     "most_retrieved": "Ryan Hill told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 6020,
+     "retrievals": 29749,
+     "max_retrievals": 693,
+     "top1_share": 0.6782748999966386,
+     "new_hour": 0.7007206796153918,
+     "most_retrieved": "Emma Wilson told me that Ella Turner is moving to another city next month"
+    },
+    {
+     "memories": 4807,
+     "retrievals": 19728,
+     "max_retrievals": 551,
+     "top1_share": 0.6537408759124088,
+     "new_hour": 0.7007046500752152,
+     "most_retrieved": "Sophia Martin told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5151,
+     "retrievals": 23904,
+     "max_retrievals": 638,
+     "top1_share": 0.6921017402945113,
+     "new_hour": 0.7007158460884231,
+     "most_retrieved": "Ella Turner told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3466,
+     "retrievals": 18574,
+     "max_retrievals": 481,
+     "top1_share": 0.5508775707978896,
+     "new_hour": 0.7006843491721904,
+     "most_retrieved": "Max Phillips told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3837,
+     "retrievals": 21921,
+     "max_retrievals": 593,
+     "top1_share": 0.5899822088408375,
+     "new_hour": 0.7007121205665824,
+     "most_retrieved": "John Carter told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5199,
+     "retrievals": 19993,
+     "max_retrievals": 507,
+     "top1_share": 0.7104986745360876,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Max Phillips told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4494,
+     "retrievals": 22943,
+     "max_retrievals": 621,
+     "top1_share": 0.6640369611646254,
+     "new_hour": 0.7007139841358747,
+     "most_retrieved": "Maria Lopez told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4141,
+     "retrievals": 25725,
+     "max_retrievals": 628,
+     "top1_share": 0.5935471331389699,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "Ethan Lewis told me that Ella Turner is moving to another city next month"
+    },
+    {
+     "memories": 4121,
+     "retrievals": 25159,
+     "max_retrievals": 643,
+     "top1_share": 0.5569776223220319,
+     "new_hour": 0.7007136115514303,
+     "most_retrieved": "Samuel Green told me that Leo Mitchell is moving to another city next month"
+    },
+    {
+     "memories": 4637,
+     "retrievals": 32251,
+     "max_retrievals": 824,
+     "top1_share": 0.6213450745713311,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "John Carter told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3599,
+     "retrievals": 20519,
+     "max_retrievals": 526,
+     "top1_share": 0.5568984843315951,
+     "new_hour": 0.7006775394768825,
+     "most_retrieved": "Anna Novak told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 8613,
+     "retrievals": 39888,
+     "max_retrievals": 1038,
+     "top1_share": 0.771685720016045,
+     "new_hour": 0.7007128661884579,
+     "most_retrieved": "Mia Clark told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 8475,
+     "retrievals": 34354,
+     "max_retrievals": 839,
+     "top1_share": 0.7698957908831577,
+     "new_hour": 0.7007151015012637,
+     "most_retrieved": "Jack Baker told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 8851,
+     "retrievals": 35815,
+     "max_retrievals": 890,
+     "top1_share": 0.8104146307413095,
+     "new_hour": 0.7007214222688782,
+     "most_retrieved": "Sophia Martin told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4290,
+     "retrievals": 19692,
+     "max_retrievals": 537,
+     "top1_share": 0.649908592321755,
+     "new_hour": 0.7007136115514303,
+     "most_retrieved": "Sophia Martin told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5182,
+     "retrievals": 36230,
+     "max_retrievals": 905,
+     "top1_share": 0.6140767319900635,
+     "new_hour": 0.7007136115514303,
+     "most_retrieved": "Lily Adams told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 6240,
+     "retrievals": 31555,
+     "max_retrievals": 792,
+     "top1_share": 0.6919980985580733,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Samuel Green told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3463,
+     "retrievals": 18330,
+     "max_retrievals": 490,
+     "top1_share": 0.5642662302236771,
+     "new_hour": 0.700715473827141,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3989,
+     "retrievals": 19872,
+     "max_retrievals": 550,
+     "top1_share": 0.6111111111111112,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "Ava Walker told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3899,
+     "retrievals": 19125,
+     "max_retrievals": 513,
+     "top1_share": 0.6169411764705882,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Ella Turner is moving to another city next month"
+    },
+    {
+     "memories": 5123,
+     "retrievals": 29182,
+     "max_retrievals": 780,
+     "top1_share": 0.6285724076485505,
+     "new_hour": 0.7007139841358747,
+     "most_retrieved": "Leo Mitchell told me that Grace Young is moving to another city next month"
+    }
+   ]
+  },
+  {
+   "variant": "last",
+   "seed": 2,
+   "burn": 90,
+   "aware": 14,
+   "recalled": 13,
+   "attended": 5,
+   "agents": [
+    {
+     "memories": 5078,
+     "retrievals": 34980,
+     "max_retrievals": 926,
+     "top1_share": 0.697770154373928,
+     "new_hour": 0.7007151015012637,
+     "most_retrieved": "Oliver Brown told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4252,
+     "retrievals": 26579,
+     "max_retrievals": 710,
+     "top1_share": 0.6096918619963129,
+     "new_hour": 0.7007151015012637,
+     "most_retrieved": "Mia Clark told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4177,
+     "retrievals": 22774,
+     "max_retrievals": 610,
+     "top1_share": 0.615131290067621,
+     "new_hour": 0.7007139841358747,
+     "most_retrieved": "Chloe Scott told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4332,
+     "retrievals": 21956,
+     "max_retrievals": 577,
+     "top1_share": 0.6089907086901075,
+     "new_hour": 0.7007184501102959,
+     "most_retrieved": "Jack Baker told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 6080,
+     "retrievals": 32532,
+     "max_retrievals": 876,
+     "top1_share": 0.7178777818763064,
+     "new_hour": 0.700715473827141,
+     "most_retrieved": "Lucas Martin told me that Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 4704,
+     "retrievals": 20405,
+     "max_retrievals": 589,
+     "top1_share": 0.6239647145307523,
+     "new_hour": 0.7007106285455243,
+     "most_retrieved": "Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 5211,
+     "retrievals": 26041,
+     "max_retrievals": 678,
+     "top1_share": 0.7133750624015974,
+     "new_hour": 0.7007210509742933,
+     "most_retrieved": "Henry King told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3492,
+     "retrievals": 18451,
+     "max_retrievals": 491,
+     "top1_share": 0.577096092352718,
+     "new_hour": 0.7007095088489977,
+     "most_retrieved": "Henry King told me that Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 3828,
+     "retrievals": 21071,
+     "max_retrievals": 576,
+     "top1_share": 0.6196668406815053,
+     "new_hour": 0.7006832157147782,
+     "most_retrieved": "Chloe Scott told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 5151,
+     "retrievals": 19085,
+     "max_retrievals": 558,
+     "top1_share": 0.68713649462929,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Grace Young told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4505,
+     "retrievals": 22065,
+     "max_retrievals": 584,
+     "top1_share": 0.6681169272603671,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Mia Clark told me that Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 4085,
+     "retrievals": 25710,
+     "max_retrievals": 717,
+     "top1_share": 0.5995332555425904,
+     "new_hour": 0.7007184501102959,
+     "most_retrieved": "Grace Young told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4162,
+     "retrievals": 27220,
+     "max_retrievals": 670,
+     "top1_share": 0.6498897869213813,
+     "new_hour": 0.700715473827141,
+     "most_retrieved": "Oliver Brown told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4635,
+     "retrievals": 30896,
+     "max_retrievals": 833,
+     "top1_share": 0.6548744174003107,
+     "new_hour": 0.7006843491721904,
+     "most_retrieved": "John Carter told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3765,
+     "retrievals": 22810,
+     "max_retrievals": 627,
+     "top1_share": 0.6177115300306883,
+     "new_hour": 0.7006779183576266,
+     "most_retrieved": "Henry King told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 8709,
+     "retrievals": 39534,
+     "max_retrievals": 1022,
+     "top1_share": 0.8170182627611676,
+     "new_hour": 0.700720308192155,
+     "most_retrieved": "Samuel Green told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 8576,
+     "retrievals": 33365,
+     "max_retrievals": 872,
+     "top1_share": 0.7954143563614566,
+     "new_hour": 0.7007169624848844,
+     "most_retrieved": "Sophia Martin told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 8704,
+     "retrievals": 33688,
+     "max_retrievals": 886,
+     "top1_share": 0.8052719069104726,
+     "new_hour": 0.7007169624848844,
+     "most_retrieved": "Jack Baker told me that Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 4367,
+     "retrievals": 18332,
+     "max_retrievals": 523,
+     "top1_share": 0.6641937595461488,
+     "new_hour": 0.7007162182851285,
+     "most_retrieved": "Adam Roberts told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 5280,
+     "retrievals": 36555,
+     "max_retrievals": 901,
+     "top1_share": 0.7360962932567364,
+     "new_hour": 0.7007169624848844,
+     "most_retrieved": "Emma Wilson told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 6547,
+     "retrievals": 32681,
+     "max_retrievals": 887,
+     "top1_share": 0.7514457941923441,
+     "new_hour": 0.7007165904172761,
+     "most_retrieved": "Ava Walker told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3462,
+     "retrievals": 21483,
+     "max_retrievals": 549,
+     "top1_share": 0.5548573290508775,
+     "new_hour": 0.7006824597454095,
+     "most_retrieved": "Maria Lopez told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3977,
+     "retrievals": 19318,
+     "max_retrievals": 519,
+     "top1_share": 0.6448907754425924,
+     "new_hour": 0.7006862369447862,
+     "most_retrieved": "Leo Mitchell told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3958,
+     "retrievals": 19664,
+     "max_retrievals": 538,
+     "top1_share": 0.5863506916192026,
+     "new_hour": 0.700715473827141,
+     "most_retrieved": "Emma Wilson told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 5107,
+     "retrievals": 26687,
+     "max_retrievals": 713,
+     "top1_share": 0.6830291902424401,
+     "new_hour": 0.7007151015012637,
+     "most_retrieved": "Anna Novak told me that Emma Wilson is moving to another city next month"
+    }
+   ]
+  },
+  {
+   "variant": "last",
+   "seed": 3,
+   "burn": 90,
+   "aware": 16,
+   "recalled": 15,
+   "attended": 10,
+   "agents": [
+    {
+     "memories": 4977,
+     "retrievals": 35363,
+     "max_retrievals": 831,
+     "top1_share": 0.5724061872578684,
+     "new_hour": 0.7007195651526021,
+     "most_retrieved": "Zoe Nelson told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4345,
+     "retrievals": 28626,
+     "max_retrievals": 693,
+     "top1_share": 0.5313002165863201,
+     "new_hour": 0.7007139841358747,
+     "most_retrieved": "Henry King is having a birthday dinner at the Rose Pub on Friday at 7 pm"
+    },
+    {
+     "memories": 4206,
+     "retrievals": 22167,
+     "max_retrievals": 542,
+     "top1_share": 0.5674651508999865,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "Mia Clark told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4435,
+     "retrievals": 22238,
+     "max_retrievals": 515,
+     "top1_share": 0.5929939742782624,
+     "new_hour": 0.7007147291107727,
+     "most_retrieved": "Jack Baker told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 6025,
+     "retrievals": 30415,
+     "max_retrievals": 723,
+     "top1_share": 0.6572743711984218,
+     "new_hour": 0.7007136115514303,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4709,
+     "retrievals": 20888,
+     "max_retrievals": 515,
+     "top1_share": 0.6060896208349291,
+     "new_hour": 0.7007113746856544,
+     "most_retrieved": "Lily Adams told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5278,
+     "retrievals": 24951,
+     "max_retrievals": 602,
+     "top1_share": 0.6541220792753798,
+     "new_hour": 0.7007288346825365,
+     "most_retrieved": "Leo Mitchell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3615,
+     "retrievals": 20273,
+     "max_retrievals": 497,
+     "top1_share": 0.5560597839490948,
+     "new_hour": 0.7006832157147782,
+     "most_retrieved": "John Carter is hosting a board game night at the Rose Pub on Saturday at 8 pm"
+    },
+    {
+     "memories": 3911,
+     "retrievals": 23118,
+     "max_retrievals": 527,
+     "top1_share": 0.5566225452028722,
+     "new_hour": 0.7007132389022976,
+     "most_retrieved": "Noah Hall told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5208,
+     "retrievals": 20486,
+     "max_retrievals": 443,
+     "top1_share": 0.6298935858635165,
+     "new_hour": 0.7007165904172761,
+     "most_retrieved": "Ava Walker told me that Adam Roberts is moving to another city next month"
+    },
+    {
+     "memories": 4481,
+     "retrievals": 23544,
+     "max_retrievals": 544,
+     "top1_share": 0.6137020047570506,
+     "new_hour": 0.7007165904172761,
+     "most_retrieved": "Lily Adams told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4157,
+     "retrievals": 26676,
+     "max_retrievals": 666,
+     "top1_share": 0.5251536962063278,
+     "new_hour": 0.7006869915911916,
+     "most_retrieved": "Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4287,
+     "retrievals": 28077,
+     "max_retrievals": 645,
+     "top1_share": 0.5857819567617623,
+     "new_hour": 0.7007169624848844,
+     "most_retrieved": "Ruby Perez told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4689,
+     "retrievals": 30828,
+     "max_retrievals": 745,
+     "top1_share": 0.5887829246139873,
+     "new_hour": 0.7007169624848844,
+     "most_retrieved": "Lucas Martin told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3646,
+     "retrievals": 21554,
+     "max_retrievals": 531,
+     "top1_share": 0.5157279391296279,
+     "new_hour": 0.7006794332158371,
+     "most_retrieved": "Henry King told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 8793,
+     "retrievals": 39581,
+     "max_retrievals": 905,
+     "top1_share": 0.7544528940653343,
+     "new_hour": 0.7007158460884231,
+     "most_retrieved": "Jack Baker is attending the news that John Carter is hosting a board game night at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 8667,
+     "retrievals": 34431,
+     "max_retrievals": 696,
+     "top1_share": 0.76570532369086,
+     "new_hour": 0.7007147291107727,
+     "most_retrieved": "Jack Baker told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 8671,
+     "retrievals": 32284,
+     "max_retrievals": 608,
+     "top1_share": 0.7277908561516541,
+     "new_hour": 0.7007243903123785,
+     "most_retrieved": "Emma Wilson told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4234,
+     "retrievals": 20979,
+     "max_retrievals": 495,
+     "top1_share": 0.584250917584251,
+     "new_hour": 0.7007151015012637,
+     "most_retrieved": "Adam Roberts is moving to another city next month"
+    },
+    {
+     "memories": 5229,
+     "retrievals": 35410,
+     "max_retrievals": 846,
+     "top1_share": 0.6220276757977973,
+     "new_hour": 0.7007151015012637,
+     "most_retrieved": "Henry King told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 6292,
+     "retrievals": 31116,
+     "max_retrievals": 719,
+     "top1_share": 0.6948193855251318,
+     "new_hour": 0.7007229068044216,
+     "most_retrieved": "Lucas Martin told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3428,
+     "retrievals": 19244,
+     "max_retrievals": 427,
+     "top1_share": 0.5106526709623779,
+     "new_hour": 0.7006843491721904,
+     "most_retrieved": "Ruby Perez got a promotion at work"
+    },
+    {
+     "memories": 3981,
+     "retrievals": 19634,
+     "max_retrievals": 532,
+     "top1_share": 0.5963634511561576,
+     "new_hour": 0.7006881230656024,
+     "most_retrieved": "Chloe Scott told me that Lucas Martin is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4265,
+     "retrievals": 21775,
+     "max_retrievals": 538,
+     "top1_share": 0.572812858783008,
+     "new_hour": 0.700715473827141,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5079,
+     "retrievals": 27865,
+     "max_retrievals": 658,
+     "top1_share": 0.643172438542975,
+     "new_hour": 0.7007132389022976,
+     "most_retrieved": "Sophia Martin told me that Grace Young is moving to another city next month"
+    }
+   ]
+  },
+  {
+   "variant": "last",
+   "seed": 4,
+   "burn": 90,
+   "aware": 15,
+   "recalled": 12,
+   "attended": 4,
+   "agents": [
+    {
+     "memories": 4942,
+     "retrievals": 36957,
+     "max_retrievals": 913,
+     "top1_share": 0.6231295830289255,
+     "new_hour": 0.7007136115514303,
+     "most_retrieved": "Ruby Perez told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4296,
+     "retrievals": 27211,
+     "max_retrievals": 679,
+     "top1_share": 0.5842857667854912,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "Anna Novak told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4303,
+     "retrievals": 21363,
+     "max_retrievals": 548,
+     "top1_share": 0.6242100828535319,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Mia Clark told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4441,
+     "retrievals": 21844,
+     "max_retrievals": 534,
+     "top1_share": 0.5818073612891412,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Lucas Martin is moving to another city next month"
+    },
+    {
+     "memories": 5967,
+     "retrievals": 31935,
+     "max_retrievals": 790,
+     "top1_share": 0.7012368874275873,
+     "new_hour": 0.700715473827141,
+     "most_retrieved": "Jack Baker told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4684,
+     "retrievals": 19905,
+     "max_retrievals": 495,
+     "top1_share": 0.6532529515197186,
+     "new_hour": 0.700682837763216,
+     "most_retrieved": "Jack Baker told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 5140,
+     "retrievals": 26461,
+     "max_retrievals": 596,
+     "top1_share": 0.668153131023015,
+     "new_hour": 0.7007229068044216,
+     "most_retrieved": "Leo Mitchell told me that Ryan Hill is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 3546,
+     "retrievals": 19096,
+     "max_retrievals": 458,
+     "top1_share": 0.5549853372434017,
+     "new_hour": 0.7007128661884579,
+     "most_retrieved": "Henry King told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 3769,
+     "retrievals": 21302,
+     "max_retrievals": 531,
+     "top1_share": 0.568538165430476,
+     "new_hour": 0.700682837763216,
+     "most_retrieved": "Anna Novak told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 5122,
+     "retrievals": 19670,
+     "max_retrievals": 533,
+     "top1_share": 0.6582613116420946,
+     "new_hour": 0.7007124934098923,
+     "most_retrieved": "Grace Young told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4329,
+     "retrievals": 20600,
+     "max_retrievals": 543,
+     "top1_share": 0.6464563106796116,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Nora Campbell told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4154,
+     "retrievals": 24451,
+     "max_retrievals": 607,
+     "top1_share": 0.5769089198805775,
+     "new_hour": 0.7007121205665824,
+     "most_retrieved": "Leo Mitchell told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4280,
+     "retrievals": 27161,
+     "max_retrievals": 676,
+     "top1_share": 0.6062368837671661,
+     "new_hour": 0.7007151015012637,
+     "most_retrieved": "Ava Walker told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4716,
+     "retrievals": 32834,
+     "max_retrievals": 822,
+     "top1_share": 0.6460071876713163,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Maria Lopez told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 3573,
+     "retrievals": 22378,
+     "max_retrievals": 576,
+     "top1_share": 0.5396818303691125,
+     "new_hour": 0.7007169624848844,
+     "most_retrieved": "Sophia Martin told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 8839,
+     "retrievals": 39953,
+     "max_retrievals": 925,
+     "top1_share": 0.7987635471679223,
+     "new_hour": 0.7007258727939306,
+     "most_retrieved": "Zoe Nelson told me that Lucas Martin is moving to another city next month"
+    },
+    {
+     "memories": 8694,
+     "retrievals": 35285,
+     "max_retrievals": 761,
+     "top1_share": 0.7941901657928299,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "Jack Baker told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 8992,
+     "retrievals": 36472,
+     "max_retrievals": 906,
+     "top1_share": 0.8202456679096293,
+     "new_hour": 0.7007225357669182,
+     "most_retrieved": "Maria Lopez told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4372,
+     "retrievals": 20171,
+     "max_retrievals": 514,
+     "top1_share": 0.6110753061325666,
+     "new_hour": 0.7007173344879719,
+     "most_retrieved": "Samuel Green told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 5331,
+     "retrievals": 37221,
+     "max_retrievals": 888,
+     "top1_share": 0.6774670213051772,
+     "new_hour": 0.7007139841358747,
+     "most_retrieved": "Emma Wilson told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 6045,
+     "retrievals": 30117,
+     "max_retrievals": 732,
+     "top1_share": 0.7316797821828204,
+     "new_hour": 0.7007076413899868,
+     "most_retrieved": "Nora Campbell told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 3486,
+     "retrievals": 20887,
+     "max_retrievals": 521,
+     "top1_share": 0.5220472063963231,
+     "new_hour": 0.700718078300659,
+     "most_retrieved": "Chloe Scott told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 3981,
+     "retrievals": 18261,
+     "max_retrievals": 450,
+     "top1_share": 0.5863862877169925,
+     "new_hour": 0.7007177064265572,
+     "most_retrieved": "Nora Campbell told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4158,
+     "retrievals": 20684,
+     "max_retrievals": 513,
+     "top1_share": 0.602107909495262,
+     "new_hour": 0.7007117476585093,
+     "most_retrieved": "John Carter told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4975,
+     "retrievals": 27510,
+     "max_retrievals": 680,
+     "top1_share": 0.6608142493638677,
+     "new_hour": 0.7007184501102959,
+     "most_retrieved": "Nora Campbell told me that Samuel Green is moving to another city next month"
+    }
+   ]
+  },
+  {
+   "variant": "uses",
+   "seed": 0,
+   "burn": 90,
+   "aware": 8,
+   "recalled": 1,
+   "attended": 1,
+   "agents": [
+    {
+     "memories": 5053,
+     "retrievals": 34737,
+     "max_retrievals": 951,
+     "top1_share": 0.8234159541699053,
+     "new_hour": 0.018019357559537433,
+     "most_retrieved": "John Carter told me that Grace Young is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 4430,
+     "retrievals": 27509,
+     "max_retrievals": 767,
+     "top1_share": 0.7815260460213022,
+     "new_hour": 0.02065813671643692,
+     "most_retrieved": "Lily Adams told me that Grace Young is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 4202,
+     "retrievals": 22693,
+     "max_retrievals": 639,
+     "top1_share": 0.8161547613801613,
+     "new_hour": 0.025408446706403506,
+     "most_retrieved": "Max Phillips told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4279,
+     "retrievals": 22146,
+     "max_retrievals": 646,
+     "top1_share": 0.8155423101237244,
+     "new_hour": 0.02630789366979707,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 5988,
+     "retrievals": 30180,
+     "max_retrievals": 850,
+     "top1_share": 0.9097746852220013,
+     "new_hour": 0.01935841239716418,
+     "most_retrieved": "Leo Mitchell is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 4845,
+     "retrievals": 20098,
+     "max_retrievals": 577,
+     "top1_share": 0.8544133744651209,
+     "new_hour": 0.029541917403934727,
+     "most_retrieved": "Lucas Martin lost a wallet at the gym"
+    },
+    {
+     "memories": 5325,
+     "retrievals": 26067,
+     "max_retrievals": 741,
+     "top1_share": 0.8488126750297311,
+     "new_hour": 0.022388334384348577,
+     "most_retrieved": "Zoe Nelson is looking for a new apartment"
+    },
+    {
+     "memories": 3476,
+     "retrievals": 19189,
+     "max_retrievals": 547,
+     "top1_share": 0.7402157486059722,
+     "new_hour": 0.02872664426256212,
+     "most_retrieved": "Mia Clark told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 3885,
+     "retrievals": 22333,
+     "max_retrievals": 623,
+     "top1_share": 0.7256973984686339,
+     "new_hour": 0.024804402886640934,
+     "most_retrieved": "Chloe Scott told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 5246,
+     "retrievals": 19972,
+     "max_retrievals": 567,
+     "top1_share": 0.8456338874424194,
+     "new_hour": 0.027492226811583947,
+     "most_retrieved": "Sophia Martin is hosting a board game night at the Rose Pub on Monday at 8 pm"
+    },
+    {
+     "memories": 4363,
+     "retrievals": 20784,
+     "max_retrievals": 583,
+     "top1_share": 0.7857486528098537,
+     "new_hour": 0.028545198271566027,
+     "most_retrieved": "Maria Lopez told me that Grace Young is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 4103,
+     "retrievals": 25749,
+     "max_retrievals": 718,
+     "top1_share": 0.7808846945512448,
+     "new_hour": 0.021990976269493395,
+     "most_retrieved": "Adam Roberts told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4262,
+     "retrievals": 28753,
+     "max_retrievals": 815,
+     "top1_share": 0.7945257886133621,
+     "new_hour": 0.02033777822882043,
+     "most_retrieved": "Adam Roberts told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4687,
+     "retrievals": 32271,
+     "max_retrievals": 880,
+     "top1_share": 0.8018344643797837,
+     "new_hour": 0.01719578741472973,
+     "most_retrieved": "Chloe Scott told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 3689,
+     "retrievals": 21008,
+     "max_retrievals": 605,
+     "top1_share": 0.777894135567403,
+     "new_hour": 0.026881826409190103,
+     "most_retrieved": "Grace Young is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 8743,
+     "retrievals": 39751,
+     "max_retrievals": 1106,
+     "top1_share": 0.9509949435234334,
+     "new_hour": 0.014481148577485507,
+     "most_retrieved": "Zoe Nelson is attending a literature seminar at Oak Hill College"
+    },
+    {
+     "memories": 8455,
+     "retrievals": 30637,
+     "max_retrievals": 859,
+     "top1_share": 0.9411169500930248,
+     "new_hour": 0.018912151550812925,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 8764,
+     "retrievals": 32943,
+     "max_retrievals": 932,
+     "top1_share": 0.9525544121664694,
+     "new_hour": 0.017396423410771557,
+     "most_retrieved": "Zoe Nelson is attending a literature seminar at Oak Hill College"
+    },
+    {
+     "memories": 4466,
+     "retrievals": 18948,
+     "max_retrievals": 552,
+     "top1_share": 0.8243086341566392,
+     "new_hour": 0.030318575295297603,
+     "most_retrieved": "Chloe Scott told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 5237,
+     "retrievals": 36165,
+     "max_retrievals": 960,
+     "top1_share": 0.8453200608322964,
+     "new_hour": 0.016244671503946356,
+     "most_retrieved": "Chloe Scott told me that Leo Mitchell is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 6156,
+     "retrievals": 30920,
+     "max_retrievals": 840,
+     "top1_share": 0.8871604139715394,
+     "new_hour": 0.019938832877934156,
+     "most_retrieved": "Nora Campbell told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 3342,
+     "retrievals": 21221,
+     "max_retrievals": 585,
+     "top1_share": 0.697139625842326,
+     "new_hour": 0.026809264889901527,
+     "most_retrieved": "Max Phillips told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4002,
+     "retrievals": 20106,
+     "max_retrievals": 580,
+     "top1_share": 0.7869292748433303,
+     "new_hour": 0.02718654532105327,
+     "most_retrieved": "Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4226,
+     "retrievals": 21543,
+     "max_retrievals": 608,
+     "top1_share": 0.8145569326463352,
+     "new_hour": 0.027576960310023733,
+     "most_retrieved": "Ella Turner got a promotion at work"
+    },
+    {
+     "memories": 5082,
+     "retrievals": 28763,
+     "max_retrievals": 807,
+     "top1_share": 0.8290164447380315,
+     "new_hour": 0.0197323209286274,
+     "most_retrieved": "Ava Walker told me that Maria Lopez got a promotion at work"
+    }
+   ]
+  },
+  {
+   "variant": "uses",
+   "seed": 1,
+   "burn": 90,
+   "aware": 14,
+   "recalled": 2,
+   "attended": 2,
+   "agents": [
+    {
+     "memories": 4787,
+     "retrievals": 32974,
+     "max_retrievals": 884,
+     "top1_share": 0.7892582034330078,
+     "new_hour": 0.019765170629804908,
+     "most_retrieved": "Max Phillips told me that Lucas Martin adopted a puppy"
+    },
+    {
+     "memories": 4246,
+     "retrievals": 26897,
+     "max_retrievals": 727,
+     "top1_share": 0.782540803807116,
+     "new_hour": 0.02302778100392676,
+     "most_retrieved": "Maria Lopez told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4069,
+     "retrievals": 21466,
+     "max_retrievals": 598,
+     "top1_share": 0.7688903382092611,
+     "new_hour": 0.025900515294921947,
+     "most_retrieved": "Emma Wilson is attending the news that Samuel Green is hosting a board game night at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 4488,
+     "retrievals": 22137,
+     "max_retrievals": 646,
+     "top1_share": 0.8389122283958983,
+     "new_hour": 0.02542638282871456,
+     "most_retrieved": "Jack Baker is attending an economics lecture at Oak Hill College"
+    },
+    {
+     "memories": 6000,
+     "retrievals": 29749,
+     "max_retrievals": 850,
+     "top1_share": 0.9096440216477865,
+     "new_hour": 0.018674355100874607,
+     "most_retrieved": "Jack Baker is attending an economics lecture at Oak Hill College"
+    },
+    {
+     "memories": 4809,
+     "retrievals": 19728,
+     "max_retrievals": 552,
+     "top1_share": 0.8542680454176804,
+     "new_hour": 0.030118146343255485,
+     "most_retrieved": "Mia Clark told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5147,
+     "retrievals": 23754,
+     "max_retrievals": 651,
+     "top1_share": 0.8409952008082849,
+     "new_hour": 0.023788147529541444,
+     "most_retrieved": "Ava Walker told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3453,
+     "retrievals": 18499,
+     "max_retrievals": 541,
+     "top1_share": 0.7320936266825234,
+     "new_hour": 0.03017153292269624,
+     "most_retrieved": "Ethan Lewis is watching football on television at Rose Pub"
+    },
+    {
+     "memories": 3835,
+     "retrievals": 21846,
+     "max_retrievals": 613,
+     "top1_share": 0.7497482376636455,
+     "new_hour": 0.02597353161684005,
+     "most_retrieved": "Leo Mitchell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5185,
+     "retrievals": 19843,
+     "max_retrievals": 565,
+     "top1_share": 0.8385324799677468,
+     "new_hour": 0.0279172412861517,
+     "most_retrieved": "Grace Young told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4468,
+     "retrievals": 22868,
+     "max_retrievals": 654,
+     "top1_share": 0.7974899422774182,
+     "new_hour": 0.0254223857559835,
+     "most_retrieved": "Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4106,
+     "retrievals": 25575,
+     "max_retrievals": 722,
+     "top1_share": 0.7808797653958944,
+     "new_hour": 0.021813611578287585,
+     "most_retrieved": "Grace Young told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4119,
+     "retrievals": 25159,
+     "max_retrievals": 695,
+     "top1_share": 0.7911681704360268,
+     "new_hour": 0.022695888884498572,
+     "most_retrieved": "Samuel Green told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4606,
+     "retrievals": 32026,
+     "max_retrievals": 870,
+     "top1_share": 0.7931992755885843,
+     "new_hour": 0.01809651490730858,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3585,
+     "retrievals": 20444,
+     "max_retrievals": 577,
+     "top1_share": 0.7374290745450988,
+     "new_hour": 0.02657506168716308,
+     "most_retrieved": "Grace Young told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 8615,
+     "retrievals": 39738,
+     "max_retrievals": 1094,
+     "top1_share": 0.9454678141828979,
+     "new_hour": 0.014296433788319475,
+     "most_retrieved": "Jack Baker is attending an economics lecture at Oak Hill College"
+    },
+    {
+     "memories": 8473,
+     "retrievals": 34054,
+     "max_retrievals": 933,
+     "top1_share": 0.9461149938333235,
+     "new_hour": 0.016608952121383497,
+     "most_retrieved": "Zoe Nelson is attending a literature seminar at Oak Hill College"
+    },
+    {
+     "memories": 8868,
+     "retrievals": 35590,
+     "max_retrievals": 1004,
+     "top1_share": 0.9586962629952234,
+     "new_hour": 0.015840272347762443,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 4290,
+     "retrievals": 19692,
+     "max_retrievals": 582,
+     "top1_share": 0.8100751574243348,
+     "new_hour": 0.028506208193576917,
+     "most_retrieved": "Samuel Green is hosting a board game night at the Rose Pub on Thursday at 8 pm"
+    },
+    {
+     "memories": 5155,
+     "retrievals": 36230,
+     "max_retrievals": 991,
+     "top1_share": 0.8251725089704665,
+     "new_hour": 0.016679587688061635,
+     "most_retrieved": "Henry King told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 6214,
+     "retrievals": 31555,
+     "max_retrievals": 845,
+     "top1_share": 0.871018855965774,
+     "new_hour": 0.019334926716402114,
+     "most_retrieved": "Samuel Green told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3446,
+     "retrievals": 18255,
+     "max_retrievals": 520,
+     "top1_share": 0.7051766639276911,
+     "new_hour": 0.0316136051613596,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3989,
+     "retrievals": 19872,
+     "max_retrievals": 559,
+     "top1_share": 0.7753119967793881,
+     "new_hour": 0.028781630450694894,
+     "most_retrieved": "Mia Clark told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3904,
+     "retrievals": 19125,
+     "max_retrievals": 552,
+     "top1_share": 0.7860392156862746,
+     "new_hour": 0.029703584108849792,
+     "most_retrieved": "Zoe Nelson is having a birthday dinner at the Rose Pub on Wednesday at 7 pm"
+    },
+    {
+     "memories": 5114,
+     "retrievals": 29182,
+     "max_retrievals": 792,
+     "top1_share": 0.8244808443561099,
+     "new_hour": 0.02079034923902624,
+     "most_retrieved": "Max Phillips is attending the news that Samuel Green is hosting a board game night at the Rose Pub at Rose Pub"
+    }
+   ]
+  },
+  {
+   "variant": "uses",
+   "seed": 2,
+   "burn": 90,
+   "aware": 7,
+   "recalled": 2,
+   "attended": 2,
+   "agents": [
+    {
+     "memories": 5071,
+     "retrievals": 34980,
+     "max_retrievals": 963,
+     "top1_share": 0.8321040594625501,
+     "new_hour": 0.017935304172065816,
+     "most_retrieved": "Leo Mitchell told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4250,
+     "retrievals": 26579,
+     "max_retrievals": 737,
+     "top1_share": 0.8001429700139208,
+     "new_hour": 0.022906309709297516,
+     "most_retrieved": "Leo Mitchell told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4167,
+     "retrievals": 22774,
+     "max_retrievals": 624,
+     "top1_share": 0.7698691490295951,
+     "new_hour": 0.02464037286146778,
+     "most_retrieved": "Mia Clark told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4330,
+     "retrievals": 21956,
+     "max_retrievals": 639,
+     "top1_share": 0.8461923847695391,
+     "new_hour": 0.02379140456308534,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 6056,
+     "retrievals": 32307,
+     "max_retrievals": 909,
+     "top1_share": 0.8984121088309035,
+     "new_hour": 0.01668003662585548,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 4703,
+     "retrievals": 20555,
+     "max_retrievals": 593,
+     "top1_share": 0.8595475553393335,
+     "new_hour": 0.024502766879076383,
+     "most_retrieved": "Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 5200,
+     "retrievals": 25966,
+     "max_retrievals": 730,
+     "top1_share": 0.8447970422860664,
+     "new_hour": 0.023312455107542727,
+     "most_retrieved": "Lucas Martin told me that Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 3489,
+     "retrievals": 18451,
+     "max_retrievals": 540,
+     "top1_share": 0.7352988997886294,
+     "new_hour": 0.03071422731288678,
+     "most_retrieved": "Max Phillips told me that Max Phillips is giving a talk at Oak Hill College on Friday at 6 pm"
+    },
+    {
+     "memories": 3829,
+     "retrievals": 21071,
+     "max_retrievals": 612,
+     "top1_share": 0.7752361064970813,
+     "new_hour": 0.02607517550124505,
+     "most_retrieved": "Ava Walker is organizing a picnic at Riverside Park on Thursday at noon"
+    },
+    {
+     "memories": 5147,
+     "retrievals": 19085,
+     "max_retrievals": 558,
+     "top1_share": 0.8427560911710767,
+     "new_hour": 0.02822577945486677,
+     "most_retrieved": "Grace Young told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4510,
+     "retrievals": 22065,
+     "max_retrievals": 641,
+     "top1_share": 0.7966915930206209,
+     "new_hour": 0.02659002505869839,
+     "most_retrieved": "Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4074,
+     "retrievals": 25560,
+     "max_retrievals": 716,
+     "top1_share": 0.7560641627543035,
+     "new_hour": 0.02317603993327452,
+     "most_retrieved": "Grace Young told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4152,
+     "retrievals": 27295,
+     "max_retrievals": 756,
+     "top1_share": 0.7923429199487085,
+     "new_hour": 0.01979573016578482,
+     "most_retrieved": "Ryan Hill told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4628,
+     "retrievals": 30896,
+     "max_retrievals": 851,
+     "top1_share": 0.8140859658208183,
+     "new_hour": 0.018856202160019785,
+     "most_retrieved": "Max Phillips told me that Max Phillips is giving a talk at Oak Hill College on Friday at 6 pm"
+    },
+    {
+     "memories": 3763,
+     "retrievals": 22810,
+     "max_retrievals": 649,
+     "top1_share": 0.7668566418237615,
+     "new_hour": 0.02411252892605656,
+     "most_retrieved": "Leo Mitchell told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 8708,
+     "retrievals": 39384,
+     "max_retrievals": 1106,
+     "top1_share": 0.9517316676823075,
+     "new_hour": 0.014640819089213592,
+     "most_retrieved": "Jack Baker is attending an economics lecture at Oak Hill College"
+    },
+    {
+     "memories": 8575,
+     "retrievals": 33365,
+     "max_retrievals": 940,
+     "top1_share": 0.9524651580998051,
+     "new_hour": 0.017504477180015365,
+     "most_retrieved": "Jack Baker is attending an economics lecture at Oak Hill College"
+    },
+    {
+     "memories": 8701,
+     "retrievals": 33613,
+     "max_retrievals": 945,
+     "top1_share": 0.952845625204534,
+     "new_hour": 0.017061445571949576,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 4362,
+     "retrievals": 18257,
+     "max_retrievals": 536,
+     "top1_share": 0.8050610724653557,
+     "new_hour": 0.028596568145207713,
+     "most_retrieved": "Max Phillips got a promotion at work"
+    },
+    {
+     "memories": 5272,
+     "retrievals": 36555,
+     "max_retrievals": 998,
+     "top1_share": 0.8508822322527698,
+     "new_hour": 0.015450868479166845,
+     "most_retrieved": "Henry King told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 6527,
+     "retrievals": 32456,
+     "max_retrievals": 909,
+     "top1_share": 0.8944725166379098,
+     "new_hour": 0.017627753030404265,
+     "most_retrieved": "Grace Young told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3457,
+     "retrievals": 21483,
+     "max_retrievals": 610,
+     "top1_share": 0.72676069450263,
+     "new_hour": 0.02630172449001738,
+     "most_retrieved": "Ava Walker got a promotion at work"
+    },
+    {
+     "memories": 3975,
+     "retrievals": 19318,
+     "max_retrievals": 551,
+     "top1_share": 0.8010145977844497,
+     "new_hour": 0.0294188438216252,
+     "most_retrieved": "Leo Mitchell told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3956,
+     "retrievals": 19589,
+     "max_retrievals": 558,
+     "top1_share": 0.7539435397416918,
+     "new_hour": 0.030429724561920477,
+     "most_retrieved": "Ryan Hill told me that Max Phillips got a promotion at work"
+    },
+    {
+     "memories": 5100,
+     "retrievals": 26762,
+     "max_retrievals": 734,
+     "top1_share": 0.8424258276660938,
+     "new_hour": 0.021814153785746,
+     "most_retrieved": "Ruby Perez told me that Ava Walker got a promotion at work"
+    }
+   ]
+  },
+  {
+   "variant": "uses",
+   "seed": 3,
+   "burn": 90,
+   "aware": 10,
+   "recalled": 3,
+   "attended": 3,
+   "agents": [
+    {
+     "memories": 4953,
+     "retrievals": 35288,
+     "max_retrievals": 987,
+     "top1_share": 0.791912264792564,
+     "new_hour": 0.018066059566612135,
+     "most_retrieved": "Maria Lopez and John Carter chatted about baking"
+    },
+    {
+     "memories": 4332,
+     "retrievals": 28551,
+     "max_retrievals": 764,
+     "top1_share": 0.7771706770340794,
+     "new_hour": 0.021393024515020627,
+     "most_retrieved": "Maria Lopez told me that Maria Lopez is organizing a picnic at Riverside Park on Wednesday at noon"
+    },
+    {
+     "memories": 4194,
+     "retrievals": 22092,
+     "max_retrievals": 615,
+     "top1_share": 0.781142495020822,
+     "new_hour": 0.02670772883444989,
+     "most_retrieved": "Max Phillips is having a birthday dinner at the Rose Pub on Tuesday at 7 pm"
+    },
+    {
+     "memories": 4429,
+     "retrievals": 22238,
+     "max_retrievals": 650,
+     "top1_share": 0.8334382588362262,
+     "new_hour": 0.02635040233099504,
+     "most_retrieved": "Zoe Nelson is attending a literature seminar at Oak Hill College"
+    },
+    {
+     "memories": 5999,
+     "retrievals": 30265,
+     "max_retrievals": 866,
+     "top1_share": 0.9004130183380142,
+     "new_hour": 0.018545977379085584,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 4706,
+     "retrievals": 20813,
+     "max_retrievals": 607,
+     "top1_share": 0.8435112669965886,
+     "new_hour": 0.025497886548639673,
+     "most_retrieved": "Sophia Martin and Lucas Martin chatted about chemistry"
+    },
+    {
+     "memories": 5274,
+     "retrievals": 24876,
+     "max_retrievals": 702,
+     "top1_share": 0.8328911400546711,
+     "new_hour": 0.022424323181345067,
+     "most_retrieved": "Chloe Scott is attending the news that Lucas Martin is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 3606,
+     "retrievals": 20123,
+     "max_retrievals": 580,
+     "top1_share": 0.7450181384485415,
+     "new_hour": 0.028457892980375675,
+     "most_retrieved": "John Carter is hosting a board game night at the Rose Pub on Saturday at 8 pm"
+    },
+    {
+     "memories": 3899,
+     "retrievals": 23043,
+     "max_retrievals": 660,
+     "top1_share": 0.7320661372217159,
+     "new_hour": 0.02465689626218764,
+     "most_retrieved": "Ava Walker is looking for a new apartment"
+    },
+    {
+     "memories": 5198,
+     "retrievals": 20336,
+     "max_retrievals": 579,
+     "top1_share": 0.8178107789142408,
+     "new_hour": 0.02885746328886814,
+     "most_retrieved": "Grace Young told me that Grace Young adopted a puppy"
+    },
+    {
+     "memories": 4466,
+     "retrievals": 23319,
+     "max_retrievals": 666,
+     "top1_share": 0.8189030404391269,
+     "new_hour": 0.025147297767672196,
+     "most_retrieved": "Grace Young adopted a puppy"
+    },
+    {
+     "memories": 4139,
+     "retrievals": 26601,
+     "max_retrievals": 736,
+     "top1_share": 0.7639562422465321,
+     "new_hour": 0.023342116301236795,
+     "most_retrieved": "Chloe Scott is attending the news that Lucas Martin is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 4276,
+     "retrievals": 28002,
+     "max_retrievals": 795,
+     "top1_share": 0.7759088636525963,
+     "new_hour": 0.02089227959806032,
+     "most_retrieved": "Lucas Martin is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4681,
+     "retrievals": 30828,
+     "max_retrievals": 837,
+     "top1_share": 0.7943428052419877,
+     "new_hour": 0.019679019845176005,
+     "most_retrieved": "Nora Campbell is organizing a charity run at Riverside Park on Tuesday morning"
+    },
+    {
+     "memories": 3644,
+     "retrievals": 21554,
+     "max_retrievals": 606,
+     "top1_share": 0.7309084160712629,
+     "new_hour": 0.02740168781030567,
+     "most_retrieved": "Leo Mitchell told me that John Carter is hosting a board game night at the Rose Pub on Saturday at 8 pm"
+    },
+    {
+     "memories": 8772,
+     "retrievals": 39506,
+     "max_retrievals": 1110,
+     "top1_share": 0.9329722067534045,
+     "new_hour": 0.014327218220567138,
+     "most_retrieved": "Zoe Nelson is attending a literature seminar at Oak Hill College"
+    },
+    {
+     "memories": 8660,
+     "retrievals": 34281,
+     "max_retrievals": 968,
+     "top1_share": 0.9385957235786587,
+     "new_hour": 0.01742466680482805,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 8661,
+     "retrievals": 32059,
+     "max_retrievals": 908,
+     "top1_share": 0.941326928475623,
+     "new_hour": 0.01835784077139381,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 4228,
+     "retrievals": 20904,
+     "max_retrievals": 591,
+     "top1_share": 0.7934366628396479,
+     "new_hour": 0.028777449968135,
+     "most_retrieved": "Samuel Green told me that John Carter is learning to play the piano"
+    },
+    {
+     "memories": 5199,
+     "retrievals": 35260,
+     "max_retrievals": 960,
+     "top1_share": 0.8207317073170731,
+     "new_hour": 0.017682070491826893,
+     "most_retrieved": "Chloe Scott told me that Lucas Martin is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 6272,
+     "retrievals": 30966,
+     "max_retrievals": 861,
+     "top1_share": 0.8831621778725053,
+     "new_hour": 0.018918705715944374,
+     "most_retrieved": "Ethan Lewis told me that John Carter is hosting a board game night at the Rose Pub on Saturday at 8 pm"
+    },
+    {
+     "memories": 3413,
+     "retrievals": 19019,
+     "max_retrievals": 537,
+     "top1_share": 0.7212787212787213,
+     "new_hour": 0.028959552463636584,
+     "most_retrieved": "Ruby Perez is looking for a new apartment"
+    },
+    {
+     "memories": 3974,
+     "retrievals": 19709,
+     "max_retrievals": 572,
+     "top1_share": 0.7782231467857325,
+     "new_hour": 0.029215069421915554,
+     "most_retrieved": "Chloe Scott told me that Lucas Martin is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4256,
+     "retrievals": 21850,
+     "max_retrievals": 606,
+     "top1_share": 0.7906178489702517,
+     "new_hour": 0.02723103749692288,
+     "most_retrieved": "Ava Walker told me that Jack Baker is giving a talk at Oak Hill College on Friday at 6 pm"
+    },
+    {
+     "memories": 5064,
+     "retrievals": 27715,
+     "max_retrievals": 768,
+     "top1_share": 0.8407721450478081,
+     "new_hour": 0.022174828219575407,
+     "most_retrieved": "Leo Mitchell told me that Max Phillips is looking for a new apartment"
+    }
+   ]
+  },
+  {
+   "variant": "uses",
+   "seed": 4,
+   "burn": 90,
+   "aware": 10,
+   "recalled": 1,
+   "attended": 1,
+   "agents": [
+    {
+     "memories": 4922,
+     "retrievals": 36957,
+     "max_retrievals": 999,
+     "top1_share": 0.8104283356333035,
+     "new_hour": 0.016530673182218555,
+     "most_retrieved": "Grace Young told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4283,
+     "retrievals": 27361,
+     "max_retrievals": 773,
+     "top1_share": 0.7921128613720259,
+     "new_hour": 0.020269457194753464,
+     "most_retrieved": "Leo Mitchell told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 4297,
+     "retrievals": 21288,
+     "max_retrievals": 601,
+     "top1_share": 0.8026587748966554,
+     "new_hour": 0.02765121997140871,
+     "most_retrieved": "Zoe Nelson told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 4443,
+     "retrievals": 21994,
+     "max_retrievals": 646,
+     "top1_share": 0.8344548513230882,
+     "new_hour": 0.02595035206351982,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 5956,
+     "retrievals": 31635,
+     "max_retrievals": 900,
+     "top1_share": 0.9124387545440177,
+     "new_hour": 0.018207638849819865,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 4676,
+     "retrievals": 19830,
+     "max_retrievals": 560,
+     "top1_share": 0.8362581946545637,
+     "new_hour": 0.03051931093688136,
+     "most_retrieved": "Mia Clark told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 5137,
+     "retrievals": 26461,
+     "max_retrievals": 759,
+     "top1_share": 0.8493254223196403,
+     "new_hour": 0.02170321239660802,
+     "most_retrieved": "Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 3536,
+     "retrievals": 18946,
+     "max_retrievals": 533,
+     "top1_share": 0.753985010028502,
+     "new_hour": 0.029632897801604947,
+     "most_retrieved": "Jack Baker is attending the news that Ella Turner is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 3766,
+     "retrievals": 21302,
+     "max_retrievals": 598,
+     "top1_share": 0.7250023471974463,
+     "new_hour": 0.027191417920007545,
+     "most_retrieved": "Nora Campbell told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 5122,
+     "retrievals": 19670,
+     "max_retrievals": 561,
+     "top1_share": 0.8335027961362481,
+     "new_hour": 0.029374587509547693,
+     "most_retrieved": "Grace Young told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4329,
+     "retrievals": 20600,
+     "max_retrievals": 588,
+     "top1_share": 0.813252427184466,
+     "new_hour": 0.029023629417053255,
+     "most_retrieved": "Leo Mitchell told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4123,
+     "retrievals": 24151,
+     "max_retrievals": 691,
+     "top1_share": 0.8126371578816612,
+     "new_hour": 0.025164672187648948,
+     "most_retrieved": "Nora Campbell is hosting a board game night at the Rose Pub on Friday at 8 pm"
+    },
+    {
+     "memories": 4269,
+     "retrievals": 27161,
+     "max_retrievals": 754,
+     "top1_share": 0.7948160966091087,
+     "new_hour": 0.020548271200176358,
+     "most_retrieved": "Chloe Scott is attending the news that Ella Turner is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 4686,
+     "retrievals": 32684,
+     "max_retrievals": 915,
+     "top1_share": 0.8253885693305593,
+     "new_hour": 0.017896822026651632,
+     "most_retrieved": "Zoe Nelson told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 3567,
+     "retrievals": 22303,
+     "max_retrievals": 639,
+     "top1_share": 0.7344751827108461,
+     "new_hour": 0.026098970424805225,
+     "most_retrieved": "Sophia Martin told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 8850,
+     "retrievals": 39803,
+     "max_retrievals": 1111,
+     "top1_share": 0.9564103208300881,
+     "new_hour": 0.015075510665941698,
+     "most_retrieved": "Zoe Nelson told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 8715,
+     "retrievals": 35360,
+     "max_retrievals": 989,
+     "top1_share": 0.9296097285067874,
+     "new_hour": 0.01608474821444924,
+     "most_retrieved": "Zoe Nelson is attending a literature seminar at Oak Hill College"
+    },
+    {
+     "memories": 9009,
+     "retrievals": 36397,
+     "max_retrievals": 1019,
+     "top1_share": 0.9621946863752507,
+     "new_hour": 0.015333577251208805,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 4358,
+     "retrievals": 20021,
+     "max_retrievals": 572,
+     "top1_share": 0.7886219469556965,
+     "new_hour": 0.02811705079897142,
+     "most_retrieved": "Grace Young is attending the news that Ella Turner is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 5296,
+     "retrievals": 37221,
+     "max_retrievals": 1031,
+     "top1_share": 0.8627119099433116,
+     "new_hour": 0.015089520754893634,
+     "most_retrieved": "Henry King told me that Nora Campbell is hosting a board game night at the Rose Pub on Friday at 8 pm"
+    },
+    {
+     "memories": 6034,
+     "retrievals": 30117,
+     "max_retrievals": 853,
+     "top1_share": 0.8831224889597238,
+     "new_hour": 0.01776173521514051,
+     "most_retrieved": "Mia Clark told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 3462,
+     "retrievals": 20737,
+     "max_retrievals": 576,
+     "top1_share": 0.7184742248155471,
+     "new_hour": 0.02812924586222475,
+     "most_retrieved": "Chloe Scott and Ruby Perez chatted about politics"
+    },
+    {
+     "memories": 3980,
+     "retrievals": 18186,
+     "max_retrievals": 523,
+     "top1_share": 0.7722423842516222,
+     "new_hour": 0.030389389874982402,
+     "most_retrieved": "Chloe Scott and Adam Roberts chatted about politics"
+    },
+    {
+     "memories": 4151,
+     "retrievals": 20609,
+     "max_retrievals": 578,
+     "top1_share": 0.7977582609539522,
+     "new_hour": 0.028401124038602406,
+     "most_retrieved": "Nora Campbell told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4960,
+     "retrievals": 27435,
+     "max_retrievals": 771,
+     "top1_share": 0.8279569892473119,
+     "new_hour": 0.020264731897484334,
+     "most_retrieved": "Jack Baker told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    }
+   ]
+  },
+  {
+   "variant": "uses_log",
+   "seed": 0,
+   "burn": 90,
+   "aware": 7,
+   "recalled": 1,
+   "attended": 1,
+   "agents": [
+    {
+     "memories": 5052,
+     "retrievals": 34737,
+     "max_retrievals": 914,
+     "top1_share": 0.7970175893139879,
+     "new_hour": 0.4695661161525651,
+     "most_retrieved": "Adam Roberts told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4432,
+     "retrievals": 27509,
+     "max_retrievals": 743,
+     "top1_share": 0.7452106583300011,
+     "new_hour": 0.4772920252679735,
+     "most_retrieved": "Max Phillips told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4205,
+     "retrievals": 22693,
+     "max_retrievals": 599,
+     "top1_share": 0.7481161591680254,
+     "new_hour": 0.4922478415093319,
+     "most_retrieved": "Leo Mitchell told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4279,
+     "retrievals": 22146,
+     "max_retrievals": 555,
+     "top1_share": 0.7365212679490653,
+     "new_hour": 0.49864844101112504,
+     "most_retrieved": "Adam Roberts told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 5986,
+     "retrievals": 30180,
+     "max_retrievals": 803,
+     "top1_share": 0.9091119946984758,
+     "new_hour": 0.4740497100121197,
+     "most_retrieved": "Leo Mitchell told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4842,
+     "retrievals": 20098,
+     "max_retrievals": 572,
+     "top1_share": 0.8069459647726142,
+     "new_hour": 0.5013755243590657,
+     "most_retrieved": "Sophia Martin told me that Leo Mitchell is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 5325,
+     "retrievals": 26067,
+     "max_retrievals": 706,
+     "top1_share": 0.8176238155522307,
+     "new_hour": 0.48304144433174645,
+     "most_retrieved": "Jack Baker told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 3475,
+     "retrievals": 19189,
+     "max_retrievals": 522,
+     "top1_share": 0.6495387982698421,
+     "new_hour": 0.5003214727703242,
+     "most_retrieved": "Henry King told me that Anna Novak got a promotion at work"
+    },
+    {
+     "memories": 3885,
+     "retrievals": 22333,
+     "max_retrievals": 586,
+     "top1_share": 0.669905520977925,
+     "new_hour": 0.4902773325237154,
+     "most_retrieved": "Henry King told me that Ella Turner is organizing a charity run at Riverside Park on Monday morning"
+    },
+    {
+     "memories": 5245,
+     "retrievals": 19972,
+     "max_retrievals": 557,
+     "top1_share": 0.7956138594031644,
+     "new_hour": 0.4985243749614159,
+     "most_retrieved": "Noah Hall is organizing a charity run at Riverside Park on Monday morning"
+    },
+    {
+     "memories": 4362,
+     "retrievals": 20784,
+     "max_retrievals": 535,
+     "top1_share": 0.7147324865280985,
+     "new_hour": 0.5007383441802122,
+     "most_retrieved": "Samuel Green told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 4108,
+     "retrievals": 25749,
+     "max_retrievals": 670,
+     "top1_share": 0.7372713503437026,
+     "new_hour": 0.4847587477610193,
+     "most_retrieved": "Ella Turner told me that Ella Turner is organizing a charity run at Riverside Park on Monday morning"
+    },
+    {
+     "memories": 4263,
+     "retrievals": 28753,
+     "max_retrievals": 784,
+     "top1_share": 0.75216499147915,
+     "new_hour": 0.47666362976256427,
+     "most_retrieved": "Adam Roberts told me that Anna Novak got a promotion at work"
+    },
+    {
+     "memories": 4687,
+     "retrievals": 32271,
+     "max_retrievals": 819,
+     "top1_share": 0.7705060270831396,
+     "new_hour": 0.46676640514733886,
+     "most_retrieved": "Leo Mitchell told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 3688,
+     "retrievals": 21008,
+     "max_retrievals": 577,
+     "top1_share": 0.7190118050266565,
+     "new_hour": 0.49794638326616253,
+     "most_retrieved": "Grace Young is having a birthday dinner at the Rose Pub on Saturday at 7 pm"
+    },
+    {
+     "memories": 8745,
+     "retrievals": 39751,
+     "max_retrievals": 1000,
+     "top1_share": 0.9702145857965837,
+     "new_hour": 0.45714261958885716,
+     "most_retrieved": "Jack Baker is attending the news that Leo Mitchell is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 8454,
+     "retrievals": 30637,
+     "max_retrievals": 788,
+     "top1_share": 0.9622352057969122,
+     "new_hour": 0.47474188915979393,
+     "most_retrieved": "Zoe Nelson is attending the news that Leo Mitchell is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 8762,
+     "retrievals": 32943,
+     "max_retrievals": 815,
+     "top1_share": 0.9733175484928512,
+     "new_hour": 0.4704293181951329,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 4465,
+     "retrievals": 18948,
+     "max_retrievals": 472,
+     "top1_share": 0.770952079375132,
+     "new_hour": 0.5102886914672938,
+     "most_retrieved": "Nora Campbell told me that Anna Novak got a promotion at work"
+    },
+    {
+     "memories": 5243,
+     "retrievals": 36165,
+     "max_retrievals": 883,
+     "top1_share": 0.8126365270288953,
+     "new_hour": 0.46397285088298623,
+     "most_retrieved": "Chloe Scott told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 6157,
+     "retrievals": 30995,
+     "max_retrievals": 814,
+     "top1_share": 0.8730440393611872,
+     "new_hour": 0.47499094343607995,
+     "most_retrieved": "Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 3347,
+     "retrievals": 21296,
+     "max_retrievals": 552,
+     "top1_share": 0.6273009015777611,
+     "new_hour": 0.49856000006015655,
+     "most_retrieved": "Mia Clark told me that Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4000,
+     "retrievals": 20106,
+     "max_retrievals": 543,
+     "top1_share": 0.7273948075201433,
+     "new_hour": 0.49704322411042623,
+     "most_retrieved": "Adam Roberts got a promotion at work"
+    },
+    {
+     "memories": 4228,
+     "retrievals": 21543,
+     "max_retrievals": 568,
+     "top1_share": 0.7557907440932089,
+     "new_hour": 0.49777246838549527,
+     "most_retrieved": "Emma Wilson told me that Lily Adams is moving to another city next month"
+    },
+    {
+     "memories": 5089,
+     "retrievals": 28763,
+     "max_retrievals": 733,
+     "top1_share": 0.8057921635434412,
+     "new_hour": 0.47632061430381417,
+     "most_retrieved": "Maria Lopez told me that Lily Adams is moving to another city next month"
+    }
+   ]
+  },
+  {
+   "variant": "uses_log",
+   "seed": 1,
+   "burn": 90,
+   "aware": 14,
+   "recalled": 5,
+   "attended": 3,
+   "agents": [
+    {
+     "memories": 4796,
+     "retrievals": 33049,
+     "max_retrievals": 880,
+     "top1_share": 0.7516717601137705,
+     "new_hour": 0.4739057333218574,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4246,
+     "retrievals": 26897,
+     "max_retrievals": 721,
+     "top1_share": 0.7360672193924973,
+     "new_hour": 0.4840026801063882,
+     "most_retrieved": "Maria Lopez told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4070,
+     "retrievals": 21466,
+     "max_retrievals": 578,
+     "top1_share": 0.7081431100344732,
+     "new_hour": 0.4929136635300891,
+     "most_retrieved": "Samuel Green told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4489,
+     "retrievals": 22137,
+     "max_retrievals": 556,
+     "top1_share": 0.7439129059944889,
+     "new_hour": 0.4996164916568758,
+     "most_retrieved": "Sophia Martin told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 6000,
+     "retrievals": 29749,
+     "max_retrievals": 751,
+     "top1_share": 0.890887088641635,
+     "new_hour": 0.4765259115175224,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 4808,
+     "retrievals": 19728,
+     "max_retrievals": 551,
+     "top1_share": 0.8262368207623683,
+     "new_hour": 0.5018859445863093,
+     "most_retrieved": "Mia Clark told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5148,
+     "retrievals": 23754,
+     "max_retrievals": 635,
+     "top1_share": 0.8080744295697567,
+     "new_hour": 0.4863492257372122,
+     "most_retrieved": "Ella Turner told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3452,
+     "retrievals": 18499,
+     "max_retrievals": 516,
+     "top1_share": 0.6488458835612736,
+     "new_hour": 0.5027846188433891,
+     "most_retrieved": "Samuel Green told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3833,
+     "retrievals": 21846,
+     "max_retrievals": 613,
+     "top1_share": 0.6951386981598462,
+     "new_hour": 0.4914648014064094,
+     "most_retrieved": "Leo Mitchell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5185,
+     "retrievals": 19843,
+     "max_retrievals": 560,
+     "top1_share": 0.7956458196845235,
+     "new_hour": 0.49730709548175345,
+     "most_retrieved": "Grace Young told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4471,
+     "retrievals": 22868,
+     "max_retrievals": 651,
+     "top1_share": 0.7740948049676404,
+     "new_hour": 0.49066111361349196,
+     "most_retrieved": "Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4112,
+     "retrievals": 25650,
+     "max_retrievals": 693,
+     "top1_share": 0.7282651072124756,
+     "new_hour": 0.4830149757409426,
+     "most_retrieved": "Adam Roberts told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4115,
+     "retrievals": 25159,
+     "max_retrievals": 690,
+     "top1_share": 0.7126276879049247,
+     "new_hour": 0.4831920724955773,
+     "most_retrieved": "Samuel Green told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4605,
+     "retrievals": 32026,
+     "max_retrievals": 863,
+     "top1_share": 0.7570099294323362,
+     "new_hour": 0.4685487055552109,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3586,
+     "retrievals": 20444,
+     "max_retrievals": 538,
+     "top1_share": 0.6906671884171395,
+     "new_hour": 0.49568886981991306,
+     "most_retrieved": "Nora Campbell told me that Ruby Perez is moving to another city next month"
+    },
+    {
+     "memories": 8616,
+     "retrievals": 39738,
+     "max_retrievals": 1042,
+     "top1_share": 0.9646182495344506,
+     "new_hour": 0.45501317297518695,
+     "most_retrieved": "Mia Clark told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 8477,
+     "retrievals": 34129,
+     "max_retrievals": 867,
+     "top1_share": 0.964575580884292,
+     "new_hour": 0.46644887275327646,
+     "most_retrieved": "Jack Baker told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 8865,
+     "retrievals": 35515,
+     "max_retrievals": 943,
+     "top1_share": 0.9728846966070674,
+     "new_hour": 0.46229158225339234,
+     "most_retrieved": "Sophia Martin told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 4291,
+     "retrievals": 19692,
+     "max_retrievals": 555,
+     "top1_share": 0.7716331505179769,
+     "new_hour": 0.4998386031039025,
+     "most_retrieved": "Samuel Green told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5157,
+     "retrievals": 36230,
+     "max_retrievals": 920,
+     "top1_share": 0.7839083632348882,
+     "new_hour": 0.46510207049363095,
+     "most_retrieved": "Lily Adams told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 6219,
+     "retrievals": 31555,
+     "max_retrievals": 845,
+     "top1_share": 0.8474092853747425,
+     "new_hour": 0.4719425026331954,
+     "most_retrieved": "Samuel Green told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3448,
+     "retrievals": 18255,
+     "max_retrievals": 519,
+     "top1_share": 0.6472747192549986,
+     "new_hour": 0.5056203559302461,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3988,
+     "retrievals": 19872,
+     "max_retrievals": 551,
+     "top1_share": 0.7186493558776168,
+     "new_hour": 0.49919033075259883,
+     "most_retrieved": "Ava Walker told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3905,
+     "retrievals": 19125,
+     "max_retrievals": 528,
+     "top1_share": 0.7270065359477125,
+     "new_hour": 0.5014467513858277,
+     "most_retrieved": "Ella Turner is moving to another city next month"
+    },
+    {
+     "memories": 5115,
+     "retrievals": 29182,
+     "max_retrievals": 783,
+     "top1_share": 0.7789733397299705,
+     "new_hour": 0.47698773045518217,
+     "most_retrieved": "Leo Mitchell told me that Grace Young is moving to another city next month"
+    }
+   ]
+  },
+  {
+   "variant": "uses_log",
+   "seed": 2,
+   "burn": 90,
+   "aware": 9,
+   "recalled": 3,
+   "attended": 2,
+   "agents": [
+    {
+     "memories": 5067,
+     "retrievals": 34980,
+     "max_retrievals": 944,
+     "top1_share": 0.8372498570611778,
+     "new_hour": 0.467905203600401,
+     "most_retrieved": "Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 4248,
+     "retrievals": 26579,
+     "max_retrievals": 714,
+     "top1_share": 0.7387034877158659,
+     "new_hour": 0.48431445552089125,
+     "most_retrieved": "Chloe Scott told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4165,
+     "retrievals": 22774,
+     "max_retrievals": 611,
+     "top1_share": 0.7245543163256345,
+     "new_hour": 0.48858117505577026,
+     "most_retrieved": "Chloe Scott told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4329,
+     "retrievals": 21956,
+     "max_retrievals": 567,
+     "top1_share": 0.7912643468755693,
+     "new_hour": 0.4895802348321732,
+     "most_retrieved": "Jack Baker told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 6057,
+     "retrievals": 32307,
+     "max_retrievals": 870,
+     "top1_share": 0.8973597053270189,
+     "new_hour": 0.46414748627692687,
+     "most_retrieved": "Lucas Martin told me that Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 4702,
+     "retrievals": 20555,
+     "max_retrievals": 593,
+     "top1_share": 0.7946971539771345,
+     "new_hour": 0.4874649350199875,
+     "most_retrieved": "Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 5201,
+     "retrievals": 25966,
+     "max_retrievals": 722,
+     "top1_share": 0.807132403912809,
+     "new_hour": 0.48564190838448607,
+     "most_retrieved": "Lucas Martin told me that Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 3489,
+     "retrievals": 18451,
+     "max_retrievals": 508,
+     "top1_share": 0.6758441276895562,
+     "new_hour": 0.5066706069406589,
+     "most_retrieved": "Lucas Martin told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3830,
+     "retrievals": 21071,
+     "max_retrievals": 585,
+     "top1_share": 0.7256893360542926,
+     "new_hour": 0.49347127258399826,
+     "most_retrieved": "Noah Hall told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 5150,
+     "retrievals": 19085,
+     "max_retrievals": 558,
+     "top1_share": 0.801729106628242,
+     "new_hour": 0.49730696388628626,
+     "most_retrieved": "Grace Young told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4512,
+     "retrievals": 22065,
+     "max_retrievals": 623,
+     "top1_share": 0.7661907999093587,
+     "new_hour": 0.49499623339360815,
+     "most_retrieved": "Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4077,
+     "retrievals": 25560,
+     "max_retrievals": 716,
+     "top1_share": 0.7101721439749609,
+     "new_hour": 0.4838033368770966,
+     "most_retrieved": "Grace Young told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4152,
+     "retrievals": 27295,
+     "max_retrievals": 734,
+     "top1_share": 0.7588569335043048,
+     "new_hour": 0.474482963033211,
+     "most_retrieved": "Oliver Brown told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 4628,
+     "retrievals": 30896,
+     "max_retrievals": 843,
+     "top1_share": 0.7851501812532367,
+     "new_hour": 0.47022490445717224,
+     "most_retrieved": "John Carter told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3765,
+     "retrievals": 22810,
+     "max_retrievals": 648,
+     "top1_share": 0.7430512932924156,
+     "new_hour": 0.4862225008845396,
+     "most_retrieved": "Leo Mitchell told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 8706,
+     "retrievals": 39384,
+     "max_retrievals": 1008,
+     "top1_share": 0.977046516351818,
+     "new_hour": 0.45791624905892303,
+     "most_retrieved": "Samuel Green told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 8574,
+     "retrievals": 33365,
+     "max_retrievals": 875,
+     "top1_share": 0.9741046006294021,
+     "new_hour": 0.4676726960939165,
+     "most_retrieved": "Sophia Martin told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 8698,
+     "retrievals": 33613,
+     "max_retrievals": 884,
+     "top1_share": 0.9719453782762622,
+     "new_hour": 0.4663711864594637,
+     "most_retrieved": "Jack Baker told me that Chloe Scott is moving to another city next month"
+    },
+    {
+     "memories": 4361,
+     "retrievals": 18257,
+     "max_retrievals": 535,
+     "top1_share": 0.7572985704113491,
+     "new_hour": 0.49914000329934566,
+     "most_retrieved": "Max Phillips got a promotion at work"
+    },
+    {
+     "memories": 5267,
+     "retrievals": 36555,
+     "max_retrievals": 976,
+     "top1_share": 0.8356996306934756,
+     "new_hour": 0.4596845740492244,
+     "most_retrieved": "Jack Baker told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 6529,
+     "retrievals": 32456,
+     "max_retrievals": 903,
+     "top1_share": 0.8972146906581218,
+     "new_hour": 0.4663658870096737,
+     "most_retrieved": "Ava Walker told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3458,
+     "retrievals": 21483,
+     "max_retrievals": 560,
+     "top1_share": 0.6597309500535307,
+     "new_hour": 0.49497987485646217,
+     "most_retrieved": "Noah Hall told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3974,
+     "retrievals": 19318,
+     "max_retrievals": 548,
+     "top1_share": 0.7565482969251476,
+     "new_hour": 0.5011981404486089,
+     "most_retrieved": "Leo Mitchell told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 3956,
+     "retrievals": 19589,
+     "max_retrievals": 537,
+     "top1_share": 0.6711930164888458,
+     "new_hour": 0.5041505173838033,
+     "most_retrieved": "Emma Wilson told me that Emma Wilson is moving to another city next month"
+    },
+    {
+     "memories": 5099,
+     "retrievals": 26762,
+     "max_retrievals": 726,
+     "top1_share": 0.8154472759883417,
+     "new_hour": 0.47990096104235896,
+     "most_retrieved": "Anna Novak told me that Emma Wilson is moving to another city next month"
+    }
+   ]
+  },
+  {
+   "variant": "uses_log",
+   "seed": 3,
+   "burn": 90,
+   "aware": 10,
+   "recalled": 3,
+   "attended": 3,
+   "agents": [
+    {
+     "memories": 4957,
+     "retrievals": 35288,
+     "max_retrievals": 901,
+     "top1_share": 0.737814554522784,
+     "new_hour": 0.47027771173662025,
+     "most_retrieved": "John Carter told me that Ruby Perez got a promotion at work"
+    },
+    {
+     "memories": 4333,
+     "retrievals": 28551,
+     "max_retrievals": 750,
+     "top1_share": 0.6927953486743021,
+     "new_hour": 0.480300421858424,
+     "most_retrieved": "Henry King is having a birthday dinner at the Rose Pub on Friday at 7 pm"
+    },
+    {
+     "memories": 4190,
+     "retrievals": 22092,
+     "max_retrievals": 552,
+     "top1_share": 0.6993481803367735,
+     "new_hour": 0.4970152508431414,
+     "most_retrieved": "Leo Mitchell told me that Ruby Perez got a promotion at work"
+    },
+    {
+     "memories": 4424,
+     "retrievals": 22163,
+     "max_retrievals": 548,
+     "top1_share": 0.7717366782475297,
+     "new_hour": 0.5037786016760049,
+     "most_retrieved": "Sophia Martin is attending the news that Jack Baker is giving a talk at Oak Hill College at Oak Hill College"
+    },
+    {
+     "memories": 5996,
+     "retrievals": 30265,
+     "max_retrievals": 808,
+     "top1_share": 0.8842226994878573,
+     "new_hour": 0.4766415533667858,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 4704,
+     "retrievals": 20813,
+     "max_retrievals": 546,
+     "top1_share": 0.7510690433863451,
+     "new_hour": 0.49498756454719917,
+     "most_retrieved": "Lucas Martin is attending the news that Maria Lopez is organizing a picnic at Riverside Park at Riverside Park"
+    },
+    {
+     "memories": 5275,
+     "retrievals": 24801,
+     "max_retrievals": 630,
+     "top1_share": 0.7831942260392726,
+     "new_hour": 0.4860418790354348,
+     "most_retrieved": "Leo Mitchell told me that Ruby Perez got a promotion at work"
+    },
+    {
+     "memories": 3607,
+     "retrievals": 20123,
+     "max_retrievals": 571,
+     "top1_share": 0.6573075585151319,
+     "new_hour": 0.5002841874159826,
+     "most_retrieved": "John Carter is hosting a board game night at the Rose Pub on Saturday at 8 pm"
+    },
+    {
+     "memories": 3897,
+     "retrievals": 23043,
+     "max_retrievals": 542,
+     "top1_share": 0.6588117866597232,
+     "new_hour": 0.4942300799899173,
+     "most_retrieved": "Noah Hall told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5199,
+     "retrievals": 20336,
+     "max_retrievals": 549,
+     "top1_share": 0.7466561762391818,
+     "new_hour": 0.50142494934222,
+     "most_retrieved": "Ava Walker told me that Oliver Brown is organizing a charity run at Riverside Park on Monday morning"
+    },
+    {
+     "memories": 4466,
+     "retrievals": 23319,
+     "max_retrievals": 617,
+     "top1_share": 0.7453149792015095,
+     "new_hour": 0.4928827605290592,
+     "most_retrieved": "Chloe Scott told me that Oliver Brown is organizing a charity run at Riverside Park on Monday morning"
+    },
+    {
+     "memories": 4145,
+     "retrievals": 26601,
+     "max_retrievals": 704,
+     "top1_share": 0.7057629412428105,
+     "new_hour": 0.4873775386772359,
+     "most_retrieved": "Chloe Scott is attending the news that Lucas Martin is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 4275,
+     "retrievals": 28002,
+     "max_retrievals": 728,
+     "top1_share": 0.7312334833226198,
+     "new_hour": 0.4815909707200453,
+     "most_retrieved": "Chloe Scott is attending the news that Lucas Martin is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 4679,
+     "retrievals": 30828,
+     "max_retrievals": 752,
+     "top1_share": 0.7543791358505255,
+     "new_hour": 0.4765801611080858,
+     "most_retrieved": "Lucas Martin told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 3645,
+     "retrievals": 21554,
+     "max_retrievals": 535,
+     "top1_share": 0.6132040456527791,
+     "new_hour": 0.4996789418104718,
+     "most_retrieved": "Leo Mitchell told me that John Carter is hosting a board game night at the Rose Pub on Saturday at 8 pm"
+    },
+    {
+     "memories": 8766,
+     "retrievals": 39356,
+     "max_retrievals": 977,
+     "top1_share": 0.9575414168106515,
+     "new_hour": 0.4596216098542305,
+     "most_retrieved": "Jack Baker is attending the news that John Carter is hosting a board game night at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 8658,
+     "retrievals": 34356,
+     "max_retrievals": 829,
+     "top1_share": 0.9542438002095703,
+     "new_hour": 0.4712002880169494,
+     "most_retrieved": "Emma Wilson told me that Ruby Perez got a promotion at work"
+    },
+    {
+     "memories": 8665,
+     "retrievals": 32059,
+     "max_retrievals": 852,
+     "top1_share": 0.9593249945413145,
+     "new_hour": 0.4742415716910981,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 4227,
+     "retrievals": 20904,
+     "max_retrievals": 549,
+     "top1_share": 0.7290470723306545,
+     "new_hour": 0.5039656531126939,
+     "most_retrieved": "Anna Novak told me that Oliver Brown is organizing a charity run at Riverside Park on Monday morning"
+    },
+    {
+     "memories": 5203,
+     "retrievals": 35260,
+     "max_retrievals": 864,
+     "top1_share": 0.7750992626205332,
+     "new_hour": 0.4697963987785036,
+     "most_retrieved": "Henry King told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 6274,
+     "retrievals": 30966,
+     "max_retrievals": 766,
+     "top1_share": 0.8422140412064846,
+     "new_hour": 0.47636084395792905,
+     "most_retrieved": "John Carter told me that Ruby Perez got a promotion at work"
+    },
+    {
+     "memories": 3415,
+     "retrievals": 19094,
+     "max_retrievals": 516,
+     "top1_share": 0.6407772074997381,
+     "new_hour": 0.5029969975732853,
+     "most_retrieved": "Leo Mitchell is attending the news that John Carter is hosting a board game night at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 3974,
+     "retrievals": 19634,
+     "max_retrievals": 565,
+     "top1_share": 0.7177854741774473,
+     "new_hour": 0.5005906575186433,
+     "most_retrieved": "Chloe Scott told me that Lucas Martin is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4255,
+     "retrievals": 21850,
+     "max_retrievals": 540,
+     "top1_share": 0.7090160183066362,
+     "new_hour": 0.49841392611905333,
+     "most_retrieved": "Nora Campbell told me that Grace Young is moving to another city next month"
+    },
+    {
+     "memories": 5060,
+     "retrievals": 27790,
+     "max_retrievals": 714,
+     "top1_share": 0.8044980208708168,
+     "new_hour": 0.48428974214982007,
+     "most_retrieved": "Nora Campbell told me that Max Phillips is having a birthday dinner at the Rose Pub on Tuesday at 7 pm"
+    }
+   ]
+  },
+  {
+   "variant": "uses_log",
+   "seed": 4,
+   "burn": 90,
+   "aware": 11,
+   "recalled": 5,
+   "attended": 2,
+   "agents": [
+    {
+     "memories": 4927,
+     "retrievals": 36957,
+     "max_retrievals": 918,
+     "top1_share": 0.8057201612685012,
+     "new_hour": 0.4646150491147997,
+     "most_retrieved": "Ruby Perez told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4286,
+     "retrievals": 27361,
+     "max_retrievals": 723,
+     "top1_share": 0.7357918204743978,
+     "new_hour": 0.4782985136173493,
+     "most_retrieved": "John Carter is attending the news that Ella Turner is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 4299,
+     "retrievals": 21288,
+     "max_retrievals": 597,
+     "top1_share": 0.7452555430289365,
+     "new_hour": 0.496107765348736,
+     "most_retrieved": "Chloe Scott told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 4439,
+     "retrievals": 21919,
+     "max_retrievals": 554,
+     "top1_share": 0.7603905287649984,
+     "new_hour": 0.500231065438469,
+     "most_retrieved": "Leo Mitchell told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 5960,
+     "retrievals": 31635,
+     "max_retrievals": 840,
+     "top1_share": 0.8940730203888099,
+     "new_hour": 0.474400706534125,
+     "most_retrieved": "Sophia Martin is attending a chemistry lecture at Oak Hill College"
+    },
+    {
+     "memories": 4684,
+     "retrievals": 19830,
+     "max_retrievals": 547,
+     "top1_share": 0.7849722642460918,
+     "new_hour": 0.5034661629458425,
+     "most_retrieved": "Jack Baker told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 5136,
+     "retrievals": 26461,
+     "max_retrievals": 669,
+     "top1_share": 0.8102490457654662,
+     "new_hour": 0.4850558011915572,
+     "most_retrieved": "Sophia Martin told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 3540,
+     "retrievals": 19021,
+     "max_retrievals": 528,
+     "top1_share": 0.679722412070869,
+     "new_hour": 0.502354318471099,
+     "most_retrieved": "John Carter is attending the news that Ella Turner is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 3765,
+     "retrievals": 21302,
+     "max_retrievals": 531,
+     "top1_share": 0.654445591963196,
+     "new_hour": 0.4986565384475833,
+     "most_retrieved": "Anna Novak told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 5122,
+     "retrievals": 19670,
+     "max_retrievals": 561,
+     "top1_share": 0.7926283680732079,
+     "new_hour": 0.5000961193847412,
+     "most_retrieved": "Grace Young told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 4333,
+     "retrievals": 20600,
+     "max_retrievals": 558,
+     "top1_share": 0.7600970873786408,
+     "new_hour": 0.5019693818670392,
+     "most_retrieved": "Leo Mitchell told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 4120,
+     "retrievals": 24151,
+     "max_retrievals": 657,
+     "top1_share": 0.753840420686514,
+     "new_hour": 0.4945642929813483,
+     "most_retrieved": "Nora Campbell is hosting a board game night at the Rose Pub on Friday at 8 pm"
+    },
+    {
+     "memories": 4269,
+     "retrievals": 27161,
+     "max_retrievals": 693,
+     "top1_share": 0.752291889105703,
+     "new_hour": 0.4785449247060217,
+     "most_retrieved": "Ava Walker told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 4693,
+     "retrievals": 32684,
+     "max_retrievals": 903,
+     "top1_share": 0.7921918981764778,
+     "new_hour": 0.467599565976515,
+     "most_retrieved": "Maria Lopez got a promotion at work"
+    },
+    {
+     "memories": 3566,
+     "retrievals": 22303,
+     "max_retrievals": 610,
+     "top1_share": 0.6673093305833296,
+     "new_hour": 0.49642613073357233,
+     "most_retrieved": "Sophia Martin told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 8853,
+     "retrievals": 39653,
+     "max_retrievals": 1038,
+     "top1_share": 0.9730159130456711,
+     "new_hour": 0.46074184111120164,
+     "most_retrieved": "Leo Mitchell told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 8717,
+     "retrievals": 35285,
+     "max_retrievals": 943,
+     "top1_share": 0.9676066317131926,
+     "new_hour": 0.4640166329658466,
+     "most_retrieved": "Jack Baker told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 9013,
+     "retrievals": 36397,
+     "max_retrievals": 932,
+     "top1_share": 0.9789817842129845,
+     "new_hour": 0.46085195550447644,
+     "most_retrieved": "Anna Novak is attending a biology lecture at Oak Hill College"
+    },
+    {
+     "memories": 4361,
+     "retrievals": 20021,
+     "max_retrievals": 530,
+     "top1_share": 0.7352280105888817,
+     "new_hour": 0.49982707923027636,
+     "most_retrieved": "Chloe Scott told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 5303,
+     "retrievals": 37221,
+     "max_retrievals": 965,
+     "top1_share": 0.8419440638349319,
+     "new_hour": 0.45913653582635067,
+     "most_retrieved": "Leo Mitchell told me that Ella Turner is having a birthday dinner at the Rose Pub on Thursday at 7 pm"
+    },
+    {
+     "memories": 6035,
+     "retrievals": 30117,
+     "max_retrievals": 774,
+     "top1_share": 0.8731281336122456,
+     "new_hour": 0.47096181555197625,
+     "most_retrieved": "Leo Mitchell is attending the news that Maria Lopez is having a birthday dinner at the Rose Pub at Rose Pub"
+    },
+    {
+     "memories": 3468,
+     "retrievals": 20812,
+     "max_retrievals": 543,
+     "top1_share": 0.6404478185662118,
+     "new_hour": 0.4986839390818572,
+     "most_retrieved": "Nora Campbell told me that Samuel Green is moving to another city next month"
+    },
+    {
+     "memories": 3980,
+     "retrievals": 18186,
+     "max_retrievals": 489,
+     "top1_share": 0.6971846475310679,
+     "new_hour": 0.506452216768355,
+     "most_retrieved": "Ryan Hill is hosting a board game night at the Rose Pub on Friday at 8 pm"
+    },
+    {
+     "memories": 4151,
+     "retrievals": 20609,
+     "max_retrievals": 560,
+     "top1_share": 0.7256053180649231,
+     "new_hour": 0.49940655958017255,
+     "most_retrieved": "Leo Mitchell told me that Sophia Martin got a promotion at work"
+    },
+    {
+     "memories": 4952,
+     "retrievals": 27435,
+     "max_retrievals": 684,
+     "top1_share": 0.7993439037725533,
+     "new_hour": 0.4785277145920109,
+     "most_retrieved": "Nora Campbell told me that Samuel Green is moving to another city next month"
+    }
+   ]
+  }
+ ]
+}

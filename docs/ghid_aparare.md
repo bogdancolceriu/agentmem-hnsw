@@ -239,13 +239,21 @@ Până aici recența a fost cea din articol: o exponențială a ultimului acces,
 
 ### În oraș
 
-Rulările din oraș cu curba ACT-R sunt încă în desfășurare. Rezultatele vin aici când se termină.
+Aceeași petrecere, pe aceleași 30 de seed-uri, în orașe de 32 și 92 de zile, cu curba ACT-R în locul recenței din articol. Scorul are trei variante: doar ultima folosire, suma peste toate folosirile și logaritmul sumei, ca în ACT-R. Ultima variantă nu se pliază, deci am rulat-o doar cu scanarea exactă.
+
+- **Indexul pliat se comportă ca scanarea exactă și cu curba ACT-R.** La 92 de zile rezultatul e identic pe 26 și 27 din 30 de seed-uri, iar pe celelalte diferă cu cel mult 2 agenți. La 32 de zile e identic pe 30 și 27 de seed-uri. Recall-ul e practic 1.
+- **Curba contează.** Cu ACT-R pe ultima folosire, la 92 de zile află de petrecere 15,2 agenți și și-o amintesc la planificare 12,4, față de 13,1 și 10,8 cu exponențiala din articol, pe aceleași seed-uri. Diferența e semnificativă statistic. La 32 de zile cele două curbe dau cam același rezultat. Explicația probabilă: puterea scade brusc în primele ore și apoi foarte încet, deci recența separă mai ales ultimele câteva ore de rest. Printre amintirile mai vechi contează atunci mai mult importanța, iar invitația e mai importantă decât aproape tot ce observă un agent.
+- **Dacă aduni fiecare folosire, memoria se blochează.** Fiecare regăsire contează ca folosire, deci o amintire regăsită primește mai multă greutate și e regăsită din nou. La 92 de zile doar 1,4 agenți își mai amintesc de petrecere la planificare și 1,2 vin, față de 12,4 și 6,5 cu ultima folosire. Regăsirile se concentrează oricum pe puține amintiri: la finalul a 5 rulări de 92 de zile, 1% dintre amintirile unui agent primiseră 64% din regăsiri cu ultima folosire și 82% cu toate folosirile. Sunt mai ales vești auzite de la alții, pe care conversațiile le tot aduc înapoi. Diferența e ce face asta cu scorul. Cu ultima folosire, recența unei amintiri nu poate trece de a uneia proaspete, deci o amintire de acum o oră primește încă 0,70 din amplitudine. Cu suma, amintirile regăsite des ajung la valori mult peste o singură folosire, iar aceeași amintire primește 0,02.
+- **Logaritmul din ACT-R nu repară asta.** Cu el, la 92 de zile află 9,8 agenți, își amintesc 2,8 și vin 1,8, aproape la fel de puțini ca fără el. Logaritmul comprimă amplitudinea (amintirea de acum o oră primește 0,49), dar amintirile regăsite des rămân în frunte. Deci problema vine din faptul că fiecare regăsire contează ca folosire, nu din lipsa logaritmului. Oricum, logaritmul unui produs scalar nu mai e un produs scalar, deci varianta cu logaritm nu s-ar putea plia.
+- **Overfetch-ul ascunde problema.** Cu toate folosirile numărate găsește doar 0,46 din top-ul real, dar vestea circulă (15,2 agenți află de petrecere). Nu vede deloc amintirile care blochează scorul, iar cele mai noi amintiri intră mereu printre candidați.
+
+**Ce să spui:** indexul nu mai limitează ce curbă alegi, dar curba trebuie verificată cu agenții, în buclă închisă. Un scor care arată bine pe hârtie poate bloca memoria când fiecare regăsire contează ca folosire.
 
 ### Întrebări probabile despre curbe
 
 **„E nou?”** Din ce am găsit, da. TANGO are doar exponențiala momentului creării, iar MemoryBank și FadeMem nu discută căutarea. Nu am găsit pe nimeni care să aproximeze curba din ACT-R cu exponențiale ca s-o caute cu un index vectorial. Matematica e veche (Bernstein, 1928, apoi sumele de exponențiale ale lui Beylkin și Monzón, 2005). Nou e felul în care le-am pus împreună și memoria care face asta să meargă. Spune „din câte am găsit”, nu „sigur nimeni”.
 
-**„De ce suma și nu logaritmul, ca în ACT-R?”** Logaritmul nu schimbă ordinea amintirilor după `D`, dar schimbă cât cântărește `D` față de importanță și relevanță. Iar logaritmul unui produs scalar nu e un produs scalar, deci nu se mai poate căuta direct. Suma favorizează ceva mai mult amintirile folosite des. Am scris asta la limite.
+**„De ce suma și nu logaritmul, ca în ACT-R?”** Logaritmul nu schimbă ordinea amintirilor după `D`, dar schimbă cât cântărește `D` față de importanță și relevanță. Iar logaritmul unui produs scalar nu e un produs scalar, deci nu se mai poate căuta direct. În oraș am rulat și varianta cu logaritm, cu scanarea exactă, iar diferența e mică: memoria se blochează în ambele cazuri. Problema nu e lipsa logaritmului, ci faptul că fiecare regăsire contează ca folosire. Există variante care se pliază și care ar putea repara asta, de exemplu ca o regăsire să conteze mai puțin decât o observație nouă sau un plafon pe numărul de folosiri. Nu le-am testat, deci spune-le ca idei, nu ca rezultate.
 
 **„De ce 8 exponențiale?”** Eroarea scade repede: cu 8 e 0,30% din amplitudine pe un an întreg. Recall-ul crește până la 8 și aproape deloc după (0,988 la 8, 0,991 la 10).
 
@@ -260,7 +268,7 @@ Rulările din oraș cu curba ACT-R sunt încă în desfășurare. Rezultatele vi
 ## 7. Întrebări probabile și răspunsuri scurte
 
 **„De ce n-ai folosit un LLM real pentru agenți?”**
-Ca să pot rula sute de simulări identice (720 în total), gratis și reproductibil. Comparația are nevoie doar ca agenții să acționeze pe baza a ce își amintesc. Am pregătit și o validare cu un LLM local (Ollama) care rulează pe placa mea video. (Dacă ai rulat-o, spune rezultatul.)
+Ca să pot rula sute de simulări identice (1 140 în total), gratis și reproductibil. Comparația are nevoie doar ca agenții să acționeze pe baza a ce își amintesc. Am pregătit și o validare cu un LLM local (Ollama) care rulează pe placa mea video. (Dacă ai rulat-o, spune rezultatul.)
 
 **„De ce GloVe și nu un model neural de embedding?”**
 Mediul în care am rulat nu avea acces la Hugging Face. Metoda nu depinde de encoder: orice vector unitar funcționează la fel. Codul are deja varianta cu un model neural (MiniLM).
@@ -333,7 +341,7 @@ De exemplu, rulările de azi sunt `python -m experiments.exp_town_curve --burns 
    ```
    pip install chroma-hnswlib numpy scipy pandas matplotlib faiss-cpu numba pytest langchain-core langchain-classic
    ```
-4. Verifică instalarea: `python -m pytest -q tests/` trebuie să arate 42 de teste trecute, în vreo jumătate de minut.
+4. Verifică instalarea: `python -m pytest -q tests/` trebuie să arate 43 de teste trecute, în vreo jumătate de minut.
 5. **Turul ghidat:** `python demo/tour.py` rulează în 1–2 minute pașii proiectului pe date mici: HNSW-ul din articol față de hnswlib, scorul agenților, plierea în produs scalar, cele patru metode de regăsire și curbele de uitare. La fiecare pas spune ce arată și în ce fișier e codul. `python demo/tour.py --oras` adaugă două simulări scurte ale orașului (prima dată descarcă vectorii GloVe, cam 130 MB).
 6. `python -m experiments.plots` și `python -m experiments.tables` refac în câteva secunde figurile și cifrele din raport, din rezultatele salvate.
 7. `demo/willowbrook.html`, deschis în browser, reia pas cu pas aceeași petrecere cu trei metode de regăsire.

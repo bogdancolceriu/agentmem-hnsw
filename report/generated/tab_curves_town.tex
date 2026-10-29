@@ -2,9 +2,24 @@
 \toprule
 Run & Curve & Retrieval & memories & recall & knew & recalled & attended\\
 \midrule
-92 days & last use & Exact scan, true curve & 5043 & 1.000 & 15.8 $\pm$ 2.4 & 13.6 $\pm$ 2.8 & 6.9 $\pm$ 2.0\\
- &  & Folded HNSW, $R{=}8$ (ours) & 5042 & 1.000 & 16.0 $\pm$ 2.8 & 13.9 $\pm$ 3.3 & 7.0 $\pm$ 2.6\\
- &  & Overfetch + re-rank, $K{=}100$ & 5034 & 0.537 & 16.0 $\pm$ 2.0 & 14.4 $\pm$ 2.3 & 7.0 $\pm$ 2.3\\
+32 days & last use & Exact scan & 1736 & 1.000 & 12.1 $\pm$ 1.0 & 9.8 $\pm$ 1.1 & 5.1 $\pm$ 0.7\\
+ &  & Folded HNSW (ours) & 1736 & 1.000 & 12.1 $\pm$ 1.0 & 9.8 $\pm$ 1.1 & 5.1 $\pm$ 0.7\\
+ &  & Overfetch, $K{=}100$ & 1733 & 0.703 & 10.9 $\pm$ 1.0$^{**}$ & 9.1 $\pm$ 1.1$^{*}$ & 4.9 $\pm$ 0.6\\
 \addlinespace[2pt]
+ & every use & Exact scan & 1735 & 1.000 & 9.5 $\pm$ 1.0 & 5.8 $\pm$ 1.1 & 3.3 $\pm$ 0.6\\
+ &  & Folded HNSW (ours) & 1735 & 1.000 & 9.3 $\pm$ 1.0 & 5.6 $\pm$ 1.0 & 3.2 $\pm$ 0.5\\
+ &  & Overfetch, $K{=}100$ & 1734 & 0.601 & 10.9 $\pm$ 1.0$^{*}$ & 9.0 $\pm$ 1.1$^{**}$ & 4.8 $\pm$ 0.6$^{**}$\\
+\addlinespace[2pt]
+ & every use, log & Exact scan & 1736 & 1.000 & 10.0 $\pm$ 1.0 & 7.1 $\pm$ 1.0 & 3.9 $\pm$ 0.6\\
+\addlinespace
+92 days & last use & Exact scan & 5041 & 1.000 & 15.2 $\pm$ 1.4 & 12.4 $\pm$ 1.7 & 6.5 $\pm$ 1.0\\
+ &  & Folded HNSW (ours) & 5041 & 1.000 & 15.1 $\pm$ 1.4 & 12.3 $\pm$ 1.7 & 6.4 $\pm$ 1.0\\
+ &  & Overfetch, $K{=}100$ & 5033 & 0.536 & 15.2 $\pm$ 1.3 & 13.3 $\pm$ 1.3 & 6.8 $\pm$ 0.9\\
+\addlinespace[2pt]
+ & every use & Exact scan & 5034 & 1.000 & 9.2 $\pm$ 0.8 & 1.4 $\pm$ 0.2 & 1.2 $\pm$ 0.2\\
+ &  & Folded HNSW (ours) & 5034 & 1.000 & 9.1 $\pm$ 0.8 & 1.4 $\pm$ 0.2 & 1.2 $\pm$ 0.2\\
+ &  & Overfetch, $K{=}100$ & 5032 & 0.456 & 15.2 $\pm$ 1.3$^{**}$ & 11.5 $\pm$ 1.4$^{**}$ & 5.9 $\pm$ 0.9$^{**}$\\
+\addlinespace[2pt]
+ & every use, log & Exact scan & 5034 & 1.000 & 9.8 $\pm$ 1.0 & 2.8 $\pm$ 0.5 & 1.8 $\pm$ 0.3\\
 \bottomrule
 \end{tabular}

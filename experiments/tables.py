@@ -569,8 +569,7 @@ def curves_town() -> None:
     for rank, (key, pval) in enumerate(sorted(tests, key=lambda x: x[1])):
         running = max(running, min(1.0, (len(tests) - rank) * pval))
         holm[key] = running
-    order = [("exact", "Exact scan, true curve"), ("folded", "Folded HNSW, $R{=}8$ (ours)"),
-             ("rerank100", "Overfetch + re-rank, $K{=}100$")]
+    order = [("exact", "Exact scan"), ("folded", "Folded HNSW (ours)"), ("rerank100", "Overfetch, $K{=}100$")]
     scores = [("last", "last use"), ("uses", "every use"), ("uses_log", "every use, log")]
     burns = sorted(d.burn.unique())
     lines = [r"\begin{tabular}{l l l r r r r r}", r"\toprule",
@@ -615,6 +614,7 @@ def curves_town() -> None:
                 for col, ctag in zip(outcomes, ("Aware", "Recalled", "Att")):
                     m(f"Tc{btag}{stag}{ktag}{ctag}", f"{piv[col][key].mean():.1f}")
                 m(f"Tc{btag}{stag}{ktag}Recall", f3(piv["recall"][key].mean()))
+                m(f"Tc{btag}{stag}{ktag}RecallFour", f"{piv['recall'][key].mean():.4f}")
             if "folded" in piv["attended"] and "exact" in piv["attended"]:
                 both = pd.concat([piv[c][["folded", "exact"]] for c in outcomes], axis=1).dropna()
                 same = np.logical_and.reduce([(piv[c]["folded"] == piv[c]["exact"]).reindex(both.index) for c in outcomes])
@@ -632,6 +632,13 @@ def curves_town() -> None:
         if len(de) and btag:
             m(f"Tc{btag}ExMs", f2(de.search_ms.mean()))
     m("TcRuns", thin(len(d)))
+    # shape of the two curves after min-max scaling over 92 days of memories (for the text)
+    from agentmem import ACT_R, exponential
+    span = 92 * 24.0
+    for name, curve in (("Exp", exponential(0.995)), ("Actr", ACT_R)):
+        lo, hi = float(curve(span)), float(curve(0.0))
+        for h, htag in ((5.0, "Five"), (35.0, "ThirtyFive")):
+            m(f"TcShape{name}{htag}", f"{(float(curve(h)) - lo) / (hi - lo):.2f}")
     # the curve itself: exact retrieval with ACT-R's curve against the paper's exponential on the same
     # seeds (same world), paired Wilcoxon, Holm-corrected over these comparisons
     pt = RES / "town.csv"
