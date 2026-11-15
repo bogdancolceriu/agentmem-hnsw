@@ -16,10 +16,14 @@ The retrieval policies are run without approximate search here (exact scans),
 so that only the policy differs: the paper's full score (what our folded HNSW
 index returns), LangChain-style overfetch+rerank, and relevance only.
 
-Requirements: Python 3.10+, numpy, Ollama (https://ollama.com) with a model, e.g.
+For every seed and policy the same town is also run with the rule-based decisions
+(model "rules" in the output), so the two can be compared on the same worlds.
+
+Requirements: Python 3.10+, numpy, scipy, Ollama (https://ollama.com) with a model, e.g.
     ollama pull qwen2.5:7b
-    python -m experiments.llm_validation --model qwen2.5:7b
+    python -m experiments.llm_validation --model qwen2.5:7b --seeds 10
 Results: results/llm_validation.csv, results/llm_validation_log.jsonl
+Finished runs are skipped when the command is started again, so it can be interrupted.
 Use --mock to test the pipeline without a model.
 """
 
@@ -65,8 +69,17 @@ class LLM:
                                    options=dict(temperature=0, seed=0, num_ctx=4096))).encode()
             req = urllib.request.Request(self.host + "/api/chat", data=body,
                                          headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=300) as r:
-                content = json.loads(r.read())["message"]["content"]
+            content = ""
+            for attempt in range(4):                      # the server may still be loading the model
+                try:
+                    with urllib.request.urlopen(req, timeout=600) as r:
+                        content = json.loads(r.read())["message"]["content"]
+                    break
+                except (OSError, KeyError, json.JSONDecodeError) as e:
+                    if attempt == 3:
+                        raise SystemExit(f"Ollama did not answer at {self.host} ({e}). Is `ollama serve` "
+                                         f"running and is the model {self.model!r} pulled?")
+                    time.sleep(5 * (attempt + 1))
             try:
                 out = json.loads(content)
             except json.JSONDecodeError:
@@ -210,6 +223,11 @@ def main() -> None:
     enc = load_encoder()
     fields = ["model", "policy", "seed", "burn", "aware_at_party", "recalled_at_plan", "planned", "attended",
               "llm_calls", "llm_seconds", "mean_memories"]
+    model = "mock" if args.mock else args.model
+    done = set()
+    if out.exists():
+        with out.open(newline="") as f:
+            done = {(r["model"], r["policy"], int(r["seed"]), int(r["burn"])) for r in csv.DictReader(f)}
     new = not out.exists()
     with out.open("a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
@@ -218,21 +236,24 @@ def main() -> None:
         for seed in range(args.seeds):
             for policy in args.policies:
                 kw = {"fetch": 100} if policy.startswith("rerank") else {}
-                cfg = SimConfig(days=args.burn + 2, party_day=args.burn + 1, seed=seed, backend=policy,
-                                backend_kw=kw, weights=PROFILES["paper"], measure_recall=False)
-                c0, s0 = llm.calls, llm.seconds
-                t0 = time.time()
-                town = LLMTown(cfg, llm, encoder=enc)
-                res = town.run()
-                row = dict(model="mock" if args.mock else args.model, policy=policy, seed=seed, burn=args.burn,
-                           aware_at_party=res["aware_at_party"], recalled_at_plan=res["recalled_at_plan"],
-                           planned=res["planned"], attended=res["attended"], llm_calls=llm.calls - c0,
-                           llm_seconds=round(llm.seconds - s0, 1), mean_memories=round(res["mean_memories"]))
-                w.writerow(row)
-                f.flush()
-                print(f"seed {seed} {policy:14s} aware={row['aware_at_party']:2d} recalled={row['recalled_at_plan']:2d} "
-                      f"attended={row['attended']:2d}  ({row['llm_calls']} LLM calls, {time.time() - t0:.0f}s)",
-                      flush=True)
+                for who in ("rules", model):               # the same world with rules, then with the model
+                    if (who, policy, seed, args.burn) in done:
+                        continue
+                    cfg = SimConfig(days=args.burn + 2, party_day=args.burn + 1, seed=seed, backend=policy,
+                                    backend_kw=kw, weights=PROFILES["paper"], measure_recall=False)
+                    c0, s0 = llm.calls, llm.seconds
+                    t0 = time.time()
+                    town = Town(cfg, encoder=enc) if who == "rules" else LLMTown(cfg, llm, encoder=enc)
+                    res = town.run()
+                    row = dict(model=who, policy=policy, seed=seed, burn=args.burn,
+                               aware_at_party=res["aware_at_party"], recalled_at_plan=res["recalled_at_plan"],
+                               planned=res["planned"], attended=res["attended"], llm_calls=llm.calls - c0,
+                               llm_seconds=round(llm.seconds - s0, 1), mean_memories=round(res["mean_memories"]))
+                    w.writerow(row)
+                    f.flush()
+                    print(f"seed {seed} {policy:14s} {who:12s} aware={row['aware_at_party']:2d} "
+                          f"recalled={row['recalled_at_plan']:2d} attended={row['attended']:2d}  "
+                          f"({row['llm_calls']} LLM calls, {time.time() - t0:.0f}s)", flush=True)
 
 
 if __name__ == "__main__":

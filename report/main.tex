@@ -40,7 +40,7 @@
 \maketitle
 
 \begin{abstract}
-\noindent Generative agents \citep{park2023generative} decide what to recall by scoring every memory with a weighted sum of recency, importance and relevance. In practice the memories sit in a vector index such as HNSW \citep{malkov2020hnsw}, the article presented at the seminar. A vector index answers a single question: which stored vectors are most similar to the query. Agent frameworks therefore fetch the $K$ most similar memories and re-rank them by the full score, so a memory that is recent or important but not similar enough is never considered. This report first reimplements HNSW from the paper's pseudocode, checks it against the authors' library and repeats the paper's parameter study: the hierarchy pays off in low dimensions, while on clustered and real data the neighbour-selection heuristic matters more. Because recency decays exponentially, the agents' score is an inner product between augmented vectors, an identity that \citet{wei2026tango} have also published for similarity and freshness. A memory store built on it adds what agents need: the importance term, the paper's min-max normalisation, refresh on every access and time-anchored segments that keep the coordinates bounded. With one million memories it keeps recall@10 at \GlOursRecallOneM{} (against \GlRerankRecallOneM{} for the re-ranking used by LangChain) while answering a query roughly a hundred times faster than a linear scan. The report then goes beyond the exponential. Forgetting curves from memory research, such as ACT-R's power law summed over every use of a memory, are close to a sum of a few exponentials, so they too become a single inner-product search: eight extra coordinates follow ACT-R's curve within \CfActrRngEight{} of its range, and the store returns \CuOursRecallOneM{} of the true top-10 among one million memories in \CuOursMsOneM{} ms, where re-ranking returns \CuRerankOneM{}. In a closed-loop simulation of 25 agents calibrated to the paper's party scenario, the folded stores reproduce the behaviour of exact retrieval under both the exponential and ACT-R's curve, while plain similarity search cuts the spread of the invitation by about 40\% in towns older than a week. The simulation also shows that counting every retrieval as a use, as ACT-R's base-level learning does, lets the most retrieved memories crowd out new ones, with or without ACT-R's logarithm. Letting a retrieval count as a small fraction of a use, which still folds, removes most of the effect. Finally, running the public Generative Agents code shows that its recency term is computed from ranks sorted in the wrong direction, so the memory accessed longest ago receives the highest recency score.
+\noindent Generative agents \citep{park2023generative} decide what to recall by scoring every memory with a weighted sum of recency, importance and relevance. A vector index such as HNSW \citep{malkov2020hnsw}, the article presented at the seminar, only finds the stored vectors most similar to a query, so agent frameworks fetch the $K$ most similar memories and re-rank them. A memory that is recent or important but not similar enough is never considered. This report makes three points. First, a reimplementation of HNSW from the paper's pseudocode matches the authors' library and reproduces the paper's parameter study: the hierarchy pays off in low dimensions, while on clustered and real data the neighbour-selection heuristic matters more. Second, the index can search the agents' score directly. Because recency decays exponentially, the score is an inner product between augmented vectors, an identity that \citet{wei2026tango} have also published for similarity and freshness. A memory store built on it adds what agents need (the importance term, the paper's min-max normalisation, refresh on every access and bounded coordinates). On the memories of simulated agents it returns \TwOursRecall{} of the exact top-10, where re-ranking the 100 most similar memories, as LangChain does, returns \TwRerankRecall{}. In a stress test with one million memories whose metadata is independent of their content the two figures are \GlOursRecallOneM{} and \GlRerankRecallOneM{}, and a query takes about a hundredth of the time of a linear scan. The same idea works beyond the exponential: forgetting curves from memory research, such as ACT-R's power law over every use of a memory, are close to a sum of eight exponentials and fold into the index in the same way. Third, the choice matters for what agents do. In a closed-loop simulation of 25 rule-based agents calibrated to the paper's party scenario, the folded store behaves like exact retrieval, plain similarity search cuts the spread of an invitation by about 40\% in towns older than a week, and counting every retrieval as a use, as ACT-R does, lets the most retrieved memories crowd out new ones unless a retrieval counts as a small fraction of a use. Two appendices report further benchmark results and a check of the public Generative Agents code, whose recency term is sorted in the wrong direction.
 \end{abstract}
 
 \section{Introduction}
@@ -49,15 +49,15 @@ Agents built on language models need a memory that outlives the context window. 
 
 The index underneath is very often a graph built with HNSW \citep{malkov2020hnsw}. It finds the stored vectors most similar to a query in roughly logarithmic time, but it knows nothing about recency or importance. Frameworks work around this by fetching more candidates than they need and re-ranking them. LangChain's \code{TimeWeightedVectorStoreRetriever} \citep{langchain_twr}, for example, fetches 100 documents by similarity, adds the most recently created ones and returns the best $k$ under the combined score. A memory outside this candidate set is never scored, however recent or important it is. As the memory grows, the candidates cover a shrinking fraction of it. Nothing tells the agent that it is now retrieving something different from what its retrieval rule describes.
 
-This report starts from the HNSW article and asks whether the index itself can answer the agent's real question. It can. The reduction is exact, so the only approximation left is the index's own. The contributions are the following.
+This report starts from the HNSW article and asks whether the index itself can answer the agent's real question. It can. The reduction is exact, so the only approximation left is the index's own. The report makes three contributions.
 \begin{enumerate}
-\item A reimplementation of HNSW from Algorithms 1--5 of the paper, validated against hnswlib and used to repeat the paper's parameter study on synthetic data and on GloVe vectors (\cref{sec:hnsw}).
-\item A reduction of the Generative Agents score to maximum inner product search (MIPS), obtained by combining forward decay \citep{cormode2009forward} with an inner-product HNSW index, together with a memory store that makes it practical: bounded coordinates, refresh-on-access, min-max normalisation and a replacement for LangChain's retriever with the same scoring rule (\cref{sec:fold}).
-\item An extension to forgetting curves from memory research, such as ACT-R's power law summed over every use of a memory, which a few exponentials approximate closely and which therefore also become a single inner-product search. The town shows that counting every retrieval as a use locks an agent's memory in, with or without ACT-R's logarithm, and that a smaller weight for retrievals, which still folds, removes most of the effect (\cref{sec:curves}).
-\item An evaluation on up to one million memories (\cref{sec:static,sec:curves}) and in Willowbrook, a closed-loop simulation of 25 agents calibrated to reproduce the information diffusion reported by \citet{park2023generative} (\cref{sec:town,sec:curves}).
-\item A check of the public Generative Agents code, which computes recency differently from the paper (\cref{sec:reference}).
+\item \textbf{The article.} A reimplementation of HNSW from Algorithms 1--5 of the paper, validated against hnswlib and used to repeat the paper's parameter study on synthetic data and on GloVe vectors (\cref{sec:hnsw}).
+\item \textbf{The extension.} A reduction of the Generative Agents score to maximum inner product search (MIPS), obtained by combining forward decay \citep{cormode2009forward} with an inner-product HNSW index, and a memory store that makes it practical: bounded coordinates, refresh on access and min-max normalisation (\cref{sec:fold}). The store is measured on the memories of simulated agents and on up to one million memories (\cref{sec:static}). The same reduction covers forgetting curves from memory research, such as ACT-R's power law summed over every use of a memory, because a few exponentials approximate them closely (\cref{sec:curves}).
+\item \textbf{Why it matters.} Willowbrook, a closed-loop simulation of 25 rule-based agents calibrated to reproduce the information diffusion reported by \citet{park2023generative}, shows that the retrieval method and the forgetting curve both change what a population of agents does (\cref{sec:town,sec:curvestown}).
 \end{enumerate}
-The individual ingredients of the second contribution are known. The factorisation of exponential decay into a query part and an item part is the basis of forward decay in stream processing. Graph indexes for inner products were studied by \citet{morozov2018ipnsw}. While this report was being written, \citet{wei2026tango} published the same reduction for a score of similarity and exponential freshness, together with a dedicated index (\cref{sec:fold}). What this report adds is the agent's full score with normalisation, the engineering needed for memories whose scores change every time they are retrieved, the extension beyond exponential decay and evidence that the retrieval method and the forgetting curve both change what a population of agents does.
+Two appendices hold results that support these points but are not needed to follow them: further benchmark results, among them ablations and the case in which relevance dominates the score (\cref{sec:appbench}), and a check of the public Generative Agents code, which computes recency differently from the paper (\cref{sec:reference}).
+
+The individual ingredients of the second contribution are known. The factorisation of exponential decay into a query part and an item part is the basis of forward decay in stream processing. Graph indexes for inner products were studied by \citet{morozov2018ipnsw}. While this report was being written, \citet{wei2026tango} published the same reduction for a score of similarity and exponential freshness, together with a dedicated index (\cref{sec:fold}). What this report adds is the agent's full score with normalisation, the engineering needed for memories whose scores change every time they are retrieved, the extension beyond exponential decay and the evidence from the simulated town.
 
 \section{Background}
 
@@ -163,7 +163,7 @@ Three practical problems remain.
 
 \textbf{Exact re-scoring.} The candidates from all segments and from the buffer are merged and scored with the exact formula. With LangChain's unnormalised score the approximation can therefore only miss memories, never reorder the ones it found. Under min-max scaling the candidates are ranked with the weights obtained from the estimated ranges, so they can also come out in a slightly different order from the exact score. \Cref{sec:static} shows that this is where most of the remaining loss comes from.
 
-The inner product in \cref{eq:fold} is exact for any $s$, but the graph is built on the vectors $x_i$, so $s$ decides how much the two metadata coordinates shape the neighbourhoods. With a small $s$ the graph is essentially the semantic graph. With a large $s$ it groups memories by age and importance. \Cref{sec:static} measures the effect. The default is $s=1$.
+The inner product in \cref{eq:fold} is exact for any $s$, but the graph is built on the vectors $x_i$, so $s$ decides how much the two metadata coordinates shape the neighbourhoods. With a small $s$ the graph is essentially the semantic graph. With a large $s$ it groups memories by age and importance. \Cref{sec:appbench} measures the effect. The default is $s=1$.
 
 \subsection{A retriever for LangChain}
 
@@ -203,13 +203,58 @@ The inner product in \cref{eq:fold} is exact for any $s$, but the graph is built
 
 \Cref{fig:tradeoff,fig:scaling,tab:static} summarise the benchmark. Three observations stand out.
 
-\textbf{Similarity candidates miss most of the true top-$k$.} With the paper's weights, the 10 memories with the highest score are mostly recent and important ones, rarely among the most similar. Relevance-only retrieval recovers \GlRelonlyRecallOneM{} of them with one million memories and overfetch with $K=100$ recovers \GlRerankRecallOneM{}. More candidates help, but slowly: $K=1000$ reaches \GlRerankKRecallOneM{}. With $K=100$ it stays low at every size: \GlRerankRecallTenK{}, \GlRerankRecallHundredK{} and \GlRerankRecallOneM{} at 10\,000, 100\,000 and one million memories. On the town memories, where similarity and recency are correlated, the gap is smaller but still large (\TwRerankRecall{} for $K=100$).
+\textbf{Similarity candidates miss much of the true top-$k$.} On the town memories overfetch with $K=100$ recovers \TwRerankRecall{} of the exact top-10 and with $K=1000$ \TwRerankKRecall{}. Relevance-only retrieval recovers \TwRelonlyRecall{}. With the paper's weights the memories with the highest score are mostly recent and important ones, and only some of them are among the most similar. The scale test is the worst case for this pattern. Its metadata is independent of its content, so candidates chosen by similarity are close to a random sample with respect to recency and importance. There overfetch with $K=100$ recovers \GlRerankRecallTenK{}, \GlRerankRecallHundredK{} and \GlRerankRecallOneM{} at 10\,000, 100\,000 and one million memories, and $K=1000$ reaches \GlRerankKRecallOneM{} at one million.
 
-\textbf{The folded index recovers almost all of the true top-$k$.} At $ef=64$ the folded store reaches \GlOursRecallOneM{} on one million memories and \TwOursRecall{} on the town memories. A deeper graph search hardly changes this (\GlOursRecallDeep{} at $ef=256$), because most of the remaining loss comes from the estimated relevance range. With the exact ranges, an $O(n)$ scan used here only for the analysis, the same index reaches \GlOursExactNorm{} and \TwOursExactNorm{}. The two range searches use a beam of 32 by default. \Cref{tab:normef}, from a separate build of the same indexes, shows that a wider beam closes most of the gap, at the price of a slower query: with a beam of 128, recall on one million memories rises from \NeGlA{} to \NeGlC{} and the query time from \NeGlMsA{} to \NeGlMsC{} ms.
+\textbf{The folded index recovers almost all of the true top-$k$.} At $ef=64$ the folded store reaches \TwOursRecall{} on the town memories and \GlOursRecallOneM{} on one million memories. A deeper graph search hardly changes this (\GlOursRecallDeep{} at $ef=256$ on GloVe), because most of the remaining loss comes from the estimated relevance range. With the exact ranges, an $O(n)$ scan used here only for the analysis, the same index reaches \TwOursExactNorm{} and \GlOursExactNorm{}. A wider beam for the two range searches closes most of the gap at the price of a slower query (\cref{sec:appbench}).
 
-With the weights of the public code, which put most of the weight on relevance (0.5 for recency, 2 for importance and 3 for relevance), the folded index needs a deeper search on GloVe: \GlCodeRecall{} at $ef=64$ and \GlCodeRecallDeep{} at $ef=256$. \Cref{sec:relsweep} explains why.
+With the weights of the public code, which put most of the weight on relevance (0.5 for recency, 2 for importance and 3 for relevance), the folded index needs a deeper search on GloVe: \GlCodeRecall{} at $ef=64$ and \GlCodeRecallDeep{} at $ef=256$. \Cref{sec:relsweep} explains why and shows where overfetching becomes adequate.
 
-Index construction runs on two threads and is not deterministic, so two builds of the same index differ slightly. On the town memories, \BvBuilds{} builds (\code{experiments/exp\_buildvar.py} plus the builds behind \cref{tab:static,tab:normef}) gave recall between \BvPaperMin{} and \BvPaperMax{} at $ef=64$ with the paper's weights and between \BvCodeMin{} and \BvCodeMax{} with the code's weights. Differences of this size between the tables are noise.
+\textbf{It is fast where speed matters.} A linear scan of one million memories takes \GlExactMsOneM{} ms per query on one core when NumPy evaluates the full formula and about \GlExactMvMsOneM{} ms for the matrix-vector product alone, the least an exact scan can cost. The folded store answers in \GlOursMsOneM{} ms, \GlSpeedupMv{} to \GlSpeedupOneM{} times faster. Its query time grows slowly with the size of the memory (\cref{fig:scaling}). Speed is not the argument for a single agent, though. For the few thousand memories that one agent collects in the town an exact scan is faster than the index (\cref{sec:limitations}) and returns the exact answer. What goes wrong at that size is the overfetch pattern, not the lack of an index. The index matters once a memory holds tens of thousands of records, as long-lived or shared memories do.
+
+\subsection{LangChain}
+\label{sec:langchain}
+
+The comparison with LangChain uses the real classes: the memory streams of five Willowbrook agents after 30 days (\LcMinN{}--\LcMaxN{} documents each), importance as an additional score key, cosine similarity as relevance, a decay rate of \LcDecay{} per hour so that recency matches the paper's 0.995 (LangChain's default is 0.01) and the agents' own planning and conversation focal points as queries. Measured against the exact top-10 of LangChain's own formula, LangChain's retriever returns \LcRecall{} of the right documents and our retriever returns \LcOursRecall{}.
+
+\section{Agents in a town}
+\label{sec:town}
+
+\input{town_section}
+\IfFileExists{generated/tab_llm.tex}{\input{llm_section}}{}
+
+\section{Beyond exponential recency}
+\label{sec:curves}
+
+\input{curves_section}
+
+\section{Limitations}
+\label{sec:limitations}
+
+\begin{itemize}
+\item The agents of Willowbrook follow rules where Generative Agents call a language model. This keeps the runs deterministic, free and repeatable: the town experiments in this report took \TownRuns{} runs. The comparison only needs the agents to act on what they retrieve. It also means that the size of the behavioural effects is specific to these rules. \IfFileExists{generated/tab_llm.tex}{A check with a local language model taking the planning and conversation decisions covers only a few seeds of one scenario (\cref{sec:llm}).}{A script that repeats the party scenario with planning and conversation decisions taken by a local language model is included (\code{experiments/llm\_validation.py}) but its results are not part of this report.}
+\item Sentence embeddings come from GloVe with smooth inverse frequency weighting \citep{arora2017sif} because the machine used here cannot download neural encoders. The store is independent of the encoder.
+\item The scale test attaches synthetic metadata to GloVe vectors. All timings come from a two-core virtual machine and vary by up to about 30\% between runs.
+\item For a single agent's memory in the town (\TwSimMemories{} memories after 92 days) an exact scan is still faster than the folded store written in Python (\TwSimExactMs{} against \TwSimFoldedMs{} ms per retrieval). In the static benchmark the folded store is already faster at 10\,000 memories (\cref{fig:scaling}).
+\item The folded index loses recall when relevance dominates the score, where plain similarity search is adequate anyway (\cref{tab:relsweep}).
+\item The extension to general forgetting curves folds ACT-R's sum but not its logarithm, which changes little in the town. When every retrieval counts as a use, frequently retrieved memories crowd out new ones. A small weight for retrievals removes most of this, with a weight tuned to this town (\cref{sec:curvestown}). The curve uses ACT-R's usual parameters rather than values fitted to agents (\cref{sec:curvelimits}).
+\end{itemize}
+
+\section{Conclusion}
+
+\textbf{The article.} The reimplementation of HNSW reproduces the paper's parameter study except for a small gain from the hierarchy at $d=1024$. On 100-dimensional GloVe vectors it agrees with the more recent observation that the hierarchy matters less than the neighbour heuristic.
+
+\textbf{The extension.} HNSW answers similarity queries and agents ask a different question. Because recency decays exponentially, that question is an inner product in disguise, and a single inner-product index answers it with the weights and the time chosen per query. A living memory needs three more ingredients: time anchors with segments, a buffer for memories that were just retrieved and a cheap estimate of the normalisation ranges. The exponential is not essential. Forgetting curves from memory research are mixtures of exponentials, and eight terms turn ACT-R's power law over every use of a memory into one more inner product. The stores return almost all of the true top-$k$, where overfetch-and-re-rank returns a part of it that shrinks as the memory grows.
+
+\textbf{Why it matters.} In a simulated town the retrieval method changes how far news travels and who turns up at a party. The forgetting curve changes it too, in ways that only a closed loop shows. When every retrieval counts as a use, frequently retrieved memories crowd out new ones, with or without ACT-R's logarithm. A retrieval that counts as a small fraction of a use removes most of the effect and still folds. The agents of the town follow rules, so the size of these effects belongs to this simulation. The mechanisms behind them do not depend on the rules: an index that silently replaces the retrieval rule with another one, and a score that feeds on its own retrievals.
+
+\clearpage
+\appendix
+\section{Further benchmark results}
+\label{sec:appbench}
+
+\subsection{The relevance range and the variation between builds}
+
+The two searches that estimate the relevance range use a beam of 32 by default. \Cref{tab:normef}, from a separate build of the indexes of \cref{tab:static}, shows that a wider beam closes most of the gap to the exact ranges, at the price of a slower query: with a beam of 128, recall on one million memories rises from \NeGlA{} to \NeGlC{} and the query time from \NeGlMsA{} to \NeGlMsC{} ms.
 
 \begin{table}[t]
 \centering\small
@@ -218,7 +263,9 @@ Index construction runs on two threads and is not deterministic, so two builds o
 \label{tab:normef}
 \end{table}
 
-\textbf{It stays fast.} A linear scan of one million memories takes \GlExactMsOneM{} ms per query on one core when NumPy evaluates the full formula and about \GlExactMvMsOneM{} ms for the matrix-vector product alone, the least an exact scan can cost. The folded store answers in \GlOursMsOneM{} ms, \GlSpeedupMv{} to \GlSpeedupOneM{} times faster. Its query time grows slowly with the size of the memory (\cref{fig:scaling}).
+Index construction runs on two threads and is not deterministic, so two builds of the same index differ slightly. On the town memories, \BvBuilds{} builds (\code{experiments/exp\_buildvar.py} plus the builds behind \cref{tab:static,tab:normef}) gave recall between \BvPaperMin{} and \BvPaperMax{} at $ef=64$ with the paper's weights and between \BvCodeMin{} and \BvCodeMax{} with the code's weights. Differences of this size between the tables are noise.
+
+\subsection{Ablations}
 
 \begin{figure}[t]
 \centering
@@ -227,7 +274,7 @@ Index construction runs on two threads and is not deterministic, so two builds o
 \label{fig:ablation}
 \end{figure}
 
-\textbf{Ablations} (\cref{fig:ablation}). Anchoring at the oldest access time instead of the newest makes the recency coordinate span almost five orders of magnitude, so recall collapses to \AbOldAnchor{} whatever the search depth. The construction scale matters in both directions: $s=0.25$ hides the metadata from the graph (\AbSQuarter{} at $ef=128$), $s=4$ lets it dominate (\AbSFour{}) and $s=1$ gives \AbSOne{}. The classic reduction of MIPS to Euclidean search \citep{bachrach2014xbox} needs a deeper search than the inner-product graph for the same recall, which matches \citet{morozov2018ipnsw}. On the town memories it ends higher at large depths, though (\TwLtwoDeep{} against \TwIpDeep{} at $ef=512$), probably because its two range searches work better on a metric graph. The fold itself is not tied to HNSW. An IVF-Flat index from FAISS on the same vectors works too, with a worse trade-off on GloVe (\AbIvfRecall{} at \AbIvfMs{} ms with 64 probes, against \AbSOne{} at \AbOursMs{} ms for HNSW) and a better one on the town memories with the paper's weights (\TwIvfRecall{} at \TwIvfMs{} ms with 16 probes), though not with the code's weights (\TwIvfCodeRecall{}, against \TwOursCodeRecall{} for HNSW). With exact ranges HNSW reaches a similar \TwOursExactNorm{} on the paper's weights, which suggests that the advantage of IVF there comes from its range searches.
+\Cref{fig:ablation} varies one design choice at a time. Anchoring at the oldest access time instead of the newest makes the recency coordinate span almost five orders of magnitude, so recall collapses to \AbOldAnchor{} whatever the search depth. The construction scale matters in both directions: $s=0.25$ hides the metadata from the graph (\AbSQuarter{} at $ef=128$), $s=4$ lets it dominate (\AbSFour{}) and $s=1$ gives \AbSOne{}. The classic reduction of MIPS to Euclidean search \citep{bachrach2014xbox} needs a deeper search than the inner-product graph for the same recall, which matches \citet{morozov2018ipnsw}. On the town memories it ends higher at large depths, though (\TwLtwoDeep{} against \TwIpDeep{} at $ef=512$), probably because its two range searches work better on a metric graph. The fold itself is not tied to HNSW. An IVF-Flat index from FAISS on the same vectors works too, with a worse trade-off on GloVe (\AbIvfRecall{} at \AbIvfMs{} ms with 64 probes, against \AbSOne{} at \AbOursMs{} ms for HNSW) and a better one on the town memories with the paper's weights (\TwIvfRecall{} at \TwIvfMs{} ms with 16 probes), though not with the code's weights (\TwIvfCodeRecall{}, against \TwOursCodeRecall{} for HNSW). With exact ranges HNSW reaches a similar \TwOursExactNorm{} on the paper's weights, which suggests that the advantage of IVF there comes from its range searches.
 
 \subsection{When are similarity candidates enough?}
 \label{sec:relsweep}
@@ -240,20 +287,6 @@ Overfetching is not always wrong. \Cref{tab:relsweep} raises the weight of relev
 \caption{Recall@10 on 100\,000 GloVe memories as the relevance weight grows (recency and importance weights fixed at 1, min-max normalised).}
 \label{tab:relsweep}
 \end{table}
-
-\subsection{LangChain}
-
-The comparison with LangChain uses the real classes: the memory streams of five Willowbrook agents after 30 days (\LcMinN{}--\LcMaxN{} documents each), importance as an additional score key, cosine similarity as relevance, a decay rate of \LcDecay{} per hour so that recency matches the paper's 0.995 (LangChain's default is 0.01) and the agents' own planning and conversation focal points as queries. Measured against the exact top-10 of LangChain's own formula, LangChain's retriever returns \LcRecall{} of the right documents and our retriever returns \LcOursRecall{}.
-
-\section{Agents in a town}
-\label{sec:town}
-
-\input{town_section}
-
-\section{Beyond exponential recency}
-\label{sec:curves}
-
-\input{curves_section}
 
 \section{The reference implementation}
 \label{sec:reference}
@@ -268,32 +301,11 @@ The heavier relevance weight dampens the effect of the reversed recency. In the 
 
 \begin{figure}[t]
 \centering
-\begin{minipage}{0.49\linewidth}\centering
-\includegraphics[width=\linewidth]{ga_recency}
-\end{minipage}\hfill
-\begin{minipage}{0.49\linewidth}\centering
-\includegraphics[width=\linewidth]{town_recall_over_time}
-\end{minipage}
-\caption{Left: normalised recency of five memories that differ only in their last access time, according to the paper and according to the public code. Right: recall of the paper's top-$k$ at every retrieval in the 92-day Willowbrook runs.}
+\includegraphics[width=0.5\linewidth]{ga_recency}
+\caption{Normalised recency of five memories that differ only in their last access time, according to the paper and according to the public code.}
 \label{fig:garecency}
 \end{figure}
 
-\section{Limitations}
-
-\begin{itemize}
-\item The agents of Willowbrook follow rules where Generative Agents call a language model. This keeps the runs deterministic, free and repeatable: the town experiments in this report took \TownRuns{} runs. The comparison only needs the agents to act on what they retrieve. It also means that the size of the behavioural effects is specific to these rules. An optional script (\code{experiments/llm\_validation.py}) repeats the party scenario with planning and conversation decisions taken by a local language model.
-\item Sentence embeddings come from GloVe with smooth inverse frequency weighting \citep{arora2017sif} because the machine used here cannot download neural encoders. The store is independent of the encoder.
-\item The scale test attaches synthetic metadata to GloVe vectors. All timings come from a two-core virtual machine and vary by up to about 30\% between runs.
-\item For a single agent's memory in the town (\TwSimMemories{} memories after 92 days) an exact scan is still faster than the folded store written in Python (\TwSimExactMs{} against \TwSimFoldedMs{} ms per retrieval). In the static benchmark the folded store is already faster at 10\,000 memories (\cref{fig:scaling}).
-\item The folded index loses recall when relevance dominates the score, where plain similarity search is adequate anyway (\cref{tab:relsweep}).
-\item The extension to general forgetting curves folds ACT-R's sum but not its logarithm, which changes little in the town. When every retrieval counts as a use, frequently retrieved memories crowd out new ones. A small weight for retrievals removes most of this, with a weight tuned to this town (\cref{sec:curvestown}). The curve uses ACT-R's usual parameters rather than values fitted to agents (\cref{sec:curvelimits}).
-\end{itemize}
-
-\section{Conclusion}
-
-HNSW answers similarity queries. Agents ask a different question. Because recency decays exponentially, the question asked by generative agents is an inner product in disguise. A single inner-product HNSW index can answer it directly, with the weights and the time chosen per query. Making this work for a living memory takes three ingredients: time anchors with segments, a buffer for memories that were just retrieved and a cheap estimate of the normalisation ranges. The resulting store returns almost all of the paper's top-$k$ where the usual overfetch-and-re-rank pattern returns only a small part of it. In a simulated town that difference changes how far news travels and who turns up at a party. The exponential is not essential. Forgetting curves from memory research, among them ACT-R's power law over every use of a memory, are mixtures of exponentials, and eight terms of the mixture turn them into one more inner product with eight more coordinates. With a recent part scanned exactly and segments anchored after it, the coordinates stay bounded for any decay rate. The store again returns almost all of the true top-$k$, and in the town it reproduces the exact scan under ACT-R's curve as well. The forgetting model of an agent can therefore be chosen on its merits rather than on what the index can search. The town shows that this choice needs testing in a closed loop. When every retrieval counts as a use, frequently retrieved memories crowd out new ones, with or without ACT-R's logarithm. A retrieval that counts as a small fraction of a use removes most of the effect and still folds. The reimplementation of HNSW reproduces the paper's parameter study except for a small gain from the hierarchy at $d=1024$. It also agrees on 100-dimensional GloVe vectors with the more recent observation that the hierarchy matters less than the neighbour heuristic.
-
-\appendix
 \section{Reproducing the results}
 All code, data loaders, tests and experiment scripts are in the accompanying repository, \url{https://github.com/bogdancolceriu/agentmem-hnsw} (see \code{README.md}). The GloVe vectors are downloaded from the gensim-data release on first use. The 45 unit tests check that the folded inner product equals the score up to rounding, that with a deep search the store returns more than 99\% of the memories of the exact scan over long sequences of queries with refresh, segment compaction and min-max normalisation, that segment coordinates stay bounded and that the LangChain retriever returns at least 7 of the 8 documents of a brute-force search for every query. For the forgetting curves they also check that eight exponentials follow the three curves of \cref{tab:curvefit} within 1\%, that the bookkeeping of uses gives the same values as direct sums over whole histories, also when a retrieval counts only part of a use, that an exponential curve of the last use gives the paper's ranking, that the Pareto fronts give the exact range of $D$, that only the exact scan accepts ACT-R's logarithm and that the folded store for general curves follows the exact scan through refresh, ageing and compaction with bounded coordinates.
 

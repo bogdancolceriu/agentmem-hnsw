@@ -1,0 +1,22 @@
+% Included by main.tex only when generated/tab_llm.tex exists, i.e. after
+% experiments/llm_validation.py was run on a GPU and experiments/tables.py was run again.
+% Every number below is generated from results/llm_validation.csv.
+
+\subsection{A check with a language model in the loop}
+\label{sec:llm}
+
+The agents above follow rules. To check that the differences between retrieval methods do not come from those rules, the \LlmDays{}-day scenario was repeated with a local language model (\code{\LlmModel{}}, run through Ollama) taking two decisions from the moment Maria learns about her party. In a conversation the speaker sees the pieces of news among its retrieved memories and the model chooses which one to mention, if any. When planning, the agent sees every memory it retrieved and the model lists the events it will attend that day. An event counts only if it matches news that the agent actually retrieved. The days before the announcement are simulated with the rules, and the three retrieval policies run as exact scans, so that only the policy differs. A run makes about \LlmCalls{} calls to the model. \Cref{tab:llm} compares the outcomes with those of the rule-based agents in the same \LlmSeeds{} worlds.
+
+With the model in the loop, \LlmExAware{} agents know about the party under the full score, \LlmReAware{} under overfetch and \LlmRelAware{} under relevance only. With the rules the three figures are \LlmRuExAware{}, \LlmRuReAware{} and \LlmRuRelAware{}.
+% INTERPRETATION: two or three sentences written after looking at the table. Say whether the
+% ordering of the three policies is the same with the model as with the rules, how large the
+% drop under relevance only is (Holm-adjusted p for knowing agents: \LlmRelVsAwareHolm), and
+% what the small number of seeds allows one to conclude. Do not claim more than the table shows.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\input{generated/tab_llm}
+\caption{The party scenario in runs of \LlmDays{} days with rule-based decisions and with decisions taken by a language model (\code{\LlmModel{}}), on the same \LlmSeeds{} seeds. Number of agents (of 25) who knew about the party, recalled it when planning and attended, as mean $\pm$ 95\% confidence interval.}
+\label{tab:llm}
+\end{table}

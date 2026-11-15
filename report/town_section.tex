@@ -15,7 +15,7 @@ Every retrieval refreshes the access time of the memories it returns. Random dec
 
 \subsection{Results}
 
-\Cref{fig:town,tab:town} show the outcomes. In a young town the four methods agree: with about a hundred memories per agent, the party ranks high under any of them. From nine days on they drift apart, because the approximate methods return a shrinking share of the paper's top-$k$ as the memories grow. Averaged over the 92-day runs they return \TNinetyReRecall{} (overfetch) and \TNinetyRelRecall{} (relevance only) of it. By the end of the runs this falls to about \TNinetyReRecallEnd{} and \TNinetyRelRecallEnd{} (\cref{fig:garecency}, right).
+\Cref{fig:town,tab:town} show the outcomes. In a young town the four methods agree: with about a hundred memories per agent, the party ranks high under any of them. From nine days on they drift apart, because the approximate methods return a shrinking share of the paper's top-$k$ as the memories grow. Averaged over the 92-day runs they return \TNinetyReRecall{} (overfetch) and \TNinetyRelRecall{} (relevance only) of it. By the end of the runs this falls to about \TNinetyReRecallEnd{} and \TNinetyRelRecallEnd{} (\cref{fig:townrecall}).
 
 \textbf{The folded store behaves like the exact scan.} Over the 92-day runs its retrievals contain \TNinetyFoRecall{} of the paper's top-$k$ on average. The three outcomes are identical on every seed up to 32 days and on \TNinetyFoSame{} of the \TNinetySeeds{} seeds at 92 days. On the other seeds they differ by at most \TNinetyFoMaxDiff{} agents, in both directions.
 
@@ -24,6 +24,13 @@ Every retrieval refreshes the access time of the memories it returns. Random dec
 \textbf{Overfetch and re-rank moves the outcome in both directions.} In the 9-day runs it spreads the news slightly less than the exact scan (\TSevenReAware{} against \TSevenExAware{} knowing agents, Holm-adjusted $p=\TSevenReAwareHolm{}$). In the 32-day runs the gap looks similar (\TThirtyReAware{} against \TThirtyExAware{}) but is within noise after the correction ($p=\TThirtyReAwareHolm{}$). In the 92-day runs it spreads the news clearly more: \TNinetyReAware{} agents know about the party and \TNinetyReRecalled{} recall it when planning, against \TNinetyExAware{} and \TNinetyExRecalled{}, although it returns less than half of the paper's top-$k$. The reason is the second half of its candidate set, the newest memories. A piece of news is among an agent's newest memories right after it is heard, so it always becomes a candidate, while most of the recent observations that would outrank it under the full score are neither that new nor similar enough to the focal point and never reach the re-ranking. Taking the newest memories out of the candidate set confirms this. With only the 100 most similar memories, the outcome at 92 days falls to \TNinetyNrAware{} knowing agents and \TNinetyNrAtt{} guests (\TThirtyNrAware{} and \TThirtyNrAtt{} at 32 days), close to relevance-only memory, although the share of the paper's top-$k$ it retrieves hardly changes (\TNinetyNrRecall{} against \TNinetyReRecall{}).
 
 Two conclusions follow. An approximate retrieval does not lose information at random: it changes which information the agents act on. The direction of the change depends on details such as which recent memories enter the candidate set and how large the memory has grown. And recall against the paper's top-$k$ does not predict the effect, since two methods with the same recall led the town to very different outcomes.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.55\linewidth]{town_recall_over_time}
+\caption{Recall of the paper's top-$k$ at every retrieval in the 92-day Willowbrook runs.}
+\label{fig:townrecall}
+\end{figure}
 
 \begin{figure}[t]
 \centering

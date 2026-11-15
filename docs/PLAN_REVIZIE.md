@@ -75,7 +75,7 @@ Generative Agents) e material de rezervă: anexe în raport, slide-uri după „
 
 ## Jurnal
 
-- [ ] A. Raportul
+- [x] A. Raportul (15.11: rezumat, introducere, secțiunea 5, anexele A și B, concluzie, locul pentru validarea cu LLM)
 - [ ] B. README și ghid
 - [ ] C. Validarea cu LLM, pregătită pentru laptop
 - [ ] D. Prezentarea
