@@ -2,6 +2,58 @@
 
 Ghidul ăsta te pregătește pentru prezentarea din 17.12 și pentru întrebările de după. Citește-l o dată de la cap la coadă, apoi revino la secțiunile unde nu ai putea răspunde fără să te uiți. Cifrele exacte sunt în raport (`report/main.pdf`), aici sunt doar cele de care chiar ai nevoie. Secțiunea 9 spune cum s-a lucrat și cum rulezi tu proiectul, inclusiv un tur ghidat de două minute (`demo/tour.py`).
 
+Dacă ai puțin timp, citește întâi cele două secțiuni de mai jos („Firul roșu” și „Ce prezinți și ce e rezervă”), apoi secțiunile 1, 4 și 7.
+
+---
+
+## Firul roșu: trei mesaje
+
+Proiectul are multe rezultate, dar prezentarea spune doar trei lucruri. Fiecare are un singur număr pe care să-l știi pe de rost. Tot ce nu intră în ele e rezervă pentru întrebări.
+
+| | Mesajul | Numărul de ținut minte | Unde |
+|---|---|---|---|
+| 1 | **Articolul.** Am rescris HNSW după pseudocod și se comportă cum spune articolul. | pe GloVe-100, la ef = 512: recall 0,940 față de 0,942 la hnswlib (diferență de cel mult 0,016 la orice ef) | slide-urile 1–9, raport secțiunile 2–3 |
+| 2 | **Extensia.** Scorul agenților generativi (recență + importanță + relevanță) e un produs scalar, deci un singur index HNSW îl caută direct. Merge și cu alte curbe de uitare. | pe amintirile agenților din oraș: 0,96 din top-10 cu indexul pliat, 0,28 cu metoda din LangChain | slide-urile 10–14 și 17, raport secțiunile 4–5 și 7 |
+| 3 | **De ce contează.** Felul în care agenții își caută și își uită amintirile schimbă ce fac. | la 92 de zile află de petrecere 13,1 agenți cu scorul exact, 8,2 doar cu relevanța, 15,2 cu overfetch. Cu „fiecare regăsire e o folosire”, doar 1,4 agenți își mai amintesc petrecerea când își fac planul, față de 12,4 | slide-urile 15–16 și 18, raport secțiunile 6 și 7.5 |
+
+Legătura dintre ele, într-o frază: articolul îți dă indexul, extensia îl face să caute scorul pe care îl folosesc de fapt agenții, iar orașul arată că diferența dintre „aproape același top-10” și „top-10 corect” se vede în comportament.
+
+Ce e original la tine și ce nu, spus direct:
+- identitatea pentru recența exponențială a fost publicată independent de TANGO (septembrie 2026) și o citezi
+- ale tale sunt: scorul complet cu importanță și normalizare min-max, memoria vie cu segmente și buffer, extinderea la curbe de uitare neexponențiale (din câte ai găsit, nepublicată), măsurarea în simulare și observația că numărarea regăsirilor ca folosiri blochează memoria, cu o reparație care se pliază în continuare
+
+## Ce prezinți și ce e rezervă
+
+Prezentarea are 20 de slide-uri de bază și 5 de rezervă, puse după „Întrebări?”.
+
+| Slide-uri | Ce spui | Timp |
+|---|---|---|
+| 1–7 | articolul: problema, NSW, ierarhia, căutarea, inserarea, parametrii | 7–8 min |
+| 8–9 | verificarea: HNSW rescris, studiul parametrilor | 2 min |
+| 10–14 | extensia: scorul agenților, de ce pierde overfetch-ul, produsul scalar, cât găsește fiecare metodă | 5 min |
+| 15–16 | de ce contează: orașul și ce se schimbă în comportament | 3 min |
+| 17–18 | un pas mai departe: alte curbe de uitare și ce fac ele în oraș | 2–3 min |
+| 19–20 | limite și concluzii | 1–2 min |
+| 21–25 | rezervă: date grupate (figura 7 din articol), GloVe și ierarhia, cum e făcută memoria, recența inversată din codul public, retriever-ul pentru LangChain | doar la întrebări |
+
+În total cam 20–22 de minute. **Dacă ai doar 15 minute:** treci repede peste 5–6 (căutarea și inserarea într-un minut), sari peste 9 și spune 17–18 într-un singur minut („aceeași idee merge și pentru curbele din psihologie, iar în oraș alegerea curbei schimbă din nou comportamentul”). Nu sări peste 12, 13, 14 și 16, pentru că ele sunt contribuția.
+
+Ce NU aduci tu în discuție, dar știi dacă ești întrebat: ablațiile (ancora, factorul `s`), comparația cu IVF, cazul în care domină relevanța, variația între construcții, recența inversată din codul public, retriever-ul LangChain. În raport sunt în anexele A și B și în secțiunea 5.3. Nimic nu s-a șters din proiect, doar s-a mutat din drumul principal.
+
+Unde găsești fiecare lucru în raport (`report/main.pdf`):
+
+| Raport | Conținut |
+|---|---|
+| 2 | noțiunile: HNSW, scorul agenților, cum se face regăsirea în practică |
+| 3 | HNSW rescris, validarea, studiul parametrilor |
+| 4 | plierea scorului în produs scalar, normalizarea, memoria |
+| 5 | cât și cât de repede găsește fiecare metodă (întâi amintirile din oraș, apoi testul la un milion), LangChain |
+| 6 | orașul Willowbrook (și, după ce rulezi validarea de pe laptop, verificarea cu un LLM) |
+| 7 | curbele de uitare, inclusiv agenții cu altă curbă (7.5) |
+| 8, 9 | limite, concluzii |
+| Anexa A | amplitudinea relevanței, variația între construcții, ablații, când ajunge overfetch-ul |
+| Anexa B | codul public Generative Agents (recența inversată) |
+
 ---
 
 ## 0. De la zero: noțiunile pe care se sprijină tot proiectul
@@ -11,9 +63,9 @@ Restul ghidului presupune noțiunile de aici. Dacă le știi pe acestea, secțiu
 ### Ce e obligatoriu și ce e extensie
 
 - **Prezentarea articolului 11 (obligatorie):** problema căutării de vecini, NSW, HNSW cu nivelurile lui, căutarea, inserarea, euristica de vecini, parametrii, rezultatele din articol, impactul și limitele. Slide-urile 1–7 și secțiunea 2 din ghid. Atât ar fi prezentat oricine.
-- **Verificarea articolului (în plus, dar încă despre articolul 11):** HNSW rescris de tine după pseudocod, comparat cu hnswlib, plus studiul parametrilor refăcut. Slide-urile 8–11 și secțiunea 3.
-- **Extensia propriu-zisă:** legătura cu articolul 12 (Generative Agents), scorul ca produs scalar, memoria cu segmente, experimentele pe un milion de amintiri, orașul simulat, a doua extensie (curbele de uitare din psihologie), bug-ul din codul public și retriever-ul pentru LangChain. Slide-urile 12–23 și secțiunile 4–6. Curbele de uitare sunt slide-urile 20–21 și secțiunea 6.
-- Slide-urile 24–25 sunt limitele și concluziile întregului proiect.
+- **Verificarea articolului (în plus, dar încă despre articolul 11):** HNSW rescris de tine după pseudocod, comparat cu hnswlib, plus studiul parametrilor refăcut. Slide-urile 8–9 și secțiunea 3. Două figuri din studiu sunt pe slide-urile de rezervă 21–22.
+- **Extensia propriu-zisă:** legătura cu articolul 12 (Generative Agents), scorul ca produs scalar, cât găsește fiecare metodă (slide-urile 10–14, secțiunile 4–5), orașul simulat (15–16, secțiunea 5) și curbele de uitare din psihologie (17–18, secțiunea 6).
+- Slide-urile 19–20 sunt limitele și concluziile. Slide-urile 21–25 sunt rezervă.
 
 ### Partea 1: căutarea de vecini (lumea articolului 11)
 
@@ -68,7 +120,7 @@ Restul ghidului presupune noțiunile de aici. Dacă le știi pe acestea, secțiu
 
 ### Ce rezolvă proiectul, pe scurt
 
-Problema: agenții cu memorie mare își aleg amintirile după un scor pe care bazele vectoriale nu îl pot căuta, deci în practică se folosește o aproximare (overfetch) care pierde aproape tot top-ul real când memoria crește. Soluția: scrii scorul ca produs scalar și îl cauți direct cu HNSW, cu inginerie pentru timp (segmente), refresh (buffer) și normalizare. Dovada: recall aproape 1 la un milion de amintiri, de aproximativ o sută de ori mai rapid decât scanarea, iar în oraș comportamentul agenților rămâne cel al regăsirii exacte, pe când metodele aproximative îl schimbă. A doua extensie duce ideea mai departe: și curbele de uitare din psihologie, de exemplu puterea din ACT-R în care contează fiecare folosire a unei amintiri, se aproximează cu 8 exponențiale, deci se caută la fel, cu un singur index.
+Problema: agenții cu memorie mare își aleg amintirile după un scor pe care bazele vectoriale nu îl pot căuta, deci în practică se folosește o aproximare (overfetch) care pierde o mare parte din top-ul real când memoria crește. Soluția: scrii scorul ca produs scalar și îl cauți direct cu HNSW, cu inginerie pentru timp (segmente), refresh (buffer) și normalizare. Dovada: pe amintirile agenților din oraș indexul găsește 0,96 din top-10, față de 0,28 cu overfetch. La un milion de amintiri e de aproximativ o sută de ori mai rapid decât scanarea. În oraș, comportamentul agenților rămâne cel al regăsirii exacte, pe când metodele aproximative îl schimbă. Un pas mai departe: și curbele de uitare din psihologie, de exemplu puterea din ACT-R în care contează fiecare folosire a unei amintiri, se aproximează cu 8 exponențiale, deci se caută la fel, cu un singur index. Iar alegerea curbei schimbă din nou ce fac agenții.
 
 ---
 
@@ -76,7 +128,7 @@ Problema: agenții cu memorie mare își aleg amintirile după un scor pe care b
 
 Dacă te întreabă cineva „despre ce e proiectul tău?”, răspunsul e ăsta:
 
-> HNSW e indexul pe care îl folosesc aproape toate bazele de date vectoriale ca să găsească rapid cei mai asemănători vectori. Agenții generativi din articolul lui Park (Generative Agents) își aleg însă amintirile după un scor care combină recența, importanța și relevanța, nu doar asemănarea. De aceea framework-urile precum LangChain iau primele 100 de amintiri după asemănare și le reordonează, iar orice amintire din afara celor 100 nu e evaluată deloc, oricât de recentă sau importantă ar fi. Pentru că recența scade exponențial, scorul agentului se poate scrie exact ca un produs scalar între doi vectori cu două coordonate în plus. Deci un singur index HNSW cu produs scalar întoarce direct amintirile cu cel mai mare scor real. Aceeași identitate, pentru un scor mai simplu, a publicat-o independent în septembrie 2026 și un grup de cercetători (TANGO). Eu am construit în jurul ei o memorie completă pentru agenți și am extins-o la curbele de uitare din psihologie: și scorul din ACT-R, unde contează fiecare folosire a unei amintiri, devine un singur produs scalar, cu 8 coordonate în plus. Am testat pe până la un milion de amintiri și într-o simulare cu 25 de agenți, iar pe lângă asta am reimplementat HNSW după pseudocodul din articol și am găsit o inversare a recenței în codul public al Generative Agents.
+> HNSW e indexul pe care îl folosesc aproape toate bazele de date vectoriale ca să găsească rapid cei mai asemănători vectori. L-am rescris după pseudocodul din articol și am verificat că se comportă cum spune articolul. Extensia pornește de la agenții generativi din articolul lui Park: ei își aleg amintirile după un scor care combină recența, importanța și relevanța, nu doar asemănarea. De aceea framework-urile precum LangChain iau primele 100 de amintiri după asemănare și le reordonează, iar orice amintire din afara celor 100 nu e evaluată deloc. Pentru că recența scade exponențial, scorul agentului se poate scrie exact ca un produs scalar între doi vectori cu două coordonate în plus, deci un singur index HNSW întoarce direct amintirile cu cel mai mare scor. Aceeași identitate, pentru un scor mai simplu, a publicat-o independent în septembrie 2026 un grup de cercetători (TANGO). Eu am construit în jurul ei o memorie completă și am extins-o la curbele de uitare din psihologie. Apoi am pus-o într-un oraș simulat cu 25 de agenți și am arătat că felul în care agenții își caută și își uită amintirile schimbă câți află de o petrecere și câți vin.
 
 ---
 
@@ -114,9 +166,9 @@ A fost cel mai bun algoritm din benchmark-urile ANN (ANN-Benchmarks) ani la rân
 - **De ce numeri evaluări de distanță?** Pentru că timpul depinde de mașină și de limbaj, iar numărul de distanțe calculate nu. E o măsură de cost corectă pentru comparații între variante.
 - **Validare:** pe GloVe-100 (500 000 de vectori), cu aceiași parametri ca hnswlib, recall-ul e practic același la orice `ef`. hnswlib e de câteva ori mai rapid, pentru că e C++ cu instrucțiuni SIMD.
 - **Ce am reprodus din studiul de parametri al articolului:**
-  - în dimensiuni mici (d=4, un milion de puncte) ierarhia ajută mult: pentru recall 0,9 graful plat are nevoie de 211 distanțe pe interogare, cel ierarhic de 95 cu `mL` implicit și de 79 cu cel mai bun `mL`;
-  - în dimensiuni mari (d=1024) aproape că nu contează: orice variantă verifică aproape jumătate din puncte;
-  - pe date cu 100 de clustere izolate, selecția simplă de vecini se oprește la recall 0,765, iar euristica ajunge la 0,996;
+  - în dimensiuni mici (d=4, un milion de puncte) ierarhia ajută mult: pentru recall 0,9 graful plat are nevoie de 211 distanțe pe interogare, cel ierarhic de 95 cu `mL` implicit și de 79 cu cel mai bun `mL`.
+  - în dimensiuni mari (d=1024) aproape că nu contează: orice variantă verifică aproape jumătate din puncte.
+  - pe date cu 100 de clustere izolate, selecția simplă de vecini se oprește la recall 0,765, iar euristica ajunge la 0,996.
   - pe GloVe, graful plat e la fel de bun ca cel ierarhic (5 066 față de 5 101 distanțe pentru recall 0,9). Asta e în acord cu un articol din 2024, „Down with the Hierarchy”: în dimensiuni mari, câteva noduri hub formează o „autostradă” care face treaba nivelurilor de sus. Euristica contează și aici: fără ea ai nevoie de 27–34% mai multe distanțe.
 
 **Dacă te întreabă de ce e diferit de hnswlib:** la inserare, articolul trimite toată lista de rezultate `W` ca puncte de intrare pentru nivelul următor, hnswlib doar cel mai apropiat element. Eu am urmat articolul.
@@ -158,30 +210,32 @@ Ce rămâne al tău: scorul complet al agenților (importanță, normalizare min
 ## 5. Experimentele: ce ai măsurat și ce a ieșit
 
 ### Benchmark static
-- **Date:** vectori GloVe (aceiași ca în ANN-Benchmarks) cu metadate de agent sintetice, până la 1 000 000 de amintiri; plus amintirile din simulare (cele 25 de agenți după 92 de zile).
-- **Rezultat:** cu ponderile din articol, la un milion de amintiri, relevance-only găsește 0,001 din adevăratul top-10, overfetch cu K=100 găsește 0,006 (cu K=1000, 0,040). Cu K=100 rămâne mic la orice mărime (0,045, 0,068 și 0,006 la 10 000, 100 000 și un milion). Indexul pliat găsește 0,975 în 0,53 ms. Scanarea exactă durează 64,5 ms când NumPy calculează toată formula și vreo 46 ms pentru un singur produs matrice-vector, deci indexul e de 87 până la 121 de ori mai rapid (spune „de aproximativ o sută de ori”). Pe memoriile din simulare (126 454): indexul pliat 0,96, overfetch-ul 0,28, relevance-only 0,04.
+- **Date:** vectori GloVe (aceiași ca în ANN-Benchmarks) cu metadate de agent sintetice, până la 1 000 000 de amintiri, plus amintirile din simulare (cele 25 de agenți după 92 de zile).
+- **Ce spui întâi:** pe memoriile din simulare (126 454 de amintiri, cu întrebările agenților) indexul pliat găsește 0,96 din top-10, overfetch-ul cu K=100 0,28 (cu K=1000, 0,66), relevance-only 0,04. Ăsta e numărul realist. Testul la un milion e un caz defavorabil pentru overfetch, pentru că acolo momentele de acces nu au legătură cu conținutul.
+- **Rezultat la un milion:** cu ponderile din articol, relevance-only găsește 0,001 din adevăratul top-10, overfetch cu K=100 găsește 0,006 (cu K=1000, 0,040). Cu K=100 rămâne mic la orice mărime (0,045, 0,068 și 0,006 la 10 000, 100 000 și un milion). Indexul pliat găsește 0,975 în 0,53 ms. Scanarea exactă durează 64,5 ms când NumPy calculează toată formula și vreo 46 ms pentru un singur produs matrice-vector, deci indexul e de 87 până la 121 de ori mai rapid (spune „de aproximativ o sută de ori”).
 - **De unde vine ce lipsește până la 1:** mai ales din estimarea amplitudinii relevanței (cele două căutări mici după `q` și `−q`). Cu amplitudinea exactă, același index ajunge la 0,997. Dacă faci căutările de estimare mai adânci (fascicul 128 în loc de 32), urci la 0,988, dar interogarea devine de vreo 2,5 ori mai lentă. E un buton, nu o limită a metodei.
 - **Variația între construcții:** hnswlib construiește pe două fire, deci două construcții ale aceluiași index dau grafuri puțin diferite. Pe memoriile orașului, 7 construcții au dat între 0,959 și 0,968. Diferențele de ordinul 0,01 între tabele sunt zgomot.
-- **Când NU ajută:** dacă relevanța domină scorul (pondere de câteva ori mai mare decât restul), primele 100 după relevanță conțin deja aproape tot top-ul, iar overfetch-ul ajunge. Atunci indexul pliat are nevoie de `ef` mai mare. Spune asta singur, arată că știi limitele.
+- **Când NU ajută** (raport, Anexa A): dacă relevanța domină scorul (pondere de câteva ori mai mare decât restul), primele 100 după relevanță conțin deja aproape tot top-ul, iar overfetch-ul ajunge. Atunci indexul pliat are nevoie de `ef` mai mare. Spune asta singur, arată că știi limitele.
 - **La memorii mici:** la memoria unui singur agent din oraș (câteva mii de amintiri), scanarea exactă e chiar mai rapidă decât indexul meu scris în Python (1,77 față de 1,90 ms). În benchmark, indexul e mai rapid de la 10 000 de amintiri în sus. Iar când memoria are cel mult K + k amintiri, overfetch-ul vede tot și e exact, deci nici câștigul de corectitudine nu există acolo.
 
 ### LangChain
-Am comparat cu clasa reală din LangChain pe memoriile a 5 agenți după 30 de zile, cu rata de uitare 0,005 pe oră, ca recența să fie cea din articol (implicit, LangChain are 0,01). Față de top-10 exact al formulei LangChain, retriever-ul lor găsește cam jumătate, al meu tot. Nu spune că e un înlocuitor complet: are aceeași formulă și câmpurile principale, dar primește un model de embedding în loc de o bază de date vectorială.
+(Slide de rezervă 25, raport 5.3.) Am comparat cu clasa reală din LangChain pe memoriile a 5 agenți după 30 de zile, cu rata de uitare 0,005 pe oră, ca recența să fie cea din articol (implicit, LangChain are 0,01). Față de top-10 exact al formulei LangChain, retriever-ul lor găsește cam jumătate, al meu tot. Nu spune că e un înlocuitor complet: are aceeași formulă și câmpurile principale, dar primește un model de embedding în loc de o bază de date vectorială.
 
 ### Simularea Willowbrook
 - 25 de agenți pe reguli, cu bucla din Generative Agents (percepție, conversații, planificare), fiecare apel de LLM înlocuit cu o regulă.
 - **Calibrare:** trei parametri nu există în articol. Probabilitatea de a veni la petrecere am fixat-o la 0,45, după cei 5 din 12 invitați din articol. Pe ceilalți doi (cât de des vorbesc, cât de des dau mai departe o veste) i-am ales dintr-o grilă de 15 combinații, astfel încât, cu regăsire exactă și un oraș „tânăr”, rezultatul să semene cu articolul: 13 din 25 au aflat de petrecere, 5 din 12 invitați au venit. Am obținut 13,4 și 5,1 în medie.
 - **Experimentul:** aceeași petrecere, dar în orașe care au trăit deja 0, 7, 30 sau 90 de zile când află Maria de ea (rulări de 2, 9, 32 sau 92 de zile, petrecerea e mereu în ultima zi), deci agenții au tot mai multe amintiri. Pentru fiecare variantă, 30 de seed-uri și 4 metode de regăsire.
-- **Ce a ieșit** (medii pe 30 de seed-uri; tabelul complet e în raport):
-  - **orașul tânăr (rularea de 2 zile, ~100 de amintiri):** toate metodele dau practic același rezultat;
-  - **indexul meu:** același rezultat ca scanarea exactă, identic pe toate seed-urile până la 32 de zile și pe 26 din 30 la 92 de zile (pe celelalte 4, diferențe de cel mult 2 agenți, în ambele sensuri, iar mediile rămân practic egale);
-  - **doar relevanța:** de la 9 zile încolo, cu aproximativ 40% mai puțini agenți află de petrecere și vin (la 92 de zile: 8,2 în loc de 13,1 află, 3,3 în loc de 5,8 vin). Invitația circulă prin conversații, iar întrebarea către memorie într-o conversație e numele celuilalt, cu care petrecerea nu prea seamănă;
+- **Ce a ieșit** (medii pe 30 de seed-uri, tabelul complet e în raport):
+  - **orașul tânăr (rularea de 2 zile, ~100 de amintiri):** toate metodele dau practic același rezultat.
+  - **indexul meu:** același rezultat ca scanarea exactă, identic pe toate seed-urile până la 32 de zile și pe 26 din 30 la 92 de zile (pe celelalte 4, diferențe de cel mult 2 agenți, în ambele sensuri, iar mediile rămân practic egale).
+  - **doar relevanța:** de la 9 zile încolo, cu aproximativ 40% mai puțini agenți află de petrecere și vin (la 92 de zile: 8,2 în loc de 13,1 află, 3,3 în loc de 5,8 vin). Invitația circulă prin conversații, iar întrebarea către memorie într-o conversație e numele celuilalt, cu care petrecerea nu prea seamănă.
   - **overfetch (LangChain):** la 9 zile răspândește vestea puțin mai slab decât scanarea exactă (11,2 față de 11,7, semnificativ), la 32 de zile diferența e în limita zgomotului, iar la 92 de zile clar mai bine (15,2 în loc de 13,1 află), deși găsește sub jumătate din amintirile pe care le-ar alege scorul din articol.
 - **De ce overfetch-ul răspândește mai repede vestea la 92 de zile:** LangChain pune mereu printre candidați și cele mai noi amintiri create. O veste tocmai aflată e printre ele, deci ajunge mereu candidată. Concurenții ei din scorul real (observații recente, dar nu chiar cele mai noi și nu foarte asemănătoare cu întrebarea) nu intră deloc printre candidați. Deci vestea urcă mai ușor decât ar urca în scorul real. **Am verificat:** fără cele mai noi amintiri printre candidați, la 92 de zile rezultatul cade la 8,3 agenți care află și 3,8 care vin, aproape cât la doar-relevanță, deși procentul de amintiri corecte găsite rămâne aproape același (0,50 față de 0,49).
 - **Concluzia pe care s-o spui:** o aproximare nu pierde informație la întâmplare, ci schimbă ce informație contează, iar direcția depinde de detalii (ce amintiri noi intră printre candidați, cât de mare e memoria). Iar recall-ul singur nu prezice efectul: două metode cu același recall au dus orașul la rezultate foarte diferite.
 - **Statistică:** comparații pe perechi (același seed, aceeași lume), cu testul Wilcoxon și corecția Holm pentru cele 36 de comparații din tabel. Intervalele de încredere folosesc distribuția t.
 
 ### Bug-ul din codul public Generative Agents
+(Slide de rezervă 24, raport Anexa B. Nu îl aduci tu în discuție în prezentarea de bază, dar e un răspuns bun la „ai verificat și codul lor?”.)
 - În `retrieve.py`, amintirile sunt sortate **crescător** după ultimul acces și primesc recența `0,995^poziție` (0,995 pentru cei 25 de agenți din scenariul principal, 0,99 în configurația implicită). Deci cea accesată cel mai demult primește recența maximă, iar cea mai recentă primește 0 după scalare.
 - În plus, recența depinde de poziție, nu de ore, iar ponderile sunt 0,5 / 3 / 2, nu 1 / 1 / 1.
 - **Cum am verificat:** am rulat funcția lor `new_retrieve` nemodificată pe personaje simulate, doar apelul la OpenAI pentru embedding l-am înlocuit.
@@ -268,8 +322,17 @@ Aceeași petrecere, pe aceleași 30 de seed-uri, în orașe de 32 și 92 de zile
 
 ## 7. Întrebări probabile și răspunsuri scurte
 
+**„De ce nu scanezi pur și simplu toate amintirile? Sunt doar câteva mii.”**
+Pentru un singur agent cu câteva mii de amintiri, exact asta e soluția corectă: scanarea durează sub 2 ms și dă răspunsul exact. Am măsurat-o și scrie în raport, la limite. Problema acolo nu e lipsa unui index, ci tiparul cu 100 de candidați, pe care framework-urile îl folosesc oricum. Indexul contează de la zeci de mii de amintiri în sus: o memorie comună a mai multor agenți, un asistent care rulează luni de zile, sau orice sistem care ține deja amintirile într-o bază de date vectorială. La un milion, scanarea durează 46–65 ms, iar indexul o jumătate de milisecundă.
+
 **„De ce n-ai folosit un LLM real pentru agenți?”**
-Ca să pot rula sute de simulări identice (1 350 în total), gratis și reproductibil. Comparația are nevoie doar ca agenții să acționeze pe baza a ce își amintesc. Am pregătit și o validare cu un LLM local (Ollama) care rulează pe placa mea video. (Dacă ai rulat-o, spune rezultatul.)
+Ca să pot rula sute de simulări identice (1 350 în total), gratis și reproductibil. Comparația are nevoie doar ca agenții să acționeze pe baza a ce își amintesc. Limita e reală: regulile nu pot arăta dacă un LLM ar compensa o amintire lipsă. De aceea am pregătit o verificare cu un LLM local (Ollama, pe placa mea video), pe aceleași seed-uri. (Dacă ai rulat-o, spune rezultatul. Dacă nu, spune că e pregătită și nerulată. Pașii sunt în `docs/RULARE_PE_LAPTOP.md`.)
+
+**„Care e de fapt contribuția ta, dacă TANGO a publicat identitatea?”**
+TANGO pliază doar recența, pentru un scor fără importanță și fără normalizare, și afirmă că reordonarea pierde, fără să măsoare. Ale mele sunt: scorul complet din Generative Agents, memoria care suportă refresh și timp care curge, extinderea la curbe de uitare care nu sunt exponențiale, și măsurarea efectului asupra agenților. Am aflat de TANGO după ce derivasem identitatea și l-am citat.
+
+**„De ce 1,4 în loc de 12,4? Nu înseamnă că metoda ta e proastă?”**
+Nu e un rezultat despre index, e despre curbă. Indexul pliat dă aceleași rezultate ca scanarea exactă și cu curba nouă. Scăderea apare în ambele și vine din regula „fiecare regăsire contează ca o folosire”: amintirile de rutină sunt regăsite zilnic, adună sute de folosiri și le îngroapă pe cele noi. Dacă o regăsire valorează 0,03 dintr-o folosire, revine la 10,4. E o observație despre cum trebuie folosită formula din ACT-R la agenți, iar reparația se pliază la fel.
 
 **„De ce GloVe și nu un model neural de embedding?”**
 Mediul în care am rulat nu avea acces la Hugging Face. Metoda nu depinde de encoder: orice vector unitar funcționează la fel. Codul are deja varianta cu un model neural (MiniLM).
@@ -350,6 +413,8 @@ De exemplu, rulările de azi sunt `python -m experiments.exp_town_curve --burns 
 Cifrele din tur nu sunt cele din raport, pentru că datele lui sunt sintetice și mici. Diferențele dintre metode sunt însă aceleași.
 
 ### Cu Claude Code pe calculatorul tău
+
+Pentru validarea cu LLM există un fișier separat, `docs/RULARE_PE_LAPTOP.md`, cu pașii pentru Windows și cu promptul gata de lipit în Claude Code.
 
 Ideea e bună. Deschizi Claude Code în folderul proiectului (din aplicația desktop sau din terminal) și îi ceri, de exemplu: „instalează dependențele, rulează testele și `demo/tour.py`, apoi explică-mi fiecare pas”. Se descurcă singur cu erorile de instalare. Apoi îl poți întreba direct despre cod: „unde se construiește vectorul pliat?”, „ce face `_age_out` din `curve_stores.py`?”, „de ce are nevoie memoria de segmente?”. Ce nu poate reface e conversația în care s-a construit proiectul. Pașii mari se văd în commit-urile de pe GitHub, iar fiecare rezultat se reproduce cu comanda lui din README.
 

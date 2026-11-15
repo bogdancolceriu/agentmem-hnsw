@@ -6,46 +6,46 @@ Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs*, IEEE T
 
 Author: Colceriu Mihai Bogdan
 
-## What is here
+## The project in three points
 
-1. **HNSW from scratch** (`agentmem/paper_hnsw.py`): Algorithms 1-5 of the paper, compiled
-   with numba, counting every distance evaluation. Validated against `hnswlib` (the authors'
-   C++ library) and used to reproduce the paper's parameter study (hierarchy `mL`, neighbour
-   selection heuristic, clustered data, real data).
-2. **The extension** (`agentmem/score.py`, `agentmem/stores.py`): generative agents
-   (Park et al., UIST 2023) retrieve memories by `recency + importance + relevance`.
-   Vector indexes only support similarity, so frameworks fetch the K most similar memories and
-   re-rank them (LangChain's `TimeWeightedVectorStoreRetriever` uses K = 100), which silently
-   drops recent or important memories. With exponential decay the full score is *exactly* an
-   inner product of two augmented vectors (forward decay, Cormode et al. 2009), so a single
-   inner-product HNSW index searches for the true top-k directly, with weights and time chosen per
-   query. Wei et al. (2026, TANGO, arXiv:2609.00548) published the same identity independently for
-   similarity plus exponential freshness. This store adds what agents need: the importance term,
-   the paper's min-max normalization (a per-query rescaling of the weights), refresh-on-access
-   through a write buffer and time anchors and segments with compaction (bounded coordinates).
-   On a synthetic benchmark of one million memories it returns 97.5% of the exact top-10, where a
-   LangChain-style overfetch-and-re-rank baseline (K = 100) returns under 1%.
-3. **Forgetting curves beyond the exponential** (`agentmem/curves.py`, `agentmem/curve_stores.py`):
-   ACT-R's power law summed over every use of a memory, hyperbolic and stretched-exponential
-   curves are fitted by a few non-negative exponentials (eight follow ACT-R's curve over a year
-   within 0.3% of its range), so they fold into one inner product too, with frequency for free.
-   A recent part scanned exactly and segments anchored after it keep every coordinate bounded for
-   every rate, and the range of the recency-frequency term comes exactly from Pareto fronts.
-   In the town the folded store behaves like the exact scan under these curves too. The town also
-   shows that counting every retrieval as a use lets the most retrieved memories crowd out new
-   ones, with or without ACT-R's logarithm. Letting a retrieval count as a small fraction of a use
-   (0.03), which still folds, removes most of the effect.
-4. **A LangChain retriever** (`agentmem/langchain_retriever.py`) with the scoring rule and the main fields
-   of LangChain's `TimeWeightedVectorStoreRetriever`, backed by the folded index.
-5. **Willowbrook** (`town/`): a closed-loop simulation of 25 rule-based generative agents
-   (perception, conversations, planning through memory retrieval), calibrated so that exact
-   retrieval reproduces the information diffusion reported in the paper (13 of 25 agents knew
-   about the party, 5 of 12 invited attended). Agents can live for months before the party, so
-   memory size grows and retrieval approximations start to matter.
-6. **A check of the reference implementation** (`experiments/ga_reference_check.py`): the
-   public Generative Agents code is run unmodified on mock personas. Its recency term is
-   rank-based and sorted the wrong way: the memory accessed longest ago gets the highest
-   recency score. (The authors' later `genagents` code computes recency correctly.)
+1. **The article.** HNSW written from the paper's pseudocode (`agentmem/paper_hnsw.py`,
+   Algorithms 1-5, compiled with numba) matches the recall of `hnswlib`, the authors' C++ library,
+   and reproduces the paper's parameter study: the hierarchy pays off in low dimensions, the
+   neighbour-selection heuristic matters on clustered and real data.
+2. **The extension.** Generative agents (Park et al., UIST 2023) retrieve memories by
+   `recency + importance + relevance`. A vector index only knows similarity, so frameworks fetch
+   the K most similar memories and re-rank them (LangChain's `TimeWeightedVectorStoreRetriever`
+   uses K = 100), which silently drops recent or important memories. With exponential decay the
+   full score is *exactly* an inner product of two augmented vectors, so one inner-product HNSW
+   index searches for the true top-k directly (`agentmem/score.py`, `agentmem/stores.py`).
+   Wei et al. (2026, TANGO, arXiv:2609.00548) published the same identity independently for
+   similarity plus freshness. This store adds what agents need: importance, the paper's min-max
+   normalization, refresh on access and bounded coordinates.
+   - On the memories of simulated agents it returns 96% of the exact top-10, where re-ranking
+     the 100 most similar memories returns 28%. With LangChain's own classes on single agents'
+     memories: 100% against 52%.
+   - In a stress test with one million memories whose metadata is independent of their content:
+     97.5% against under 1%, about a hundred times faster than a linear scan.
+   - For the few thousand memories of one agent an exact scan is faster than any index. The
+     index matters from tens of thousands of memories on.
+   - The same idea covers forgetting curves beyond the exponential (`agentmem/curves.py`,
+     `agentmem/curve_stores.py`): ACT-R's power law over every use of a memory is within 0.3% of
+     a sum of eight exponentials, which folds into the index in the same way.
+3. **Why it matters.** Willowbrook (`town/`) is a closed-loop simulation of 25 rule-based agents,
+   calibrated so that exact retrieval reproduces the party scenario of the paper (13 of 25 agents
+   knew about the party, 5 of 12 invited attended). In towns older than a week, plain similarity
+   search cuts the spread of the invitation by about 40%, and overfetch-and-re-rank shifts it in
+   both directions. The forgetting curve matters too: when every retrieval counts as a use, as
+   in ACT-R, the most retrieved memories crowd out new ones, unless a retrieval counts as a small
+   fraction of a use (0.03), which still folds.
+
+Secondary results, in the appendices of the report: ablations and the case in which relevance
+dominates the score, a LangChain retriever backed by the folded index
+(`agentmem/langchain_retriever.py`) and a check of the public Generative Agents code
+(`experiments/ga_reference_check.py`), whose recency term is rank-based and sorted the wrong way.
+
+The report is `report/main.pdf`. A guide for the presentation, in Romanian, is
+`docs/ghid_aparare.md`.
 
 ## Reproduce
 
@@ -81,9 +81,10 @@ python -m experiments.tables                                   # report/generate
 The GloVe vectors are downloaded from the gensim-data GitHub releases on first use
 (`data/raw/`, ~540 MB) and cached as `.npy` in `data/cache/`.
 
-Optional, on a machine with a GPU: `python -m experiments.llm_validation` repeats the party
-scenario with planning and conversation decisions taken by a local LLM through Ollama
-(see the docstring of that file).
+On a machine with a GPU, `python -m experiments.llm_validation --seeds 10` repeats the party
+scenario with planning and conversation decisions taken by a local LLM through Ollama. Once
+`results/llm_validation.csv` exists, `experiments/tables.py` and the report pick it up
+(`docs/RULARE_PE_LAPTOP.md` has the steps, in Romanian).
 
 ## Layout
 

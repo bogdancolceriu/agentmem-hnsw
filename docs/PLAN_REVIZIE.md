@@ -76,8 +76,14 @@ Generative Agents) e material de rezervă: anexe în raport, slide-uri după „
 ## Jurnal
 
 - [x] A. Raportul (15.11: rezumat, introducere, secțiunea 5, anexele A și B, concluzie, locul pentru validarea cu LLM)
-- [ ] B. README și ghid
-- [ ] C. Validarea cu LLM, pregătită pentru laptop
-- [ ] D. Prezentarea
-- [ ] E. Documentul
-- [ ] F. Final
+- [x] B. README și ghid (15.11: README pe trei puncte, ghidul începe cu „Firul roșu” și „Ce prezinți și ce e rezervă”, întrebări noi în secțiunea 7)
+- [x] C. Validarea cu LLM, pregătită pentru laptop (15.11: script cu reluare, tabel și text în raport, `docs/RULARE_PE_LAPTOP.md` cu promptul pentru Claude Code, `CLAUDE.md`). **Rămâne de rulat pe laptop.**
+- [x] D. Prezentarea (15.11: 20 de slide-uri de bază în ordinea celor trei mesaje, 5 de rezervă după „Întrebări?”, slide-ul 14 cu cifrele realiste primele)
+- [ ] E. Documentul (copia raportului din Claude e încă la structura veche, din 29.10. Raportul de referință e `report/main.pdf`)
+- [x] F. Final (15.11: 45 de teste, commit, push)
+
+## Ce rămâne după această revizie
+
+1. Rularea validării cu LLM pe laptop (`docs/RULARE_PE_LAPTOP.md`), apoi rezultatul pe slide-ul de limite și în ghid.
+2. Copia raportului din Claude (punctul E), dacă mai e folosită.
+3. Decizii ale autorului: anexa „Use of AI tools” din raport, mesajul către profesor, descrierea de pe GitHub.
